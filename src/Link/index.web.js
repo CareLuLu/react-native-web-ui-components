@@ -65,6 +65,7 @@ const Link = compose(
   const Wrapper = wrapper;
   return (
     <Wrapper
+      type={type}
       target={blank ? '_blank' : undefined}
       className={`${className} ${type}`}
       href={href}

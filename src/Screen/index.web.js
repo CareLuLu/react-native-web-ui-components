@@ -92,6 +92,8 @@ export default {
   addEventListener,
 };
 
+export const withKeyboard = () => Component => props => <Component {...props} keyboard={0} />;
+
 export const withScreen = () => Component => class extends React.PureComponent {
   constructor(props) {
     super(props);
