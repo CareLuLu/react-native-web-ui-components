@@ -1,6 +1,6 @@
 {
   "name": "react-native-web-ui-components",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "main": "/dist/index.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "lint": "eslint ./src -c ./.eslintrc --ext .js",
     "publish": "build && npm publish"
   },
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.4.3",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
