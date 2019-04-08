@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
+import { compose } from 'recompact';
 import StylePropType from '../StylePropType';
 import { pick } from '../utils';
+import { withScreen } from '../Screen';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 
@@ -77,4 +79,7 @@ Title.defaultProps = {
   lg: null,
 };
 
-export default withTheme('Title')(Title);
+export default compose(
+  withScreen(),
+  withTheme('Title'),
+)(Title);
