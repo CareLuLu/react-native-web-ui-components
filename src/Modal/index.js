@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  View as RNView,
   StyleSheet,
   ViewPropTypes,
   TouchableWithoutFeedback,
@@ -182,7 +183,7 @@ class Modal extends React.PureComponent {
       return null;
     }
     if (!overlayStyle) {
-      return <View ref={this.onRef} style={styles.marker} />;
+      return <RNView ref={this.onRef} style={styles.marker} />;
     }
     if (followKeyboard) {
       return (
