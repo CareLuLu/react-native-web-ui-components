@@ -33,11 +33,15 @@ const styles = StyleSheet.create({
   text: {
     position: 'absolute',
     left: 12,
+    top: 10,
+    fontSize: 13,
     textAlign: 'left',
   },
   placeholder: {
     position: 'absolute',
     left: 10,
+    top: 10,
+    fontSize: 13,
     textAlign: 'left',
   },
   confirmText: {},
@@ -63,6 +67,7 @@ const Datepicker = withHandlers({
     return onDateChange(dateString);
   },
 })(({
+  fontFamily,
   themeTextStyle,
   themeInputStyle,
   style,
@@ -88,6 +93,7 @@ const Datepicker = withHandlers({
     dateText: [
       styles.text,
       themeInputStyle.text,
+      { fontFamily: fontFamily.regular },
       customStyles.text,
     ],
     placeholderText: [
@@ -122,6 +128,7 @@ const Datepicker = withHandlers({
 });
 
 Datepicker.propTypes = {
+  fontFamily: PropTypes.shape().isRequired,
   themeTextStyle: PropTypes.shape().isRequired,
   themeInputStyle: PropTypes.shape().isRequired,
   auto: PropTypes.bool,
