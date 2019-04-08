@@ -37,6 +37,7 @@ const Link = compose(
   withAmp(),
 )(({
   amp,
+  theme,
   blank,
   className,
   type,
@@ -51,6 +52,7 @@ const Link = compose(
   replace,
   wrapper,
   basepath,
+  fontFamily,
 }) => {
   if (onPress === null && to === null) {
     throw new Error('Either `onPress` or `to` must be provided');
@@ -63,6 +65,23 @@ const Link = compose(
     href = href.indexOf('?') >= 0 ? href.replace('#', '&') : href.replace('#', '?');
   }
   const Wrapper = wrapper;
+
+  const currentStyle = [
+    styles.defaults,
+    !auto ? styles.fullWidth : null,
+    typeof children !== 'string' ? styles.noLineHeight : null,
+    theme.colors[type] && theme.colors[type].text,
+    style,
+  ];
+  const font = {};
+  if (Wrapper === Text) {
+    const css = StyleSheet.flatten(currentStyle);
+    if (css.fontWeight === 'bold' && (!css.fontFamily || css.fontFamily === fontFamily.regular)) {
+      font.fontFamily = fontFamily.bold;
+    } else if (!css.fontFamily) {
+      font.fontFamily = fontFamily.regular;
+    }
+  }
   return (
     <Wrapper
       type={type}
@@ -70,12 +89,7 @@ const Link = compose(
       className={`${className} ${type}`}
       href={href}
       onPress={amp || blank ? undefined : (onPress || go(basepath, to, history, external, replace))}
-      style={[
-        styles.defaults,
-        !auto ? styles.fullWidth : null,
-        typeof children !== 'string' ? styles.noLineHeight : null,
-        style,
-      ]}
+      style={[currentStyle, font]}
       accessibilityRole="link"
     >
       {children}
@@ -84,6 +98,8 @@ const Link = compose(
 });
 
 Link.propTypes = {
+  theme: PropTypes.shape().isRequired,
+  fontFamily: PropTypes.shape().isRequired,
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     search: PropTypes.string.isRequired,

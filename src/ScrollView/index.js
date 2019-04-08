@@ -21,13 +21,18 @@ if (Platform.OS === 'android') {
   defaultScrollProps.onScroll = Keyboard.dismiss;
 }
 
-const ScrollView = React.forwardRef(({ children, style, ...props }, ref) => (
+const ScrollView = React.forwardRef(({
+  children,
+  style,
+  theme,
+  ...props
+}, ref) => (
   <RNScrollView
     ref={ref}
     keyboardShouldPersistTaps="always"
     keyboardDismissMode="on-drag"
     {...defaultScrollProps}
-    {...props}
+    {...theme.omit(props)}
     style={[styles.defaults, style]}
   >
     {children}
@@ -35,6 +40,7 @@ const ScrollView = React.forwardRef(({ children, style, ...props }, ref) => (
 ));
 
 ScrollView.propTypes = {
+  theme: PropTypes.shape().isRequired,
   children: PropTypes.node,
   style: StylePropType,
 };

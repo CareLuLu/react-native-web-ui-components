@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   full: {
     marginRight: 1,
-    color: '#EE2D68',
+    color: '#FEC430',
     fontSize: 18,
   },
   half: {
@@ -63,7 +63,7 @@ const Rating = ({
         <View
           className={`Rating__group Rating__group-${i}`}
           key={`full-${i}`}
-          style={[styles.half, { width: size, height: size }, fullStyle]}
+          style={[styles.half, { width: size, height: size }]}
         >
           <Icon
             name={iconName}
@@ -80,7 +80,7 @@ const Rating = ({
       {half > 0 ? (
         <View
           className={`Rating__group Rating__group-${full}`}
-          style={[styles.half, { width: size, height: size }, halfStyle]}
+          style={[styles.half, { width: size, height: size }]}
         >
           {Array(half).fill(0).map((v, i) => (
             <Icon
@@ -104,7 +104,7 @@ const Rating = ({
         <View
           className={`Rating__group Rating__group-${full + half + i}`}
           key={`empty-${i}`}
-          style={[styles.half, { width: size, height: size }, fullStyle]}
+          style={[styles.half, { width: size, height: size }]}
         >
           <Icon
             name={iconName}
@@ -141,7 +141,7 @@ Rating.defaultProps = {
   halfLeftStyle: styles.default,
   halfRightStyle: styles.default,
   rating: 0,
-  iconName: 'heart',
+  iconName: 'star',
 };
 
 export default withTheme('Rating')(Rating);

@@ -63,7 +63,8 @@ const Datepicker = withHandlers({
     return onDateChange(dateString);
   },
 })(({
-  theme,
+  themeTextStyle,
+  themeInputStyle,
   style,
   auto,
   customStyles,
@@ -72,35 +73,35 @@ const Datepicker = withHandlers({
   minDate,
   maxDate,
   disabled,
+  readonly,
   ...props
 }) => {
-  const themeStyles = theme.input[disabled ? 'disabled' : 'regular'];
   const mergedStyles = {
     dateInput: [
       styles.input,
-      themeStyles.background,
-      themeStyles.border,
-      themeStyles.opacity,
+      themeInputStyle.background,
+      themeInputStyle.border,
+      themeInputStyle.opacity,
       customStyles.input,
     ],
     dateIcon: [styles.icon, customStyles.icon],
     dateText: [
       styles.text,
-      themeStyles.text,
+      themeInputStyle.text,
       customStyles.text,
     ],
     placeholderText: [
       styles.placeholder,
-      themeStyles.placeholder,
+      themeInputStyle.placeholder,
       customStyles.placeholder,
     ],
     dateTouch: [styles.datepicker, customStyles.datepicker],
     dateTouchBody: [styles.datepicker, customStyles.datepicker],
-    btnTextConfirm: [styles.confirmText, theme.colors.black.text, customStyles.confirmText],
+    btnTextConfirm: [styles.confirmText, themeTextStyle.text, customStyles.confirmText],
   };
   const datepickerProps = {
     ...props,
-    disabled,
+    disabled: disabled || readonly,
     format: FORMAT,
     onDateChange: onChange,
     confirmBtnText: 'Confirm',
@@ -121,9 +122,11 @@ const Datepicker = withHandlers({
 });
 
 Datepicker.propTypes = {
-  theme: PropTypes.shape().isRequired,
+  themeTextStyle: PropTypes.shape().isRequired,
+  themeInputStyle: PropTypes.shape().isRequired,
   auto: PropTypes.bool,
   disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
   style: StylePropType,
   customStyles: StylePropType,
   placeholder: PropTypes.string,
@@ -135,6 +138,7 @@ Datepicker.propTypes = {
 Datepicker.defaultProps = {
   auto: false,
   disabled: false,
+  readonly: false,
   style: null,
   customStyles: {},
   placeholder: ' ',

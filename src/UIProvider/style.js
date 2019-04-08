@@ -1,4 +1,7 @@
 export default `
+  .hidden {
+    display: none;
+  }
   @media (max-width: 767px)  {
     .hidden-xs {
       display: none;
@@ -244,5 +247,8 @@ export default `
   }
   .button:hover {
     opacity: 0.8;
+  }
+  .TextInput {
+    outline: none;
   }
 `;

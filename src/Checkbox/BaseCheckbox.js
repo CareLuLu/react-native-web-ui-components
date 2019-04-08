@@ -30,9 +30,10 @@ const styles = StyleSheet.create({
 
 const BaseCheckbox = compose(
   withProps(({
-    theme,
+    type,
+    themeTextStyle,
+    themeInputStyle,
     checked,
-    disabled,
     iconChecked,
     iconUnchecked,
     styleChecked,
@@ -40,30 +41,38 @@ const BaseCheckbox = compose(
     styleCheckedText,
     styleUncheckedText,
     style, // eslint-disable-line
-  }) => {
-    const themeStyles = theme.input[disabled ? 'disabled' : 'regular'];
-    return {
-      className: `Checkbox ${!checked ? 'Checkbox__unchecked' : ''}`,
-      viewStyle: [styles.container, style],
-      iconName: checked ? iconChecked : iconUnchecked,
-      iconStyle: [
-        styles.icon,
-        checked
-          ? [themeStyles.selected, styleChecked]
-          : [themeStyles.unselected, styleUnchecked],
-      ],
-      textStyle: [
-        styles.text,
-        checked
-          ? [themeStyles.selected, styleCheckedText]
-          : [themeStyles.unselected, styleUncheckedText],
-      ],
-    };
-  }),
+  }) => ({
+    className: `${type} ${!checked ? `${type}__unchecked` : ''}`,
+    viewStyle: [styles.container, style],
+    iconName: checked ? iconChecked : iconUnchecked,
+    iconStyle: [
+      styles.icon,
+      checked
+        ? [themeInputStyle.selected, styleChecked]
+        : [themeInputStyle.unselected, styleUnchecked],
+    ],
+    textStyle: [
+      styles.text,
+      checked
+        ? [themeInputStyle.selected, styleCheckedText]
+        : [themeTextStyle.text, styleUncheckedText],
+    ],
+  })),
   withHandlers({
-    press: ({ checked, value, onPress }) => () => onPress(checked, value),
+    press: ({
+      checked,
+      value,
+      onPress,
+      disabled,
+      readonly,
+    }) => () => {
+      if (!disabled && !readonly) {
+        onPress(checked, value);
+      }
+    },
   }),
 )(({
+  type,
   text,
   className,
   viewStyle,
@@ -72,17 +81,21 @@ const BaseCheckbox = compose(
   textStyle,
   iconUncheckedContent,
   press,
+  disabled,
+  readonly,
 }) => (
   <React.Fragment>
     <Helmet>
       <style>
         {`
-          .Checkbox {
+          .${type} {
             cursor: pointer;
           }
-          .Checkbox__unchecked:hover .fa:before {
-            content: ${iconUncheckedContent};
-          }
+          ${!disabled && !readonly ? `
+            .${type}__unchecked:hover .fa:before {
+              content: "${iconUncheckedContent}";
+            }
+          ` : ''}
         `}
       </style>
     </Helmet>
@@ -101,10 +114,13 @@ const BaseCheckbox = compose(
 ));
 
 BaseCheckbox.propTypes = {
-  theme: PropTypes.shape().isRequired,
+  themeTextStyle: PropTypes.shape().isRequired,
+  themeInputStyle: PropTypes.shape().isRequired,
   text: PropTypes.string,
   value: PropTypes.any, // eslint-disable-line
   checked: PropTypes.bool,
+  disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
   onPress: PropTypes.func,
   style: StylePropType,
   styleChecked: StylePropType,
@@ -114,12 +130,15 @@ BaseCheckbox.propTypes = {
   iconChecked: PropTypes.string,
   iconUnchecked: PropTypes.string,
   iconUncheckedContent: PropTypes.string,
+  type: PropTypes.string,
 };
 
 BaseCheckbox.defaultProps = {
   text: null,
   value: true,
   checked: false,
+  disabled: false,
+  readonly: false,
   onPress: noop,
   style: styles.empty,
   styleChecked: styles.empty,
@@ -129,6 +148,7 @@ BaseCheckbox.defaultProps = {
   iconChecked: 'check-square',
   iconUnchecked: 'square',
   iconUncheckedContent: '\\f14a',
+  type: 'Checkbox',
 };
 
 export default BaseCheckbox;

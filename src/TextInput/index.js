@@ -21,17 +21,23 @@ if (Platform.OS === 'android') {
 }
 
 const TextInput = ({
-  themeInputStyle,
+  // Make sure we don't send hasError to RNTextInput
+  // since it's not a valid prop for <input>.
+  hasError,
   style,
   multiline,
   numberOfLines,
   disabled,
   readonly,
+  className,
+  theme,
+  themeInputStyle,
   ...props
 }) => (
   <RNTextInput
     {...androidProps}
-    {...props}
+    {...theme.omit(props)}
+    className={`TextInput ${className}`}
     multiline={multiline}
     numberOfLines={numberOfLines}
     style={[
@@ -43,18 +49,21 @@ const TextInput = ({
       multiline ? { height: 40 * numberOfLines } : null,
       style,
     ]}
-    editable={!disabled && !readonly}
+    editable={!(disabled || readonly)}
     placeholderTextColor={StyleSheet.flatten(themeInputStyle.placeholder).color}
   />
 );
 
 TextInput.propTypes = {
+  theme: PropTypes.shape().isRequired,
   themeInputStyle: PropTypes.shape().isRequired,
   style: StylePropType,
   multiline: PropTypes.bool,
   numberOfLines: PropTypes.number,
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
+  hasError: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 TextInput.defaultProps = {
@@ -63,6 +72,8 @@ TextInput.defaultProps = {
   numberOfLines: 1,
   readonly: false,
   disabled: false,
+  hasError: false,
+  className: '',
 };
 
 export default withTheme('TextInput')(TextInput);

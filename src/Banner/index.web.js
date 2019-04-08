@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import murmurhash from 'murmurhash';
 import compose from 'recompact/compose';
+import { pick } from '../utils';
 import stylePropType from '../StylePropType';
 import { withAmp } from '../Amp';
 import { withTheme } from '../Theme';
@@ -15,15 +16,6 @@ import Column from '../Column';
 const styles = StyleSheet.create({
   empty: {},
 });
-
-const pick = (...args) => {
-  for (let i = 0; i < args.length; i += 1) {
-    if (args[i] !== undefined && args[i] !== null) {
-      return args[i];
-    }
-  }
-  return args[args.length - 1];
-};
 
 const Banner = ({
   theme,

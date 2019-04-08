@@ -225,9 +225,9 @@ class Popup extends React.Component {
       return (
         <View
           style={styles.overlay}
-          className={`ReactModal__Overlay ReactModal__Overlay--after-open popup modal-slide ${className || ''} ${this.className}`}
+          className={`ReactModal__Overlay ReactModal__Overlay--after-open popup modal-slide NoAdjustment ${className || ''} ${this.className}`}
         >
-          <View className={`ReactModal__Content ReactModal__Content--after-open popup modal-slide ${className || ''} ${this.className}`}>
+          <View className={`ReactModal__Content ReactModal__Content--after-open popup modal-slide NoAdjustment ${className || ''} ${this.className}`}>
             {this.renderPopup()}
           </View>
         </View>
@@ -241,7 +241,7 @@ class Popup extends React.Component {
           fixed={fixed}
           animationType="slide"
           visible={false}
-          className={`${className || ''} ${this.className}`}
+          className={`NoAdjustment ${className || ''} ${this.className}`}
           followKeyboard={followKeyboard}
           shouldCloseOnEsc={shouldCloseOnEsc}
           onRequestClose={onClose}
@@ -255,7 +255,7 @@ class Popup extends React.Component {
         fixed={fixed}
         animationType="slide"
         visible={visible}
-        className={`${className || ''} ${this.className}`}
+        className={`NoAdjustment ${className || ''} ${this.className}`}
         followKeyboard={followKeyboard}
         shouldCloseOnEsc={shouldCloseOnEsc}
         onRequestClose={onClose}
