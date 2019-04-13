@@ -25,8 +25,9 @@ const Dropzone = ({
   accept,
   children,
   onDrop,
+  multiple,
 }) => (
-  <RNDropzone onDrop={onDrop} accept={accept}>
+  <RNDropzone onDrop={onDrop} accept={accept[0] === '*/*' ? null : accept} multiple={multiple}>
     {({ getRootProps, getInputProps }) => (
       <div {...getRootProps()} style={{ ...styles.container, ...StyleSheet.flatten(style || {}) }}>
         <input {...getInputProps()} />
@@ -43,6 +44,7 @@ Dropzone.propTypes = {
   onDrop: PropTypes.func,
   style: StylePropType,
   children: PropTypes.node,
+  multiple: PropTypes.bool,
 };
 
 Dropzone.defaultProps = {
@@ -50,6 +52,7 @@ Dropzone.defaultProps = {
   onDrop: noop,
   style: null,
   children: null,
+  multiple: true,
 };
 
 export default withTheme('Dropzone')(Dropzone);
