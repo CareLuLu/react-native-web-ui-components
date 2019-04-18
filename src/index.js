@@ -20,6 +20,7 @@ export { default as Draggable } from './Draggable';
 export { default as Dropzone } from './Dropzone';
 export { default as Helmet } from './Helmet';
 export { default as HideShowText } from './HideShowText';
+export { default as Hr } from './Hr';
 export { default as Icon } from './Icon';
 export { default as IconLink } from './IconLink';
 export { default as IconText } from './IconText';
