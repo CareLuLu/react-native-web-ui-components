@@ -53,11 +53,13 @@ const Hr = (props) => {
         }
       }
       />
-      <Text type={color} auto style={{ color, ...textShadowStyle }}>
-      &nbsp;
-        { text }
-      &nbsp;
-      </Text>
+      {text === null ? (
+        <Text type={color} auto style={{ color, ...textShadowStyle }}>
+        &nbsp;
+          { text }
+        &nbsp;
+        </Text>
+      ) : null}
       <View style={
         {
           flex: 0.5,
@@ -77,7 +79,7 @@ Hr.propTypes = {
   text: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
-  ]).isRequired,
+  ]),
   color: PropTypes.string,
   thickness: PropTypes.number,
   marginTop: PropTypes.number,
@@ -93,6 +95,7 @@ Hr.propTypes = {
 };
 
 Hr.defaultProps = {
+  text: null,
   color: '#FFFFFF',
   thickness: 1,
   marginTop: 1,
