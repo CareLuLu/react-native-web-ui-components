@@ -53,7 +53,7 @@ const Hr = (props) => {
         }
       }
       />
-      {text === null ? (
+      {text !== null ? (
         <Text type={color} auto style={{ color, ...textShadowStyle }}>
         &nbsp;
           { text }
