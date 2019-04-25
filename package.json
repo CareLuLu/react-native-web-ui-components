@@ -4,7 +4,7 @@
   "private": false,
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist && babel src -d dist && cp package.json dist/package.json && cp README.md dist/README.md && cp -r node_modules dist/node_modules && rm -rf ../../app/node_modules/react-native-web-ui-components && cp -r dist ../../app/node_modules/react-native-web-ui-components",
+    "build": "rm -rf dist && babel src -d dist && cp package.json dist/package.json && cp README.md dist/README.md",
     "lint": "eslint ./src -c ./.eslintrc --ext .js"
   },
   "author": "Gabriel Marques <gabriel@carelulu.com>",
