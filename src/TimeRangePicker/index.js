@@ -19,6 +19,7 @@ import { withTheme } from '../Theme';
 import Row from '../Row';
 import View from '../View';
 import Text from '../Text';
+import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
 
 const styles = StyleSheet.create({
@@ -81,6 +82,7 @@ const TimeCell = compose(
   selectedStyle,
   unselectedStyle,
   themeInputStyle,
+  filterTime,
 }) => {
   const reverse = pressed === value;
   let active = values.indexOf(value) >= 0;
@@ -98,7 +100,8 @@ const TimeCell = compose(
   if (pressed === null) {
     className += active ? ` ${id}__active` : ` ${id}__inactive`;
   }
-  if (disabled) {
+  const isDisabled = disabled || !filterTime(value);
+  if (isDisabled) {
     className += ` ${id}__disabled`;
   }
   const css = [{
@@ -116,7 +119,7 @@ const TimeCell = compose(
     css.push({ opacity: 0.2 });
     background.push({ backgroundColor: selectedStyle.color });
   }
-  if (disabled) {
+  if (isDisabled) {
     css.push(themeInputStyle.opacity);
     background.push({ backgroundColor: unselectedStyle.color });
   }
@@ -168,17 +171,24 @@ const TimeRangePicker = compose(
     value,
     decoder,
     name,
+    selectedStyle,
+    unselectedStyle,
   }) => ({
     id: `TimeRangePicker__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`,
     length: Math.ceil((maxTime - minTime) / interval),
     width: 100 / Math.ceil((maxTime - minTime) / interval),
     values: decoder(value).sort(sorter),
-    selectedStyle: StyleSheet.flatten(themeInputStyle.selected),
-    unselectedStyle: StyleSheet.flatten(themeInputStyle.unselected),
+    selectedStyle: StyleSheet.flatten([themeInputStyle.selected, selectedStyle]),
+    unselectedStyle: StyleSheet.flatten([themeInputStyle.unselected, unselectedStyle]),
   })),
   withStateHandlers({ pressed: null }, {
-    onStart: (__, { onFocus, disabled, readonly }) => (start) => {
-      if (disabled || readonly) {
+    onStart: (__, {
+      onFocus,
+      disabled,
+      readonly,
+      filterTime,
+    }) => (start) => {
+      if (disabled || readonly || !filterTime(start)) {
         return {};
       }
       onFocus();
@@ -225,6 +235,7 @@ const TimeRangePicker = compose(
       selectedStyle,
       unselectedStyle,
       themeInputStyle,
+      filterTime,
     }) => index => (
       <TimeCell
         id={id}
@@ -240,6 +251,7 @@ const TimeRangePicker = compose(
         selectedStyle={selectedStyle}
         unselectedStyle={unselectedStyle}
         themeInputStyle={themeInputStyle}
+        filterTime={filterTime}
       />
     ),
     renderHeader: ({ width, minTime, interval }) => index => (
@@ -337,6 +349,9 @@ TimeRangePicker.propTypes = {
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
   name: PropTypes.string,
+  filterTime: PropTypes.func,
+  selectedStyle: StylePropType,
+  unselectedStyle: StylePropType,
 };
 
 TimeRangePicker.defaultProps = {
@@ -352,6 +367,9 @@ TimeRangePicker.defaultProps = {
   disabled: false,
   readonly: false,
   name: '',
+  filterTime: () => true,
+  selectedStyle: {},
+  unselectedStyle: {},
 };
 
 export default withTheme('TimeRangePicker')(TimeRangePicker);

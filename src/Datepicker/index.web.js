@@ -84,8 +84,8 @@ const Datepicker = compose(
       const date = moment(event.target.value, format, true);
       if (date.isValid()) {
         if (
-          (minDate && !moment(minDate, FORMAT).isBefore(date)) // before min date
-          || (maxDate && !moment(maxDate, FORMAT).isAfter(date)) // after max date
+          (minDate && moment(minDate, FORMAT).isAfter(date)) // before min date
+          || (maxDate && moment(maxDate, FORMAT).isBefore(date)) // after max date
         ) {
           alert('This date cannot be selected. Please choose another one.'); // eslint-disable-line
           return onDateChange('');
