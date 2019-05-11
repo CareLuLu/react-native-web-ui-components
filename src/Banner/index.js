@@ -105,5 +105,5 @@ Banner.defaultProps = {
 
 export default compose(
   withScreen(),
-  withTheme('Banner')
+  withTheme('Banner'),
 )(Banner);
