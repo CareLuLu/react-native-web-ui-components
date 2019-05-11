@@ -33,7 +33,7 @@
     "prop-types": "^15.6.2",
     "react-datepicker": "^2.1.0",
     "react-draggable": "^3.2.1",
-    "react-dropzone": "9",
+    "react-dropzone": "10",
     "react-fontawesome": "^1.6.1",
     "react-helmet": "^5.2.0",
     "react-modal": "^3.6.1",
