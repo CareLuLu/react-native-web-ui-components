@@ -1,0 +1,10 @@
+sudo: false
+language:
+  - node_js
+node_js:
+  - "10"
+env:
+  - ACTION="run lint"
+  - ACTION="run build"
+script:
+  - yarn $ACTION
