@@ -1,6 +1,6 @@
 {
   "name": "react-native-web-ui-components",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -49,14 +49,14 @@
     "recompact": "^3.4.0"
   },
   "peerDependencies": {
-    "expo": "^^31.0.4",
-    "react": "^16.6.1",
-    "react-dom": "^16.6.1",
+    "expo": "^31.0.0 || ^32.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-native": "*",
-    "react-native-web": "^0.9.6",
-    "react-router": "^4.3.0",
-    "react-router-dom": "^4.3.0",
-    "react-router-native": "^4.3.0"
+    "react-native-web": "*",
+    "react-router": "^4.0.0 || ^5.0.0",
+    "react-router-dom": "^4.0.0 || ^5.0.0",
+    "react-router-native": "^4.0.0 || ^5.0.0"
   },
   "browserslist": [
     ">0.2%",
