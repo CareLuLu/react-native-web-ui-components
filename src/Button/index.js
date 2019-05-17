@@ -7,6 +7,7 @@ import {
   View,
   ViewPropTypes,
 } from 'react-native';
+import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 import Link from '../Link';
@@ -89,6 +90,7 @@ const Button = (props) => {
     auto,
     type,
     style,
+    textStyle,
     blank,
     onPress,
     replace,
@@ -100,10 +102,11 @@ const Button = (props) => {
   let width = null;
   let height = null;
   let isAuto = auto;
-  const buttonWidth = isAuto ? 'button-auto' : 'button-full';
+  let buttonWidth = isAuto ? 'button-auto' : 'button-full';
   const css = StyleSheet.flatten(style || {});
   if (css.width !== undefined) {
     isAuto = true;
+    buttonWidth = 'button-auto';
     width = { width: css.width };
   }
   if (css.height !== undefined) {
@@ -136,12 +139,15 @@ const Button = (props) => {
             type={getTextType(textType, type)}
             blank={blank}
             to={to}
-            style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall')]}
+            style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall'), textStyle]}
           >
             {children}
           </Link>
         ) : (
-          <Text type={getTextType(textType, type)} style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall')]}>
+          <Text
+            type={getTextType(textType, type)}
+            style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall'), textStyle]}
+          >
             {children}
           </Text>
         )}
@@ -159,6 +165,7 @@ Button.propTypes = {
   blank: PropTypes.bool,
   textType: PropTypes.string,
   style: ViewPropTypes.style,
+  textStyle: StylePropType,
   auto: PropTypes.bool,
   className: PropTypes.string,
   replace: PropTypes.bool,
@@ -180,6 +187,7 @@ Button.defaultProps = {
   blank: false,
   textType: null,
   style: null,
+  textStyle: null,
   nomargin: false,
   auto: false,
   className: '',
