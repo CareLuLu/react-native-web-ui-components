@@ -231,6 +231,8 @@ export default `
   }
   .button-wrapper {
     display: flex;
+  }
+  .button-wrapper.button-auto {
     width: max-content;
   }
   .button-wrapper.button-full {

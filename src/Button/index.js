@@ -97,11 +97,18 @@ const Button = (props) => {
     className,
     theme,
   } = props;
+  let isAuto = auto;
+  let buttonWidth = isAuto ? 'button-auto' : 'button-full';
+  const css = StyleSheet.flatten(style || {});
+  if (css.width !== undefined) {
+    isAuto = true;
+    buttonWidth = '';
+  }
   return (
     <TouchableOpacity
-      className={`${className} button-wrapper ${!auto ? 'button-full' : ''}`}
+      className={`${className} button-wrapper ${buttonWidth}`}
       onPress={onPress}
-      style={[auto ? styles.empty : styles.fullWidth, style]}
+      style={[isAuto ? styles.empty : styles.fullWidth, style]}
     >
       <View
         className={`button button-${type}`}
@@ -110,7 +117,7 @@ const Button = (props) => {
           theme.colors[type] && theme.colors[type].border,
           theme.colors[type] && theme.colors[type].background,
           styles[`${type}Outer`],
-          ifProp(props, 'auto'),
+          isAuto ? styles.auto : styles.empty,
           ifProp(props, 'flat'),
           ifProp(props, 'radius'),
           ifProp(props, 'nomargin'),
