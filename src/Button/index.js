@@ -97,12 +97,17 @@ const Button = (props) => {
     className,
     theme,
   } = props;
+  let width = null;
+  let height = null;
   let isAuto = auto;
-  let buttonWidth = isAuto ? 'button-auto' : 'button-full';
+  const buttonWidth = isAuto ? 'button-auto' : 'button-full';
   const css = StyleSheet.flatten(style || {});
   if (css.width !== undefined) {
     isAuto = true;
-    buttonWidth = '';
+    width = { width: css.width };
+  }
+  if (css.height !== undefined) {
+    height = { height: css.height };
   }
   return (
     <TouchableOpacity
@@ -121,6 +126,8 @@ const Button = (props) => {
           ifProp(props, 'flat'),
           ifProp(props, 'radius'),
           ifProp(props, 'nomargin'),
+          width,
+          height,
         ]}
       >
         {to ? (
