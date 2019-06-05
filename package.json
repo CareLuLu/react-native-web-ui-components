@@ -49,7 +49,7 @@
     "recompact": "^3.4.0"
   },
   "peerDependencies": {
-    "expo": "^31.0.0 || ^32.0.0",
+    "expo": "^31.0.0 || ^32.0.0 || ^33.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-native": "*",
