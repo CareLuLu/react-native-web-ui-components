@@ -12,7 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "7.4.4",
-    "@babel/core": "7.4.4",
+    "@babel/core": "7.4.5",
     "@babel/plugin-proposal-class-properties": "7.4.4",
     "@babel/plugin-transform-react-jsx": "7.3.0",
     "@babel/register": "7.4.4",
@@ -20,7 +20,7 @@
     "babel-plugin-lodash": "3.3.4",
     "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.0",
-    "eslint-plugin-import": "2.17.2",
+    "eslint-plugin-import": "2.17.3",
     "eslint-plugin-jsx-a11y": "6.2.1",
     "eslint-plugin-react": "7.13.0"
   },
