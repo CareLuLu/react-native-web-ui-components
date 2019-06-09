@@ -51,6 +51,8 @@ export { default as Theme } from './Theme';
 export { default as TimeRangePicker } from './TimeRangePicker';
 export { default as Title } from './Title';
 export { default as Tooltip } from './Tooltip';
+export { default as TouchableOpacity } from './TouchableOpacity';
+export { default as TouchableWithoutFeedback } from './TouchableWithoutFeedback';
 export { default as UIProvider } from './UIProvider';
 export { default as View } from './View';
 export { default as WebOnly } from './WebOnly';

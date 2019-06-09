@@ -109,12 +109,12 @@ const Datepicker = compose(
   excludeDates,
   css,
   name,
-  className,
   date,
   onRef,
   onFocus,
   onBlur,
   selectedDateColor,
+  className,
   ...props
 }) => {
   const id = `DatePicker__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`;
@@ -142,7 +142,7 @@ const Datepicker = compose(
     .react-datepicker-wrapper, .react-datepicker__input-container {
       width: 100%;
     }
-    .${id},
+    [data-class~="${id}"],
     .react-datepicker__input-container input.${id} {
       ${!auto ? 'width: 100%;' : ''}
     }

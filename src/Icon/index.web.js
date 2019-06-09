@@ -11,7 +11,11 @@ const styles = StyleSheet.create({
   defaults: {},
 });
 
-const Icon = ({ name, style, className }) => (
+const Icon = ({
+  name,
+  style,
+  className,
+}) => (
   <React.Fragment>
     <Helmet>
       <link
@@ -20,7 +24,7 @@ const Icon = ({ name, style, className }) => (
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       />
     </Helmet>
-    <Text className={className} style={[styles.defaults, style]}>
+    <Text data-class={className} style={[styles.defaults, style]}>
       <WebFontAwesome name={name} />
     </Text>
   </React.Fragment>

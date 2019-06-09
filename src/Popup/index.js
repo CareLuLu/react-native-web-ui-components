@@ -160,7 +160,7 @@ class Popup extends React.Component {
                 width: 100%;
                 padding: 10px;
               }
-              .Popup__logoContainer .image-responsive {
+              [data-class~="Popup__logoContainer"] [data-class~="image-responsive"] {
                 margin: 0 auto;
               }
               @media (min-width: 768px)  {

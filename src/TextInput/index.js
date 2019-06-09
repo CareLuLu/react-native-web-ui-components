@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { noop } from 'lodash';
 import { TextInput as RNTextInput, StyleSheet, Platform } from 'react-native';
 import { withTheme } from '../Theme';
 import StylePropType from '../StylePropType';
@@ -32,12 +33,14 @@ const TextInput = ({
   className,
   theme,
   themeInputStyle,
+  onRef,
   ...props
 }) => (
   <RNTextInput
     {...androidProps}
     {...theme.omit(props)}
-    className={`TextInput ${className}`}
+    ref={onRef}
+    data-class={`TextInput ${className}`}
     multiline={multiline}
     numberOfLines={numberOfLines}
     style={[
@@ -64,6 +67,7 @@ TextInput.propTypes = {
   disabled: PropTypes.bool,
   hasError: PropTypes.bool,
   className: PropTypes.string,
+  onRef: PropTypes.func,
 };
 
 TextInput.defaultProps = {
@@ -74,6 +78,7 @@ TextInput.defaultProps = {
   disabled: false,
   hasError: false,
   className: '',
+  onRef: noop,
 };
 
 export default withTheme('TextInput')(TextInput);

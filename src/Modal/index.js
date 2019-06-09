@@ -4,7 +4,6 @@ import {
   View as RNView,
   StyleSheet,
   ViewPropTypes,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import noop from 'lodash/noop';
 import compose from 'recompact/compose';
@@ -12,6 +11,7 @@ import * as Animatable from 'react-native-animatable';
 import Screen, { withKeyboard } from '../Screen';
 import { withTheme } from '../Theme';
 import View from '../View';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 /* eslint react/no-unused-state: 0 */
 /* eslint react/no-unused-prop-types: 0 */

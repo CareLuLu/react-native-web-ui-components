@@ -4,8 +4,6 @@ import {
   Modal,
   StyleSheet,
   Platform,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   DocumentPicker,
@@ -22,6 +20,8 @@ import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import View from '../View';
 import Text from '../Text';
+import TouchableOpacity from '../TouchableOpacity';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 const styles = StyleSheet.create({
   container: {

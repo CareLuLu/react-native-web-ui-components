@@ -74,18 +74,23 @@ const Link = compose(
     style,
   ];
   const font = {};
+  const classNameProp = {};
   if (Wrapper === Text) {
+    classNameProp['data-class'] = `${className} ${type}`;
     const css = StyleSheet.flatten(currentStyle);
     if (css.fontWeight === 'bold' && (!css.fontFamily || css.fontFamily === fontFamily.regular)) {
       font.fontFamily = fontFamily.bold;
     } else if (!css.fontFamily) {
       font.fontFamily = fontFamily.regular;
     }
+  } else {
+    classNameProp.className = `${className} ${type}`;
   }
+
   return (
     <Wrapper
+      {...classNameProp}
       target={blank ? '_blank' : undefined}
-      className={`${className} ${type}`}
       href={href}
       onPress={amp || blank ? undefined : (onPress || go(basepath, to, history, external, replace))}
       style={[currentStyle, font]}

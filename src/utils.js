@@ -34,6 +34,12 @@ const toFormat = (format, replaceMap) => {
   return f.join('');
 };
 
+export const isEmpty = value => (
+  value === ''
+  || value === null
+  || value === undefined
+);
+
 export const isSSR = () => process.env.SERVER === '1';
 
 export const blankOr = (value) => {
@@ -169,3 +175,5 @@ export const toTime = (value, format = 'MIX') => {
   }
   return toFormat(format, parseTime(value));
 };
+
+export const escapeRegExp = text => blankOr(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');

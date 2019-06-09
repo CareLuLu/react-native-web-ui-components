@@ -5,10 +5,11 @@ import noop from 'lodash/noop';
 import compose from 'recompact/compose';
 import withHandlers from 'recompact/withHandlers';
 import withState from 'recompact/withState';
-import { StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { StyleSheet, Linking } from 'react-native';
 import { withTheme } from '../Theme';
 import StylePropType from '../StylePropType';
 import Text from '../Text/NativeText';
+import TouchableOpacity from '../TouchableOpacity';
 
 const MAIL_REGEX = /^mailto:/i;
 const PHONE_REGEX = /^tel:/i;

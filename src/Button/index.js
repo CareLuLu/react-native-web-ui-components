@@ -1,16 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewPropTypes,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 import Link from '../Link';
+import View from '../View';
+import TouchableOpacity from '../TouchableOpacity';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -96,8 +93,8 @@ const Button = (props) => {
     replace,
     children,
     textType,
-    className,
     theme,
+    className,
   } = props;
   let width = null;
   let height = null;
@@ -164,7 +161,7 @@ Button.propTypes = {
   to: PropTypes.string,
   blank: PropTypes.bool,
   textType: PropTypes.string,
-  style: ViewPropTypes.style,
+  style: StylePropType,
   textStyle: StylePropType,
   auto: PropTypes.bool,
   className: PropTypes.string,

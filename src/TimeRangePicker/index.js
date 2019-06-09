@@ -1,11 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  StyleSheet,
-  Platform,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import times from 'lodash/times';
 import without from 'lodash/without';
 import uniq from 'lodash/uniq';
@@ -19,6 +14,8 @@ import { withTheme } from '../Theme';
 import Row from '../Row';
 import View from '../View';
 import Text from '../Text';
+import TouchableOpacity from '../TouchableOpacity';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
 
@@ -299,26 +296,26 @@ const TimeRangePicker = compose(
       <Helmet>
         <style>
           {`
-            .${id}__after,
-            .${id}__pressed,
-            .${id}__before,
-            .${id}__disabled {
+            [data-class~="${id}__after"],
+            [data-class~="${id}__pressed"],
+            [data-class~="${id}__before"],
+            [data-class~="${id}__disabled"] {
               user-drag: none; 
               user-select: none;
             }
-            .${id}__after.${id}__disable:hover,
-            .${id}__after.${id}__disable:hover ~ .${id}__after {
+            [data-class~="${id}__after"][data-class~="${id}__disable"]:hover,
+            [data-class~="${id}__after"][data-class~="${id}__disable"]:hover ~ [data-class~="${id}__after"] {
               ${!(disabled || readonly) ? 'opacity: 0.2 !important;' : ''}
               background-color: ${selectedStyle.color};
             }
-            .${id}__inactive:hover,
-            .${id}__after.${id}__enable:hover,
-            .${id}__after.${id}__enable:hover ~ .${id}__after {
+            [data-class~="${id}__inactive"]:hover,
+            [data-class~="${id}__after"][data-class~="${id}__enable"]:hover,
+            [data-class~="${id}__after"][data-class~="${id}__enable"]:hover ~ [data-class~="${id}__after"] {
               ${!(disabled || readonly) ? 'opacity: 1 !important;' : ''}
               background-color: ${selectedStyle.color};
             }
-            .${id}__disabled,
-            .${id}__disabled:hover {
+            [data-class~="${id}__disabled"],
+            [data-class~="${id}__disabled"]:hover {
               background-color: ${unselectedStyle.color};
             }
           `}

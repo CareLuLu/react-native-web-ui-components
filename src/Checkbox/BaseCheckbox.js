@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet } from 'react-native';
 import withHandlers from 'recompact/withHandlers';
 import withProps from 'recompact/withProps';
 import compose from 'recompact/compose';
@@ -10,6 +10,7 @@ import { Helmet, style } from '../Helmet';
 import Icon from '../Icon';
 import Text from '../Text';
 import View from '../View';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -88,11 +89,11 @@ const BaseCheckbox = compose(
     <Helmet>
       <style>
         {`
-          .${type} {
+          [data-class~="${type}"] {
             cursor: pointer;
           }
           ${!disabled && !readonly ? `
-            .${type}__unchecked:hover .fa:before {
+            [data-class~="${type}__unchecked"]:hover .fa:before {
               content: "${iconUncheckedContent}";
             }
           ` : ''}

@@ -16,7 +16,7 @@ const parse = (text, theme) => {
     let lastIndex = 0;
     parsedText.replace(LINK, (match, anchor, to, index) => {
       components.push(parsedText.substring(lastIndex, index));
-      components.push(<Link key={to} type={theme.colors.primary} to={to}>{anchor}</Link>);
+      components.push(<Link key={`${index}__${to}`} type={theme.colors.primary} to={to}>{anchor}</Link>);
       lastIndex = index + match.length;
     });
 

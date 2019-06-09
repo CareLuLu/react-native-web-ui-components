@@ -59,7 +59,7 @@ const Banner = ({
       <Helmet>
         <style>
           {`
-            .${className} {
+            [data-class~="${className}"] {
               width: 100%;
               height: ${fit ? '100vh' : `${height}px`};
               max-height: ${maxHeight || height}px;

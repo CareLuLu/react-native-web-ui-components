@@ -17,9 +17,6 @@ const styles = {
   inner: {},
 };
 
-// @TODO: Upgrade to latest react-dropzone version.
-// In order to upgrade, we need to be able to upgrade
-// to react >= 16.8
 const Dropzone = ({
   style,
   accept,
