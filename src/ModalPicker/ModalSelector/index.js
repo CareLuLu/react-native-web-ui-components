@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import NativeFontAwesome, { Icons } from 'react-native-fontawesome';
 import styles from './style';
-import ScrollView from '../ScrollView';
-import TouchableOpacity from '../TouchableOpacity';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
+import ScrollView from '../../ScrollView';
+import TouchableOpacity from '../../TouchableOpacity';
+import TouchableWithoutFeedback from '../../TouchableWithoutFeedback';
 
 /* Code copied from react-native-modal-selector and adapted for our needs */
 
