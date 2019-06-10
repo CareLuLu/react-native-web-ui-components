@@ -5,6 +5,7 @@ import View from '../View';
 import StylePropType from '../StylePropType';
 import Spinner from '../Spinner';
 import { withTheme } from '../Theme';
+import Text from '../Text';
 import DefaultItem from './Item';
 
 const styles = StyleSheet.create({
@@ -13,11 +14,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
   },
+  noSuggestions: {
+    padding: 5,
+    height: 30,
+    opacity: 0.7,
+  },
 });
 
 class Menu extends React.PureComponent {
   static propTypes = {
-    themeInputStyle: PropTypes.shape().isRequired,
+    theme: PropTypes.shape().isRequired,
     loading: PropTypes.bool.isRequired,
     items: PropTypes.arrayOf(PropTypes.any).isRequired,
     getItemValue: PropTypes.func.isRequired,
@@ -63,15 +69,16 @@ class Menu extends React.PureComponent {
       highlightedIndex,
       onSelect,
       getItemValue,
-      themeInputStyle,
+      theme,
     } = this.props;
 
+    const themeInputStyle = theme.input.regular;
     const containerStyle = [
       styles.container,
       themeInputStyle.border,
       themeInputStyle.background,
       themeInputStyle.opacity,
-      { height: (items.length * itemHeight) + 2 },
+      { height: (Math.max(items.length, 1) * itemHeight) + 2 },
       style,
     ];
     const { maxHeight, height } = StyleSheet.flatten(containerStyle);
@@ -96,7 +103,7 @@ class Menu extends React.PureComponent {
           onScroll={this.onScroll}
         >
           {loading ? <Spinner /> : null}
-          {items.map((item, i) => (
+          {items.length ? items.map((item, i) => (
             <Item
               {...this.props}
               item={item}
@@ -108,7 +115,9 @@ class Menu extends React.PureComponent {
               style={itemStyle}
               {...itemProps}
             />
-          ))}
+          )) : (
+            <Text style={styles.noSuggestions}>No suggestions...</Text>
+          )}
         </ScrollView>
       </View>
     );
