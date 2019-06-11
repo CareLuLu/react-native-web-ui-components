@@ -1,14 +1,13 @@
 import React from 'react';
+import renderer from 'react-test-renderer';
 import View from '../src/View';
 import { Provider as ThemeProvider } from '../src/Theme';
-import renderer from 'react-test-renderer';
 
 test('renders correctly', () => {
-   const tree = renderer.create(
-       <ThemeProvider>
-           <View>
-           </View>
-       </ThemeProvider>
-   ).toJSON();
-expect(tree).toMatchSnapshot();
+  const tree = renderer.create(
+    <ThemeProvider>
+      <View />
+    </ThemeProvider>,
+  ).toJSON();
+  expect(tree).toMatchSnapshot();
 });
