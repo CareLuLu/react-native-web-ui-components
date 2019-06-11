@@ -97,10 +97,10 @@ class Menu extends React.PureComponent {
     return (
       <View style={containerStyle}>
         <ScrollView
-          ref={this.onRef}
           style={themeInputStyle.background}
           scrollEventThrottle={1}
           onScroll={this.onScroll}
+          onRef={this.onRef}
         >
           {loading ? <Spinner /> : null}
           {items.length ? items.map((item, i) => (
