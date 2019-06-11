@@ -213,6 +213,7 @@ export default class ModalSelector extends React.Component {
         <View style={[styles.overlayStyle, this.props.overlayStyle]}>
           <View style={[styles.optionContainer, this.props.optionContainerStyle]}>
             <ScrollView
+              style={styles.optionScrollView}
               keyboardShouldPersistTaps={this.props.keyboardShouldPersistTaps}
               accessible={this.props.accessible}
               accessibilityLabel={this.props.scrollViewAccessibilityLabel}
