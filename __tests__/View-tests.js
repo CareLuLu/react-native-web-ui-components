@@ -6,7 +6,9 @@ import { Provider as ThemeProvider } from '../src/Theme';
 test('renders correctly', () => {
   const tree = renderer.create(
     <ThemeProvider>
-      <View />
+      <View className="Test__parent">
+        <View className="Test__child" />
+      </View>
     </ThemeProvider>,
   ).toJSON();
   expect(tree).toMatchSnapshot();

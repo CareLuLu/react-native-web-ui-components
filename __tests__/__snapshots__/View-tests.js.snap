@@ -2,12 +2,22 @@
 
 exports[`renders correctly 1`] = `
 <View
-  data-class=""
+  data-class="Test__parent"
   style={
     Array [
       undefined,
       undefined,
     ]
   }
-/>
+>
+  <View
+    data-class="Test__child"
+    style={
+      Array [
+        undefined,
+        undefined,
+      ]
+    }
+  />
+</View>
 `;
