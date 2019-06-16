@@ -49,9 +49,7 @@ const Item = compose(
       components.push(<Bold style={{ color: css.color }} key={`${index}__${match}`}>{match}</Bold>);
       lastIndex = index + match.length;
     });
-    if (lastIndex > 0) {
-      components.push(text.substring(lastIndex));
-    }
+    components.push(text.substring(lastIndex));
   }
   return (
     <Text onPress={onPress} style={textStyle} numberOfLines={numberOfLines} ellipsizeMode="tail">
