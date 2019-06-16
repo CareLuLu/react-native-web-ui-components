@@ -1,7 +1,10 @@
 {
   "extends": "airbnb",
   "parser": "babel-eslint",
-  "plugins": ["react"],
+  "plugins": [
+    "react",
+    "react-hooks"
+  ],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
@@ -36,6 +39,8 @@
     "browser": true
   },
   "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
     "import-extensions": 0,
     "jsx-a11y/anchor-is-valid": 0,
     "react/jsx-filename-extension": 0,
