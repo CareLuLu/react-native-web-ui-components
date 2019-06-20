@@ -100,7 +100,7 @@ class Menu extends React.PureComponent {
           style={themeInputStyle.background}
           scrollEventThrottle={1}
           onScroll={this.onScroll}
-          onRef={this.onRef}
+          ref={this.onRef}
         >
           {loading ? <Spinner /> : null}
           {items.length ? items.map((item, i) => (
