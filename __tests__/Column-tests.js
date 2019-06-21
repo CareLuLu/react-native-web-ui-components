@@ -4,8 +4,13 @@ import { Dimensions, StyleSheet } from 'react-native';
 import Column from '../src/Column';
 import { Provider as ThemeProvider } from '../src/Theme';
 
+let testDescription = '';
+let testData = '';
+
 // Test NOT Absolute, Case: 'lg'
-test('Column should render with {"width": "100%"}. Test Data: screen.type="lg" lg={12}', () => {
+testDescription = 'Column should render View with {"width": "100%"}.\n';
+testData = 'Test Data: screen.type="lg" lg={12}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -18,7 +23,9 @@ test('Column should render with {"width": "100%"}. Test Data: screen.type="lg" l
 });
 
 // Test NOT Absolute, Case: 'lg'
-test('Column should render with {"width": "91.66666667%"}. Test Data: screen.type="lg" lg=null md={11}', () => {
+testDescription = 'Column should render View with {"width": "91.66666667%"}.\n';
+testData = 'Test Data: screen.type="lg" lg=null md={11}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -31,7 +38,9 @@ test('Column should render with {"width": "91.66666667%"}. Test Data: screen.typ
 });
 
 // Test NOT Absolute, Case: 'lg'
-test('Column should render with {"width": "83.33333333%"}. Test Data: screen.type="lg" lg=null md=null sm={10}', () => {
+testDescription = 'Column should render View with {"width": "83.33333333%"}.\n';
+testData = 'Test Data: screen.type="lg" lg=null md=null sm={10}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -44,7 +53,9 @@ test('Column should render with {"width": "83.33333333%"}. Test Data: screen.typ
 });
 
 // Test NOT Absolute, Case: 'lg'
-test('Column should render with {"width": "75%"}. Test Data: screen.type="lg" lg=null md=null sm=null xs={9}', () => {
+testDescription = 'Column should render View with {"width": "75%"}.\n';
+testData = 'Test Data: screen.type="lg" lg=null md=null sm=null xs={9}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -57,7 +68,9 @@ test('Column should render with {"width": "75%"}. Test Data: screen.type="lg" lg
 });
 
 // Test NOT Absolute, Case: 'md'
-test('Column should render with {"width": "66.66666667%"}. Test Data: screen.type="md" md={8}', () => {
+testDescription = 'Column should render View with {"width": "66.66666667%"}.\n';
+testData = 'Test Data: screen.type="md" md={8}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -70,7 +83,9 @@ test('Column should render with {"width": "66.66666667%"}. Test Data: screen.typ
 });
 
 // Test NOT Absolute, Case: 'md'
-test('Column should render with {"width": "58.33333333%"}. Test Data: screen.type="md" md=null sm={7}', () => {
+testDescription = 'Column should render View with {"width": "58.33333333%"}.\n';
+testData = 'Test Data: screen.type="md" md=null sm={7}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -83,7 +98,9 @@ test('Column should render with {"width": "58.33333333%"}. Test Data: screen.typ
 });
 
 // Test NOT Absolute, Case: 'md'
-test('Column should render with {"width": "50%"}. Test Data: screen.type="md" md=null sm=null xs={6}', () => {
+testDescription = 'Column should render View with {"width": "50%"}.\n';
+testData = 'Test Data: screen.type="md" md=null sm=null xs={6}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -96,7 +113,9 @@ test('Column should render with {"width": "50%"}. Test Data: screen.type="md" md
 });
 
 // Test NOT Absolute, Case: 'sm'
-test('Column should render with {"width": "41.66666667%"}. Test Data: screen.type="sm" sm={5}', () => {
+testDescription = 'Column should render View with {"width": "41.66666667%"}.\n';
+testData = 'Test Data: screen.type="sm" sm={5}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'sm'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -109,7 +128,9 @@ test('Column should render with {"width": "41.66666667%"}. Test Data: screen.typ
 });
 
 // Test NOT Absolute, Case: 'sm'
-test('Column should render with {"width": "33.33333333%"}. Test Data: screen.type="sm" sm=null xs={4}', () => {
+testDescription = 'Column should render View with {"width": "33.33333333%"}.\n';
+testData = 'Test Data: screen.type="sm" sm=null xs={4}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'sm'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -122,7 +143,9 @@ test('Column should render with {"width": "33.33333333%"}. Test Data: screen.typ
 });
 
 // Test NOT Absolute, Case: default
-test('Column should render with {"width": "25%"}. Test Data: screen.type=[default] xs={3}', () => {
+testDescription = 'Column should render View with {"width": "25%"}.\n';
+testData = 'Test Data: screen.type=[default] xs={3}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'xs'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -134,8 +157,10 @@ test('Column should render with {"width": "25%"}. Test Data: screen.type=[defaul
   expect(tree).toMatchSnapshot();
 });
 
-// Test NOT Absolute, Case: default
-test('Column should render with {"width": "16.66666667%"}. Test Data: screen.type="md" md={2} absolute={false}', () => {
+// Test NOT Absolute, Case: md
+testDescription = 'Column should render View with {"width": "16.66666667%"}.\n';
+testData = 'Test Data: screen.type="md" md={2} absolute={false}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -147,8 +172,10 @@ test('Column should render with {"width": "16.66666667%"}. Test Data: screen.typ
   expect(tree).toMatchSnapshot();
 });
 
-// Test NOT Absolute, Case: default
-test('Column should render with {"width": "8.33333333%"}. Test Data: screen.type="sm" sm={1} absolute={false}', () => {
+// Test NOT Absolute, Case: sm
+testDescription = 'Column should render View with {"width": "8.33333333%"}.\n';
+testData = 'Test Data: screen.type="sm" sm={1} absolute={false}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'sm'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -161,7 +188,9 @@ test('Column should render with {"width": "8.33333333%"}. Test Data: screen.type
 });
 
 // Test NOT Absolute, Case: default
-test('Column should render with {"width": "8.33333333%"}. Test Data: screen.type=[default] xs={1} absolute={false}', () => {
+testDescription = 'Column should render View with {"width": "8.33333333%"}.\n';
+testData = 'Test Data: screen.type=[default] xs={1} absolute={false}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'not-in-list'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -174,7 +203,9 @@ test('Column should render with {"width": "8.33333333%"}. Test Data: screen.type
 });
 
 // Test NOT Absolute (false), Case: 'lg'
-test('Column should render with {"width": "100%"}. Test Data: screen.type="lg" lg={12} absolute={false}', () => {
+testDescription = 'Column should render View with {"width": "100%"}.\n';
+testData = 'Test Data: screen.type="lg" lg={12} absolute={false}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -187,7 +218,9 @@ test('Column should render with {"width": "100%"}. Test Data: screen.type="lg" l
 });
 
 // Test NOT Absolute (false), Width = 0
-test('Column should return null. Test Data: screen.type=[default] xs={0} absolute={false}', () => {
+testDescription = 'Column should return null.\n';
+testData = 'Test Data: screen.type=[default] xs={0} absolute={false}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'xs'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
 
@@ -200,7 +233,9 @@ test('Column should return null. Test Data: screen.type=[default] xs={0} absolut
 });
 
 // Test Absolute, Case: 'lg'
-test('Column should render with "width": 80. Test Data: screen.type="lg" lg={80} absolute={true}', () => {
+testDescription = 'Column should render View with "width": 80.\n';
+testData = 'Test Data: screen.type="lg" lg={80} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -213,7 +248,9 @@ test('Column should render with "width": 80. Test Data: screen.type="lg" lg={80}
 });
 
 // Test Absolute, Case: 'lg'
-test('Column should render with {"width": 60}. Test Data: screen.type="lg" lg=null md={60} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 60}.\n';
+testData = 'Test Data: screen.type="lg" lg=null md={60} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -226,7 +263,9 @@ test('Column should render with {"width": 60}. Test Data: screen.type="lg" lg=nu
 });
 
 // Test Absolute, Case: 'lg'
-test('Column should render with {"width": 40}. Test Data: screen.type="lg" lg=null md=null sm={40} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 40}.\n';
+testData = 'Test Data: screen.type="lg" lg=null md=null sm={40} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -239,7 +278,9 @@ test('Column should render with {"width": 40}. Test Data: screen.type="lg" lg=nu
 });
 
 // Test Absolute, Case: 'lg'
-test('Column should render with {"width": 20}. Test Data: screen.type="lg" lg=null md=null sm=null xs={20} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 20}.\n';
+testData = 'Test Data: screen.type="lg" lg=null md=null sm=null xs={20} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -252,7 +293,9 @@ test('Column should render with {"width": 20}. Test Data: screen.type="lg" lg=nu
 });
 
 // Test Absolute, Case: 'md'
-test('Column should render with {"width": 60}. Test Data: screen.type="md" md={60} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 60}.\n';
+testData = 'Test Data: screen.type="md" md={60} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -265,7 +308,9 @@ test('Column should render with {"width": 60}. Test Data: screen.type="md" md={6
 });
 
 // Test Absolute, Case: 'md'
-test('Column should render with {"width": 40}. Test Data: screen.type="md" md=null sm={40} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 40}.\n';
+testData = 'Test Data: screen.type="md" md=null sm={40} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -278,7 +323,9 @@ test('Column should render with {"width": 40}. Test Data: screen.type="md" md=nu
 });
 
 // Test Absolute, Case: 'md'
-test('Column should render with {"width": 20}. Test Data: screen.type="md" md=null sm=null xs={20} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 20}.\n';
+testData = 'Test Data: screen.type="md" md=null sm=null xs={20} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -291,7 +338,9 @@ test('Column should render with {"width": 20}. Test Data: screen.type="md" md=nu
 });
 
 // Test Absolute, Case: 'sm'
-test('Column should render with {"width": 40}. Test Data: screen.type="sm" sm={40} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 40}.\n';
+testData = 'Test Data: screen.type="sm" sm={40} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'sm'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -304,7 +353,9 @@ test('Column should render with {"width": 40}. Test Data: screen.type="sm" sm={4
 });
 
 // Test Absolute, Case: 'sm'
-test('Column should render with {"width": 20}. Test Data: screen.type="sm" sm=null xs={20} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 20}.\n';
+testData = 'Test Data: screen.type="sm" sm=null xs={20} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'sm'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -317,7 +368,9 @@ test('Column should render with {"width": 20}. Test Data: screen.type="sm" sm=nu
 });
 
 // Test Absolute, Case: default
-test('Column should render with {"width": 20}. Test Data: screen.type=[default] xs={20} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 20}.\n';
+testData = 'Test Data: screen.type=[default] xs={20} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'xs'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -329,8 +382,10 @@ test('Column should render with {"width": 20}. Test Data: screen.type=[default] 
   expect(tree).toMatchSnapshot();
 });
 
-// Test Absolute, Case: default
-test('Column should render with {"width": 60}. Test Data: screen.type="md" md={60} absolute={true}', () => {
+// Test Absolute, Case: md
+testDescription = 'Column should render View with {"width": 60}.\n';
+testData = 'Test Data: screen.type="md" md={60} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'md'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -342,8 +397,10 @@ test('Column should render with {"width": 60}. Test Data: screen.type="md" md={6
   expect(tree).toMatchSnapshot();
 });
 
-// Test Absolute, Case: default
-test('Column should render with {"width": 20}. Test Data: screen.type="sm" sm={20} absolute={true}', () => {
+// Test Absolute, Case: sm
+testDescription = 'Column should render View with {"width": 20}.\n';
+testData = 'Test Data: screen.type="sm" sm={20} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'sm'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -356,7 +413,9 @@ test('Column should render with {"width": 20}. Test Data: screen.type="sm" sm={2
 });
 
 // Test Absolute, Case: default
-test('Column should render with {"width": 20}. Test Data: screen.type=[default] xs={20} absolute={true}', () => {
+testDescription = 'Column should render View with {"width": 20}.\n';
+testData = 'Test Data: screen.type=[default] xs={20} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'not-in-list'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -368,8 +427,10 @@ test('Column should render with {"width": 20}. Test Data: screen.type=[default] 
   expect(tree).toMatchSnapshot();
 });
 
-// Test Absolute (false), Case: 'lg'
-test('Column should render with {"width": 100}. Test Data: screen.type="lg" lg={100} absolute={true}', () => {
+// Test Absolute, Case: 'lg'
+testDescription = 'Column should render View with {"width": 100}.\n';
+testData = 'Test Data: screen.type="lg" lg={100} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -381,8 +442,10 @@ test('Column should render with {"width": 100}. Test Data: screen.type="lg" lg={
   expect(tree).toMatchSnapshot();
 });
 
-// Test Absolute (false), Width = 0
-test('Column should return null. Test Data: screen.type=[default] xs={0} absolute={true}', () => {
+// Test Absolute, Width = 0
+testDescription = 'Column should return null.\n';
+testData = 'Test Data: screen.type=[default] xs={0} absolute={true}';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'xs'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -395,7 +458,9 @@ test('Column should return null. Test Data: screen.type=[default] xs={0} absolut
 });
 
 // Test Default Style
-test('Column should return default style only (alignItems, flexDirection, justifyContent). Test Data: screen.type=[default] xs=null style=null', () => {
+testDescription = 'Column should return default style only (alignItems, flexDirection, justifyContent).\n';
+testData = 'Test Data: screen.type=[default] xs=null style=null';
+test(testDescription + testData, () => {
   const screen = Dimensions.get('window');
   screen.type = 'xs'; // Mocked screen.type. Hence, the following are ignored: screen.width, screen.height
 
@@ -408,7 +473,9 @@ test('Column should return default style only (alignItems, flexDirection, justif
 });
 
 // Test Default Style
-test('Column should return default style only (alignItems, flexDirection, justifyContent). Test Data: screen.type=[default] xs=null style={}', () => {
+testDescription = 'Column should return default style only (alignItems, flexDirection, justifyContent).\n';
+testData = 'Test Data: screen.type=[default] xs=null style={}';
+test(testDescription + testData, () => {
   const styles = StyleSheet.create({
   });
 
@@ -424,7 +491,9 @@ test('Column should return default style only (alignItems, flexDirection, justif
 });
 
 // Test Default Style with other Style
-test('Column should return default style (alignItems, flexDirection, justifyContent) and other style (margin). Test Data: screen.type=[default] xs=null style={margin:1}', () => {
+testDescription = 'Column should return these styles: alignItems, flexDirection, justifyContent and margin.\n';
+testData = 'Test Data: screen.type=[default] xs=null style={margin:1}';
+test(testDescription + testData, () => {
   const styles = StyleSheet.create({
     margin: 1,
   });
@@ -441,7 +510,9 @@ test('Column should return default style (alignItems, flexDirection, justifyCont
 });
 
 // Test Style and NOT Absolute
-test('Column should render with {"width": "100%"} and {"margin": 1}. Test Data: screen.type="lg" lg={12} style={margin:1}', () => {
+testDescription = 'Column should render View with {"width": "100%"} and {"margin": 1}.\n';
+testData = 'Test Data: screen.type="lg" lg={12} style={margin:1}';
+test(testDescription + testData, () => {
   const styles = StyleSheet.create({
     margin: 1,
   });
@@ -458,7 +529,9 @@ test('Column should render with {"width": "100%"} and {"margin": 1}. Test Data: 
 });
 
 // Test Style and Absolute
-test('Column should render with {"width": 80} and {"margin": 1}. Test Data: screen.type="lg" lg={80} absolute={true} style={margin:1}', () => {
+testDescription = 'Column should render View with {"width": 80} and {"margin": 1}.\n';
+testData = 'Test Data: screen.type="lg" lg={80} absolute={true} style={margin:1}';
+test(testDescription + testData, () => {
   const styles = StyleSheet.create({
     margin: 1,
   });
@@ -469,6 +542,94 @@ test('Column should render with {"width": 80} and {"margin": 1}. Test Data: scre
   const tree = renderer.create(
     <ThemeProvider>
       <Column xs={20} sm={40} md={60} lg={80} screen={screen} style={styles} absolute />
+    </ThemeProvider>,
+  ).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+// Test Outer and Inner columns
+testDescription = 'Column should render View with outer and inner column (parent and child).\n'
+                    + 'Outer column (parent) should have a {"width": 80} and {"margin": 1}.\n'
+                    + 'Inner column (child) should have a {"width": "41.66666667%"} and {"margin": 0.2}.\n';
+testData = 'Test Data: screen.type="lg"\n'
+              + 'Outer_Column { lg={80} absolute={true} style={margin:1} }\n'
+              + 'Inner_Column { lg={5} absolute={false} style={margin:0.2} }';
+test(testDescription + testData, () => {
+  const stylesOfOuterColumn = StyleSheet.create({
+    margin: 1,
+  });
+
+  const stylesOfInnerColumn = StyleSheet.create({
+    margin: 0.2,
+  });
+
+  const screen = Dimensions.get('window');
+  screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
+
+  const tree = renderer.create(
+    <ThemeProvider>
+      <Column
+        xs={20}
+        sm={40}
+        md={60}
+        lg={80}
+        screen={screen}
+        style={stylesOfOuterColumn}
+        absolute
+      >
+        <Column
+          xs={2}
+          sm={3}
+          md={4}
+          lg={5}
+          screen={screen}
+          style={stylesOfInnerColumn}
+        />
+      </Column>
+    </ThemeProvider>,
+  ).toJSON();
+  expect(tree).toMatchSnapshot();
+});
+
+// Test Outer and Inner columns
+testDescription = 'Column should render View with outer and inner column (parent and child).\n'
+                    + 'Outer column (parent) should have a {"width": "100%"} and {"margin": 1}.\n'
+                    + 'Inner column (child) should have a {"width": "80"} and {"margin": 0.2}.\n';
+testData = 'Test Data: screen.type="lg"\n'
+            + 'Outer_Column { lg={12} absolute={false} style={margin:1} }\n'
+            + 'Inner_Column { lg={80} absolute={true} style={margin:0.2} }';
+test(testDescription + testData, () => {
+  const stylesOfOuterColumn = StyleSheet.create({
+    margin: 1,
+  });
+
+  const stylesOfInnerColumn = StyleSheet.create({
+    margin: 0.2,
+  });
+
+  const screen = Dimensions.get('window');
+  screen.type = 'lg'; // Mocked screen.type. Hence, the following are ignored: screen.widght, screen.height
+
+  const tree = renderer.create(
+    <ThemeProvider>
+      <Column
+        xs={9}
+        sm={10}
+        md={11}
+        lg={12}
+        screen={screen}
+        style={stylesOfOuterColumn}
+      >
+        <Column
+          xs={20}
+          sm={40}
+          md={60}
+          lg={80}
+          screen={screen}
+          style={stylesOfInnerColumn}
+          absolute
+        />
+      </Column>
     </ThemeProvider>,
   ).toJSON();
   expect(tree).toMatchSnapshot();
