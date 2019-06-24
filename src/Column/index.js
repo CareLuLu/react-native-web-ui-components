@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
-  width0: { width: '100%' },
   width1: { width: '8.33333333%' },
   width2: { width: '16.66666667%' },
   width3: { width: '25%' },
