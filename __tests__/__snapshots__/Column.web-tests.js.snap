@@ -1,0 +1,254 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Column for Web should render View with class = \` col-lg-10 col-md-10 col-sm-10\`.
+The following classes should not be displayed: col-xs.
+Test Data: sm={10} 1`] = `
+<View
+  data-class=" col-sm-10 col-md-10 col-lg-10"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-lg-11 col-md-11\`.
+The following classes should not be displayed: col-sm col-xs.
+Test Data: md={11} 1`] = `
+<View
+  data-class=" col-md-11 col-lg-11"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-lg-12\`.
+The following classes should not be displayed: col-md col-sm col-xs.
+Test Data: lg={12} 1`] = `
+<View
+  data-class=" col-lg-12"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-xs-9 col-sm-9 col-md-9 col-lg-9\`.
+Test Data: xs={9} 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-9 col-md-9 col-lg-9"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-xs-9 col-sm-10 col-md-10 col-lg-10\`.
+Test Data: sm={10} xs={9} 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-10 col-md-10 col-lg-10"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-xs-9 col-sm-10 col-md-11 col-lg-11\`.
+Test Data: md={11} sm={10} xs={9} 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-10 col-md-11 col-lg-11"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-xs-9 col-sm-10 col-md-11 col-lg-12\` and "margin": 1.
+Test Data: lg={12} md={11} sm={10} xs={9} absolute={true} "margin": 1 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-10 col-md-11 col-lg-12"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        Object {
+          "margin": 1,
+        },
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-xs-9 col-sm-10 col-md-11 col-lg-12\` and "width": 9.
+Test Data: lg={12} md={11} sm={10} xs={9} absolute={true} 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-10 col-md-11 col-lg-12"
+  style={
+    Array [
+      undefined,
+      Array [
+        Array [
+          undefined,
+          undefined,
+        ],
+        Object {
+          "width": 9,
+        },
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \` col-xs-9 col-sm-10 col-md-11 col-lg-12\`.
+Test Data: lg={12} md={11} sm={10} xs={9} 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-10 col-md-11 col-lg-12"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with class = \`\`.
+The following classes should not be displayed: col-xs col-sm col-md col-lg
+Test Data: xs=null sm=null md=null lg=null 1`] = `
+<View
+  data-class=""
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column for Web should render View with outer and inner column (parent and child).
+Outer column (parent) should have class = \` col-xs-9 col-sm-10 col-md-11 col-lg-12\`, "width": 9, and "margin": 1
+Inner column (child) should have class = \` col-xs-1 col-sm-2 col-md-3 col-lg-4\`, and "margin": 0.2
+Test Data: Outer_Column { lg={12} md={11} sm={10} xs={9} absolute={true} "margin": 1}
+Inner_Column { lg={4} md={3} sm={2} xs={1} absolute={false} "margin": 0.2} 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-10 col-md-11 col-lg-12"
+  style={
+    Array [
+      undefined,
+      Array [
+        Array [
+          undefined,
+          Object {
+            "margin": 1,
+          },
+        ],
+        Object {
+          "width": 9,
+        },
+      ],
+    ]
+  }
+>
+  <View
+    data-class=" col-xs-1 col-sm-2 col-md-3 col-lg-4"
+    style={
+      Array [
+        undefined,
+        Array [
+          undefined,
+          Object {
+            "margin": 0.2,
+          },
+        ],
+      ]
+    }
+  />
+</View>
+`;
+
+exports[`Column for Web should render View with outer and inner column (parent and child).
+Outer column (parent) should have class = \` col-xs-9 col-sm-10 col-md-11 col-lg-12\`, and "margin": 1.
+Inner column (child) should have class = \` col-xs-1 col-sm-2 col-md-3 col-lg-4\`, "width": 1, and "margin": 0.2
+Test Data: Outer_Column { lg={12} md={11} sm={10} xs={9} absolute={false} "margin": 1}
+Inner_Column { lg={4} md={3} sm={2} xs={1} absolute={true} "margin": 0.2} 1`] = `
+<View
+  data-class=" col-xs-9 col-sm-10 col-md-11 col-lg-12"
+  style={
+    Array [
+      undefined,
+      Array [
+        undefined,
+        Object {
+          "margin": 1,
+        },
+      ],
+    ]
+  }
+>
+  <View
+    data-class=" col-xs-1 col-sm-2 col-md-3 col-lg-4"
+    style={
+      Array [
+        undefined,
+        Array [
+          Array [
+            undefined,
+            Object {
+              "margin": 0.2,
+            },
+          ],
+          Object {
+            "width": 1,
+          },
+        ],
+      ]
+    }
+  />
+</View>
+`;

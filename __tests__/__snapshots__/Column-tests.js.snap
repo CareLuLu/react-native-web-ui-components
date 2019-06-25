@@ -1,0 +1,828 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Column should render View with "width": 80.
+Test Data: screen.type="lg" lg={80} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 80,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "8.33333333%"}.
+Test Data: screen.type="sm" sm={1} absolute={false} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "8.33333333%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "8.33333333%"}.
+Test Data: screen.type=[default] xs={1} absolute={false} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "8.33333333%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "16.66666667%"}.
+Test Data: screen.type="md" md={2} absolute={false} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "16.66666667%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "25%"}.
+Test Data: screen.type=[default] xs={3} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "25%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "33.33333333%"}.
+Test Data: screen.type="sm" sm=null xs={4} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "33.33333333%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "41.66666667%"}.
+Test Data: screen.type="sm" sm={5} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "41.66666667%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "50%"}.
+Test Data: screen.type="md" md=null sm=null xs={6} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "50%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "58.33333333%"}.
+Test Data: screen.type="md" md=null sm={7} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "58.33333333%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "66.66666667%"}.
+Test Data: screen.type="md" md={8} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "66.66666667%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "75%"}.
+Test Data: screen.type="lg" lg=null md=null sm=null xs={9} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "75%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "83.33333333%"}.
+Test Data: screen.type="lg" lg=null md=null sm={10} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "83.33333333%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "91.66666667%"}.
+Test Data: screen.type="lg" lg=null md={11} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "91.66666667%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "100%"} and {"margin": 1}.
+Test Data: screen.type="lg" lg={12} style={margin:1} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        Object {
+          "margin": 1,
+        },
+      ],
+      Object {
+        "width": "100%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "100%"}.
+Test Data: screen.type="lg" lg={12} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "100%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": "100%"}.
+Test Data: screen.type="lg" lg={12} absolute={false} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": "100%",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 20}.
+Test Data: screen.type="lg" lg=null md=null sm=null xs={20} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 20,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 20}.
+Test Data: screen.type="md" md=null sm=null xs={20} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 20,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 20}.
+Test Data: screen.type="sm" sm={20} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 20,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 20}.
+Test Data: screen.type="sm" sm=null xs={20} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 20,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 20}.
+Test Data: screen.type=[default] xs={20} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 20,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 20}.
+Test Data: screen.type=[default] xs={20} absolute={true} 2`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 20,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 40}.
+Test Data: screen.type="lg" lg=null md=null sm={40} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 40,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 40}.
+Test Data: screen.type="md" md=null sm={40} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 40,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 40}.
+Test Data: screen.type="sm" sm={40} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 40,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 60}.
+Test Data: screen.type="lg" lg=null md={60} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 60,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 60}.
+Test Data: screen.type="md" md={60} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 60,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 60}.
+Test Data: screen.type="md" md={60} absolute={true} 2`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 60,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 80} and {"margin": 1}.
+Test Data: screen.type="lg" lg={80} absolute={true} style={margin:1} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        Object {
+          "margin": 1,
+        },
+      ],
+      Object {
+        "width": 80,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with {"width": 100}.
+Test Data: screen.type="lg" lg={100} absolute={true} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+      Object {
+        "width": 100,
+      },
+    ]
+  }
+/>
+`;
+
+exports[`Column should render View with outer and inner column (parent and child).
+Outer column (parent) should have a {"width": "100%"} and {"margin": 1}.
+Inner column (child) should have a {"width": "80"} and {"margin": 0.2}.
+Test Data: screen.type="lg"
+Outer_Column { lg={12} absolute={false} style={margin:1} }
+Inner_Column { lg={80} absolute={true} style={margin:0.2} } 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        Object {
+          "margin": 1,
+        },
+      ],
+      Object {
+        "width": "100%",
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+        },
+        Array [
+          undefined,
+          Object {
+            "margin": 0.2,
+          },
+        ],
+        Object {
+          "width": 80,
+        },
+      ]
+    }
+  />
+</View>
+`;
+
+exports[`Column should render View with outer and inner column (parent and child).
+Outer column (parent) should have a {"width": 80} and {"margin": 1}.
+Inner column (child) should have a {"width": "41.66666667%"} and {"margin": 0.2}.
+Test Data: screen.type="lg"
+Outer_Column { lg={80} absolute={true} style={margin:1} }
+Inner_Column { lg={5} absolute={false} style={margin:0.2} } 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        Object {
+          "margin": 1,
+        },
+      ],
+      Object {
+        "width": 80,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+        },
+        Array [
+          undefined,
+          Object {
+            "margin": 0.2,
+          },
+        ],
+        Object {
+          "width": "41.66666667%",
+        },
+      ]
+    }
+  />
+</View>
+`;
+
+exports[`Column should return default style only (alignItems, flexDirection, justifyContent).
+Test Data: screen.type=[default] xs=null style={} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        Object {},
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column should return default style only (alignItems, flexDirection, justifyContent).
+Test Data: screen.type=[default] xs=null style=null 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        undefined,
+      ],
+    ]
+  }
+/>
+`;
+
+exports[`Column should return null.
+Test Data: screen.type=[default] xs={0} absolute={false} 1`] = `null`;
+
+exports[`Column should return null.
+Test Data: screen.type=[default] xs={0} absolute={true} 1`] = `null`;
+
+exports[`Column should return these styles: alignItems, flexDirection, justifyContent and margin.
+Test Data: screen.type=[default] xs=null style={margin:1} 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "flex-start",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      Array [
+        undefined,
+        Object {
+          "margin": 1,
+        },
+      ],
+    ]
+  }
+/>
+`;
