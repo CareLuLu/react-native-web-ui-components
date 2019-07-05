@@ -1,0 +1,47 @@
+---
+name: View
+menu: Components
+route: /View
+---
+
+import { Playground, Props } from 'docz';
+import { Provider as ThemeProvider } from '../src/Theme/index';
+import View from '../src/View/index';
+import NativeText from '../src/Text/NativeText';
+
+# View
+`View` utilizes the `View of react-native`. It is a container that 
+supports the layout and is designed to be nested inside other views
+and can have 0 to many children of any type 
+[[1]](https://facebook.github.io/react-native/docs/view.html).
+In addition, `View` requires the use of a theme provider to be able 
+to inject a theme.
+
+## Properties of View
+| **Prop**      | **Type**                   | **Default** | **Required** |
+|:--------------|:---------------------------|:------------|:-------------|
+| **theme**     | Shape                      | null        | Yes          |
+| **classname** | String                     | ''          | No           | 
+| **children**  | Node                       | null        | No           | 
+
+Since View utilizes the `View of react-native`, it also inherits the props
+of `View of react-native` (e.g. style). For the list of props of 
+`View of react-native`, please see this 
+[link](https://facebook.github.io/react-native/docs/view.html).
+
+## Basic usage of View
+The following renders a View component inside another View component.
+<Playground>
+      <ThemeProvider>
+            <View class="main_container" style={{backgroundColor: '#20B2AA'}}>
+                  <NativeText>Text inside a View.</NativeText>
+                  <View class="inner_container" style={{backgroundColor: '#FFB6C1'}}>
+                        <NativeText>Text inside another View.</NativeText>
+                  </View>
+            </View>
+      </ThemeProvider>
+</Playground>
+
+Reference <br />
+"View · React Native". "React-Native". 
+      https://facebook.github.io/react-native/docs/view.html

@@ -7,7 +7,9 @@
     "build": "rm -rf dist && babel src -d dist && cp package.json dist/package.json && cp README.md dist/README.md",
     "build:windows": "rmdir /s /q dist && babel src -d dist && copy package.json dist\\package.json && copy README.md dist\\README.md",
     "lint": "eslint ./src -c ./.eslintrc --ext .js",
-    "test": "jest"
+    "test": "jest",
+    "docs:dev": "docz dev",
+    "docs:build": "docz build"
   },
   "jest": {
     "preset": "react-native"
@@ -23,6 +25,8 @@
     "babel-eslint": "10.0.1",
     "babel-jest": "^24.8.0",
     "babel-plugin-lodash": "3.3.4",
+    "docz": "^1.2.0",
+    "docz-theme-default": "^1.2.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-plugin-import": "2.17.3",
@@ -30,7 +34,9 @@
     "eslint-plugin-react": "7.13.0",
     "jest": "^24.8.0",
     "react": "^16.8.6",
+    "react-art": "^16.8.6",
     "react-native": "^0.59.9",
+    "react-native-web": "^0.11.4",
     "react-test-renderer": "^16.8.6"
   },
   "dependencies": {
