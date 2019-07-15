@@ -11,7 +11,7 @@ import { isEmpty, escapeRegExp } from '../utils';
 const styles = StyleSheet.create({
   defaults: {
     padding: 5,
-    height: 30,
+    minHeight: 30,
     color: '#FFFFFF',
   },
 });
