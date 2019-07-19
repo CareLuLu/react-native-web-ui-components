@@ -340,7 +340,7 @@ class Autocomplete extends EventHandler {
       2
       + (items.length * itemHeight)
       + (loading ? spinnerHeight : 0)
-      + (!items.length ? emptyResultHeight : 0)
+      + (!items.length && !loading ? emptyResultHeight : 0)
     );
     let mobileMenuStyle = null;
     if (Platform.OS !== 'web') {
