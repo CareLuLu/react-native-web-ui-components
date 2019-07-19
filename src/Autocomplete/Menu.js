@@ -107,7 +107,7 @@ class Menu extends React.PureComponent {
           ref={this.onRef}
         >
           {loading ? <Spinner key="spinner" /> : null}
-          {items.length ? items.map((item, i) => (
+          {items.map((item, i) => (
             <Item
               {...this.props}
               item={item}
@@ -119,9 +119,8 @@ class Menu extends React.PureComponent {
               style={itemStyle}
               {...itemProps}
             />
-          )) : (
-            <EmptyResult key="emptyResult" />
-          )}
+          ))}
+          {!items.length && !loading ? <EmptyResult key="emptyResult" /> : null}
         </ScrollView>
       </View>
     );
