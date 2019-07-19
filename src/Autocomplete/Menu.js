@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { StyleSheet, ScrollView } from 'react-native';
 import View from '../View';
 import StylePropType from '../StylePropType';
-import Spinner from '../Spinner';
 import { withTheme } from '../Theme';
-import Text from '../Text';
 import DefaultItem from './Item';
+import DefaultSpinner from './Spinner';
+import DefaultEmptyResult from './EmptyResult';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,11 +34,15 @@ class Menu extends React.PureComponent {
     itemStyle: StylePropType,
     itemHeight: PropTypes.number,
     itemProps: PropTypes.shape(),
+    Spinner: PropTypes.elementType,
+    EmptyResult: PropTypes.elementType,
   };
 
   static defaultProps = {
     Item: DefaultItem,
     itemHeight: 30,
+    Spinner: DefaultSpinner,
+    EmptyResult: DefaultEmptyResult,
     style: null,
     itemStyle: null,
     itemProps: {},
@@ -64,12 +68,14 @@ class Menu extends React.PureComponent {
       items,
       Item,
       itemStyle,
-      itemHeight,
       itemProps,
+      itemHeight,
       highlightedIndex,
       onSelect,
       getItemValue,
       theme,
+      Spinner,
+      EmptyResult,
     } = this.props;
 
     const themeInputStyle = theme.input.regular;
@@ -78,7 +84,6 @@ class Menu extends React.PureComponent {
       themeInputStyle.border,
       themeInputStyle.background,
       themeInputStyle.opacity,
-      { height: (Math.max(items.length, 1) * itemHeight) + 2 },
       style,
     ];
     const { maxHeight, height } = StyleSheet.flatten(containerStyle);
@@ -93,7 +98,6 @@ class Menu extends React.PureComponent {
         setTimeout(() => scrollView.scrollTo({ x: 0, y: fy + itemHeight - currentHeight }));
       }
     }
-
     return (
       <View style={containerStyle}>
         <ScrollView
@@ -102,7 +106,7 @@ class Menu extends React.PureComponent {
           onScroll={this.onScroll}
           ref={this.onRef}
         >
-          {loading ? <Spinner /> : null}
+          {loading ? <Spinner key="spinner" /> : null}
           {items.length ? items.map((item, i) => (
             <Item
               {...this.props}
@@ -116,7 +120,7 @@ class Menu extends React.PureComponent {
               {...itemProps}
             />
           )) : (
-            <Text style={styles.noSuggestions}>No suggestions...</Text>
+            <EmptyResult key="emptyResult" />
           )}
         </ScrollView>
       </View>

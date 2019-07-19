@@ -1,13 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Platform, StyleSheet } from 'react-native';
+import { throttle, debounce } from 'throttle-debounce';
 import {
   noop,
   omit,
   filter,
   isFunction,
+  isEqual,
 } from 'lodash';
+import { compose } from 'recompact';
+import { isEmpty } from '../utils';
 import { withTheme } from '../Theme';
+import Screen, { withKeyboard } from '../Screen';
 import EventHandler from '../EventHandler';
 import View from '../View';
 import StylePropType from '../StylePropType';
@@ -47,11 +52,19 @@ const propNames = [
   'itemStyle',
   'itemHeight',
   'itemProps',
+  'Spinner',
+  'spinnerHeight',
+  'EmptyResult',
+  'emptyResultHeight',
   'containerStyle',
+  'throttleDelay',
+  'debounceDelay',
+  'throttleDebounceThreshold',
 ];
 
 class Autocomplete extends EventHandler {
   static propTypes = {
+    keyboard: PropTypes.number.isRequired,
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
     getItemValue: PropTypes.func,
     onChangeText: PropTypes.func,
@@ -66,6 +79,12 @@ class Autocomplete extends EventHandler {
     containerStyle: StylePropType,
     name: PropTypes.string,
     value: PropTypes.any, // eslint-disable-line
+    itemHeight: PropTypes.number,
+    spinnerHeight: PropTypes.number,
+    emptyResultHeight: PropTypes.number,
+    throttleDelay: PropTypes.number,
+    debounceDelay: PropTypes.number,
+    throttleDebounceThreshold: PropTypes.number,
   };
 
   static defaultProps = {
@@ -83,17 +102,37 @@ class Autocomplete extends EventHandler {
     containerStyle: null,
     name: undefined,
     value: undefined,
+    itemHeight: 30,
+    spinnerHeight: 30,
+    emptyResultHeight: 30,
+    throttleDelay: 500,
+    debounceDelay: 500,
+    throttleDebounceThreshold: 3,
   };
 
   constructor(props) {
     super(props);
-    const { items, value, name } = props;
+    const {
+      items,
+      value,
+      name,
+      throttleDelay,
+      debounceDelay,
+    } = props;
+    this.fy = 0;
     this.state = {
       items: isFunction(items) ? [] : items,
       open: false,
       loading: isFunction(items),
       highlightedIndex: 0,
+      keyboardOffset: null,
     };
+    this.updateItemsThrottled = this.updateItems;
+    this.updateItemsDebounced = this.updateItems;
+    if (isFunction(items)) {
+      this.updateItemsThrottled = throttle(throttleDelay, this.updateItems);
+      this.updateItemsDebounced = debounce(debounceDelay, this.updateItems);
+    }
     this.id = `Autocomplete__${name || Math.random().toString(36).substr(2, 9)}`;
     this.fieldRegex = new RegExp(`\\b${this.id}\\b`);
     setTimeout(() => this.updateItems(value));
@@ -115,14 +154,17 @@ class Autocomplete extends EventHandler {
   }
 
   onChangeText = (text) => {
-    const { onChangeText } = this.props;
+    const { onChangeText, throttleDebounceThreshold } = this.props;
     onChangeText(text);
     this.onMount(() => this.setState({
       open: true,
       loading: true,
-      highlightedIndex: 0,
     }));
-    this.updateItems(text);
+    if (text.length > throttleDebounceThreshold) {
+      this.updateItemsDebounced(text);
+    } else {
+      this.updateItemsThrottled(text);
+    }
   };
 
   onKeyPress = (event) => {
@@ -146,6 +188,22 @@ class Autocomplete extends EventHandler {
     }
   };
 
+  onKeyboardOpen = () => {
+    const self = this;
+    self.onMount(() => self.setState({ keyboardOffset: 0 }));
+    if (self.input) {
+      self.input.measureInWindow((x, y) => {
+        const { keyboard } = self.props;
+        const keyboardOffset = Screen.getHeight() - keyboard - y;
+        if (keyboard > 0 && keyboardOffset < 0) {
+          self.onMount(() => self.setState({ keyboardOffset }));
+        }
+      });
+    }
+  };
+
+  onKeyboardClose = () => this.onMount(() => this.setState({ keyboardOffset: null }));
+
   onSubmitEditing = (event) => {
     const { open, items, highlightedIndex } = this.state;
     const { onSubmitEditing } = this.props;
@@ -168,30 +226,35 @@ class Autocomplete extends EventHandler {
   };
 
   onRef = (input) => {
-    const { onRef } = this.props;
+    const self = this;
+    self.input = input;
+    const { onRef } = self.props;
     if (isFunction(onRef)) {
       onRef(input);
     }
-    if (input) {
-      input.measure((fx, fy, width, height, px, py) => {
-        if (Platform.OS === 'web') {
-          this.menuStyle = {
-            width,
-            top: height,
-            left: fx,
-            maxHeight: 200,
-          };
-        } else {
-          const maxHeight = Math.max(0, Math.min(200, py));
-          this.menuStyle = {
-            width,
-            maxHeight,
-            top: fy - maxHeight,
-            left: fx,
-          };
-        }
-      });
-    }
+    setTimeout(() => {
+      if (self.input) {
+        self.input.measure((fx, fy, width, height, px, py) => {
+          self.fy = fy;
+          if (Platform.OS === 'web') {
+            self.menuStyle = {
+              width,
+              top: height,
+              left: fx,
+              maxHeight: 200,
+            };
+          } else {
+            const maxHeight = Math.max(0, Math.min(200, py));
+            self.menuStyle = {
+              width,
+              maxHeight,
+              top: fy - maxHeight,
+              left: fx,
+            };
+          }
+        });
+      }
+    });
   };
 
   clickListener = (event) => {
@@ -217,30 +280,53 @@ class Autocomplete extends EventHandler {
     if (parsedText === null || parsedText === undefined) {
       parsedText = '';
     }
+    const id = Math.random().toString(36).substr(2, 9);
+    this.request = {
+      id,
+      loading: true,
+      items: this.state.items,
+    };
     if (isFunction(items)) {
       items = await items(parsedText, this.getParams());
+      if (this.request.id === id) {
+        this.request.loading = false;
+        this.request.items = items;
+      } else {
+        return this.request.items;
+      }
     } else {
-      items = this.filterItems(parsedText, items);
+      this.request.items = this.filterItems(parsedText, items);
+      this.request.loading = false;
     }
     return items;
   }
 
-  async updateItems(text) {
+  updateItems = async (text) => {
     const items = await this.getItems(text);
+    const highlightedIndex = isEqual(items, this.state.items) ? this.state.highlightedIndex : 0;
     this.onMount(() => this.setState({
       items,
-      loading: false,
-      highlightedIndex: 0,
+      highlightedIndex,
+      loading: this.request.loading,
     }));
-  }
+  };
 
   render() {
-    const { open } = this.state;
+    const {
+      open,
+      items,
+      loading,
+      keyboardOffset,
+    } = this.state;
     const {
       Menu,
       Input,
       style,
+      itemHeight,
+      spinnerHeight,
+      emptyResultHeight,
       menuStyle,
+      keyboard,
       containerStyle,
     } = this.props;
     const props = omit(this.props, propNames);
@@ -250,6 +336,23 @@ class Autocomplete extends EventHandler {
       props.autoCompleteType = 'off';
     }
     const { minWidth, maxWidth, width } = StyleSheet.flatten([style]);
+    const height = (
+      2
+      + (items.length * itemHeight)
+      + (loading ? spinnerHeight : 0)
+      + (!items.length ? emptyResultHeight : 0)
+    );
+    let mobileMenuStyle = null;
+    if (Platform.OS !== 'web') {
+      mobileMenuStyle = { top: this.fy - height + (keyboardOffset || 0) };
+      if (keyboard > 0 && keyboardOffset === null) {
+        setTimeout(this.onKeyboardOpen);
+      }
+      if (keyboard === 0 && keyboardOffset !== null) {
+        setTimeout(this.onKeyboardClose);
+      }
+    }
+
     return (
       <View className={this.id} style={[{ minWidth, maxWidth, width }, containerStyle]}>
         <Input
@@ -259,12 +362,14 @@ class Autocomplete extends EventHandler {
           onChangeText={this.onChangeText}
           onSubmitEditing={this.onSubmitEditing}
         />
-        {open ? (
+        {open && !isEmpty(props.value) ? (
           <Menu
             {...this.props}
             {...this.state}
             style={[
               this.menuStyle,
+              { height },
+              mobileMenuStyle,
               menuStyle,
             ]}
             onSelect={this.onSelect}
@@ -275,4 +380,7 @@ class Autocomplete extends EventHandler {
   }
 }
 
-export default withTheme('Autocomplete')(Autocomplete);
+export default compose(
+  withTheme('Autocomplete'),
+  withKeyboard(),
+)(Autocomplete);
