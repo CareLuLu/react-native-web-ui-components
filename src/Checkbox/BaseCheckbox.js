@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 13,
     lineHeight: 23,
+    paddingLeft: 10,
     textAlignVertical: 'center',
   },
 });
@@ -105,7 +106,6 @@ const BaseCheckbox = compose(
         <Icon name={iconName} style={iconStyle} />
         {text !== null ? (
           <Text auto style={textStyle}>
-            &nbsp;&nbsp;
             {text}
           </Text>
         ) : null}
