@@ -7,21 +7,21 @@ route: /View
 import { Playground, Props } from 'docz';
 import { Provider as ThemeProvider } from '../src/Theme/index';
 import View from '../src/View/index';
-import NativeText from '../src/Text/NativeText';
+import Button from '../src/Button/index';
+import { default as Text } from '../src/Text/NativeText';
 
 # View
-`View` utilizes the `View of react-native`. It is a container that 
-supports the layout and is designed to be nested inside other views
-and can have 0 to many children of any type 
-[[1]](https://facebook.github.io/react-native/docs/view.html).
-In addition, `View` requires the use of a theme provider to be able 
-to inject a theme.
+`View` utilizes the `View of react-native`. It is a container used
+for controlling the layout. In addition, `View` requires the use of a 
+theme provider to be able to inject a theme. `View` also has `onRef`
+property which can be used for referencing the instance of a component.
 
 ## Properties of View
 | **Prop**      | **Type**                   | **Default** | **Required** |
 |:--------------|:---------------------------|:------------|:-------------|
-| **theme**     | Shape                      | null        | Yes          |
+| **theme**     | Object                     | null        | Yes          |
 | **classname** | String                     | ''          | No           | 
+| **onRef**     | Function                   | noop        | No           | 
 | **children**  | Node                       | null        | No           | 
 
 Since View utilizes the `View of react-native`, it also inherits the props
@@ -30,18 +30,46 @@ of `View of react-native` (e.g. style). For the list of props of
 [link](https://facebook.github.io/react-native/docs/view.html).
 
 ## Basic usage of View
-The following renders a View component inside another View component.
+The following example renders a `View` component inside another `View` component.
 <Playground>
       <ThemeProvider>
             <View class="main_container" style={{backgroundColor: '#20B2AA'}}>
-                  <NativeText>Text inside a View.</NativeText>
+                  <Text>Text inside a View</Text>
                   <View class="inner_container" style={{backgroundColor: '#FFB6C1'}}>
-                        <NativeText>Text inside another View.</NativeText>
+                        <Text>Text inside another View.</Text>
                   </View>
             </View>
       </ThemeProvider>
 </Playground>
 
-Reference <br />
-"View · React Native". "React-Native". 
-      https://facebook.github.io/react-native/docs/view.html
+## Accessing View component using an `onRef` property
+To following example changes the `View` background color using the `onRef` property.
+The `onRef` property is set to `{component => _view = component}`. The variable namely 
+`_view` is then used to set the native property of the component and change the
+background color.
+
+<Playground>
+  {() => {
+      isColorPink = true;
+      changeBackgroundColor = () => {
+            if(isColorPink){
+                  _view.setNativeProps({style:{backgroundColor: '#20B2AA'}});
+                  isColorPink = false;
+            }else {
+                  _view.setNativeProps({style:{backgroundColor: '#FFB6C1'}});
+                  isColorPink = true;
+            }
+      }
+      return (           
+            <ThemeProvider>
+                  <View onRef={component => _view = component} style={{backgroundColor: '#FFB6C1'}}>
+                        <Text>Hello World!</Text>
+                        <Button 
+                              type='navy' 
+                              onPress={changeBackgroundColor}>Change Background Color
+                        </Button>
+                  </View>
+            </ThemeProvider>
+      );
+  }}
+</Playground>

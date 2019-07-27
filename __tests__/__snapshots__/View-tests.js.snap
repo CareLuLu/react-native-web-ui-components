@@ -1,6 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`Outer View should render with class="".
+Inner View should render with class="".
+Both the Outer and Inner View should have an onRef referencing to a Function. 1`] = `
+<View
+  data-class=""
+  onref={[Function]}
+  style={
+    Array [
+      undefined,
+      undefined,
+    ]
+  }
+>
+  <View
+    data-class=""
+    onref={[Function]}
+    style={
+      Array [
+        undefined,
+        undefined,
+      ]
+    }
+  />
+</View>
+`;
+
+exports[`Outer View should render with class="Test__parent class".
+Inner View should render with class="Test__child".
+ 1`] = `
 <View
   data-class="Test__parent"
   style={
@@ -12,6 +40,32 @@ exports[`renders correctly 1`] = `
 >
   <View
     data-class="Test__child"
+    style={
+      Array [
+        undefined,
+        undefined,
+      ]
+    }
+  />
+</View>
+`;
+
+exports[`Outer View should render with class="Test__parent class".
+Inner View should render with class="Test__child".
+Both the Outer and Inner View should have an onRef referencing to a Function. 1`] = `
+<View
+  data-class="Test__parent"
+  onref={[Function]}
+  style={
+    Array [
+      undefined,
+      undefined,
+    ]
+  }
+>
+  <View
+    data-class="Test__child"
+    onref={[Function]}
     style={
       Array [
         undefined,
