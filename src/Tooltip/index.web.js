@@ -12,12 +12,13 @@ const Tooltip = ({ content, children }) => (
       </style>
     </Helmet>
     <Tippy
-      performance
       animateFill={false}
       theme="light"
       content={content}
     >
-      {children}
+      <span>
+        {children}
+      </span>
     </Tippy>
   </React.Fragment>
 );
