@@ -40,8 +40,11 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#BFBFBF',
+    paddingLeft: 10,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E9ECEF',
     borderWidth: 0,
+    borderBottomWidth: 1,
     height: 53,
   },
   boxItem: {

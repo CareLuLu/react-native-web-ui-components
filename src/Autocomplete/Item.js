@@ -34,6 +34,7 @@ const Item = compose(
   const textStyle = [styles.defaults, themeTextStyle.text, style];
   if (active) {
     textStyle.push([{
+      color: '#FFFFFF',
       backgroundColor: StyleSheet.flatten(themeInputStyle.selected).color,
     }, activeStyle]);
   }

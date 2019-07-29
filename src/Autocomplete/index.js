@@ -295,8 +295,9 @@ class Autocomplete extends EventHandler {
         return this.request.items;
       }
     } else {
-      this.request.items = this.filterItems(parsedText, items);
+      items = this.filterItems(parsedText, items);
       this.request.loading = false;
+      this.request.items = items;
     }
     return items;
   }

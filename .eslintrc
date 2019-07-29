@@ -3,7 +3,8 @@
   "parser": "babel-eslint",
   "plugins": [
     "react",
-    "react-hooks"
+    "react-hooks",
+    "json"
   ],
   "parserOptions": {
     "ecmaVersion": 6,
