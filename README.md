@@ -114,7 +114,7 @@ yarn add react-native-web-ui-components
 1. You need to import [FontAwesome](https://fontawesome.com). First, [download](https://github.com/CareLuLu/react-native-web-ui-components/raw/docs/update-readme/assets/fonts.zip) the font files and add them to `src/assets/fonts` in your project. Then, make sure you import the font at `App.js`.
 2. Wrap your entry screen with `UIProvider`. Note that `UIProvider` must be within `Router`.
 
-```
+```javascript
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { UIProvider, Router, Switch } from 'react-native-web-ui-components';
@@ -227,7 +227,7 @@ Or using [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash). T
 
 After that, you can do imports like below without actually include the entire library content.
 
-```
+```javascript
 import { Autocomplete } from 'react-native-web-ui-components';
 ```
 
@@ -235,7 +235,7 @@ import { Autocomplete } from 'react-native-web-ui-components';
 
 While mobile components are indiferent to the `className` property, that is very useful for the web. [React Native Web](https://github.com/necolas/react-native-web) components no longer accept class names but for convenience, this library accepts the `className` property for all exported components. Please note that class names are converted into `data-class` attribute.
 
-```
+```javascript
 import React from 'react';
 import { Row } from 'react-native-web-ui-components';
 
@@ -369,7 +369,7 @@ Displays a dropzone to upload files. This library uses [React Dropzone](https://
 
 This library exports [React Helmet](https://github.com/nfl/react-helmet). For mobile, Helmet won't do anything.
 
-```
+```javascript
 import React from 'react';
 import { Row } from 'react-native-web-ui-components';
 
@@ -514,7 +514,7 @@ Displays a spinner.
 
 Prop type for styles.
 
-```
+```javascript
 import { StylePropType } from 'react-native-web-ui-components';
 
 // ...
