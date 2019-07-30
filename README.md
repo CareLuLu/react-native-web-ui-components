@@ -4,7 +4,7 @@
 [![Codacy Badge](https://img.shields.io/codacy/grade/8663803b71b246eebe54c048a38a7a1f/dev.svg)](https://www.codacy.com/app/CareLuLu/react-native-web-ui-components?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CareLuLu/react-native-web-ui-components&amp;utm_campaign=Badge_Grade)
 [![NPM](https://img.shields.io/npm/v/react-native-web-ui-components.svg)](https://www.npmjs.com/package/react-native-web-ui-components)
 
-React Native Web UI Components is a library of customized [React Native](https://facebook.github.io/react-native/)/[React Native Web](https://github.com/necolas/react-native-web) components for mobile and web UI. It has Alert, Banner, Button, Carousel, DatePicker, ScrollView, Spinner and a lot of other reusable UI components.
+React Native Web UI Components is a library of customized [React Native](https://facebook.github.io/react-native/)/[React Native Web](https://github.com/necolas/react-native-web) components for mobile and web UI. This library is used by [React Native Web Jsonschema Form](https://github.com/CareLuLu/react-native-web-jsonschema-form).
 
 ## Table of Contents
 
@@ -111,7 +111,7 @@ yarn add react-native-web-ui-components
 
 ### Mobile
 
-1. You need to import [FontAwesome](https://fontawesome.com). First, [download](https://github.com/CareLuLu/react-native-web-ui-components/assets/fonts.zip) the font files and add them to `src/assets/fonts` in your project. Then, make sure you import the font at `App.js`.
+1. You need to import [FontAwesome](https://fontawesome.com). First, [download](https://github.com/CareLuLu/react-native-web-ui-components/raw/docs/update-readme/assets/fonts.zip) the font files and add them to `src/assets/fonts` in your project. Then, make sure you import the font at `App.js`.
 2. Wrap your entry screen with `UIProvider`. Note that `UIProvider` must be within `Router`.
 
 ```
