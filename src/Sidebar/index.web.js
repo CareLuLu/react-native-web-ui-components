@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { noop } from 'lodash';
 import DomSidebar from 'react-sidebar';
+import compose from 'recompact/compose';
 import lifecycle from 'recompact/lifecycle';
 import { withTheme } from '../Theme';
+import { withScreen } from '../Screen';
 import Row from '../Row';
 
 const edgeHitWidth = 120;
@@ -27,6 +29,7 @@ const Sidebar = lifecycle({
   rightOnChange,
   leftComponent,
   rightComponent,
+  disabled,
   children,
 }) => {
   if (screen.type === 'xs' || screen.type === 'sm') {
@@ -42,6 +45,7 @@ const Sidebar = lifecycle({
           sidebar={leftComponent}
           onSetOpen={leftOnChange}
           touchHandleWidth={edgeHitWidth}
+          touch={!(disabled || rightOpen)}
         >
           <DomSidebar
             styles={styles}
@@ -51,6 +55,7 @@ const Sidebar = lifecycle({
             pullRight
             onSetOpen={rightOnChange}
             touchHandleWidth={edgeHitWidth}
+            touch={!disabled}
           >
             {children}
           </DomSidebar>
@@ -66,6 +71,7 @@ const Sidebar = lifecycle({
           sidebar={leftComponent}
           onSetOpen={leftOnChange}
           touchHandleWidth={edgeHitWidth}
+          touch={!disabled}
         >
           {children}
         </DomSidebar>
@@ -80,6 +86,7 @@ const Sidebar = lifecycle({
           pullRight
           onSetOpen={rightOnChange}
           touchHandleWidth={edgeHitWidth}
+          touch={!disabled}
         >
           {children}
         </DomSidebar>
@@ -90,9 +97,7 @@ const Sidebar = lifecycle({
 });
 
 Sidebar.propTypes = {
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-  }).isRequired,
+  screen: PropTypes.shape().isRequired,
   leftOpen: PropTypes.bool,
   leftOnChange: PropTypes.func,
   leftComponent: PropTypes.oneOfType([
@@ -106,6 +111,7 @@ Sidebar.propTypes = {
     PropTypes.func,
   ]),
   children: PropTypes.node,
+  disabled: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
@@ -116,6 +122,10 @@ Sidebar.defaultProps = {
   rightOnChange: noop,
   rightComponent: null,
   children: null,
+  disabled: false,
 };
 
-export default withTheme('Sidebar')(Sidebar);
+export default compose(
+  withTheme('Sidebar'),
+  withScreen(),
+)(Sidebar);

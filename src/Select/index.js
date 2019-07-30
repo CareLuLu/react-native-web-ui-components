@@ -132,6 +132,13 @@ const Select = compose(
             .select.select-${id} .select__indicator-separator {
               background-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
             }
+            .select.select-${id} .select__control.select__control--is-focused {
+              border-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
+              box-shadow: none;
+            }
+            .select.select-${id} .select__option--is-focused {
+              background-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
+            }
             ${css}
           `}
         </style>
