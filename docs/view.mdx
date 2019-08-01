@@ -1,0 +1,85 @@
+---
+name: View
+menu: Components
+route: /View
+---
+
+import { Playground } from 'docz';
+import { Provider as ThemeProvider } from '../src/Theme/index';
+import View from '../src/View/index';
+import Button from '../src/Button/index';
+import Text from '../src/Text/NativeText';
+
+# View
+
+`View` utilizes the `View of react-native`. It is a container used
+for controlling the layout. In addition, `View` requires the use of a
+theme provider to be able to inject a theme. `View` also has `onRef`
+property which can be used for referencing the instance of the component.
+
+## Properties of View
+
+| **Prop**      | **Type** | **Default** | **Required** |
+| :------------ | :------- | :---------- | :----------- |
+| **theme**     | Object   | null        | Yes          |
+| **classname** | String   | ''          | No           |
+| **onRef**     | Function | noop        | No           |
+| **children**  | Node     | null        | No           |
+
+Since View utilizes the `View of react-native`, it also inherits the props
+of `View of react-native` (e.g. style). For the list of props of
+`View of react-native`, please see this
+[link](https://facebook.github.io/react-native/docs/view.html).
+
+## Basic usage of View
+
+The following renders a View component inside another View component.
+
+<Playground>
+  <ThemeProvider>
+    <View class='main_container' style={{ backgroundColor: '#20B2AA' }}>
+      <Text>Text inside a View</Text>
+      <View class='inner_container' style={{ backgroundColor: '#FFB6C1' }}>
+        <Text>Text inside another View.</Text>
+      </View>
+    </View>
+  </ThemeProvider>
+</Playground>
+
+## Accessing View component using an `onRef` property
+
+The following example renders a `View` component with a button;
+whenever the button is clicked, the background color of the View changes.
+To reference the instance of the View component, `onRef` is set to
+`{component => view = component}`. The variable namely `view` can now then
+used to set the native property of the View component and then change the
+background color.
+
+<Playground>
+  {() => {
+    let view;
+    let isColorPink = true;
+    const changeBackgroundColor = () => {
+      if (isColorPink) {
+        view.setNativeProps({ style: { backgroundColor: '#20B2AA' } });
+        isColorPink = false;
+      } else {
+        view.setNativeProps({ style: { backgroundColor: '#FFB6C1' } });
+        isColorPink = true;
+      }
+    };
+    return (
+      <ThemeProvider>
+        <View
+          onRef={component => (view = component)}
+          style={{ backgroundColor: '#FFB6C1' }}
+        >
+          <Text>Hello World!</Text>
+          <Button type='navy' onPress={changeBackgroundColor}>
+            Change Background Color
+          </Button>
+        </View>
+      </ThemeProvider>
+    );
+  }}
+</Playground>
