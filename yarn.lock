@@ -9970,10 +9970,10 @@ react-native-datepicker@^1.7.2:
     crypto-js "^3.1.9-1"
     lodash "^4.17.4"
 
-react-native-fontawesome@^6.0.0:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-fontawesome/-/react-native-fontawesome-6.0.1.tgz#6a4f06b3d2523ef2567cdde84c601a1b50733110"
-  integrity sha512-j/nuOQCX+FeSsHDbqrownPsOuxMtiKQy7aj1pK5CV3ri8SoWlglNXU26IN8KTAs5XPJpoYS+6kY99qwqHKJPtw==
+react-native-fontawesome@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-fontawesome/-/react-native-fontawesome-7.0.0.tgz#9050d50e03c5264c071292b885ab189f29accfad"
+  integrity sha512-UBZXyTLO8rK2NMf7Eomzb70b6cpL5JlBI4xwJGnRroRofrIXUxPelmm0Ojs6OcMs4ucAyPidCOxbJDJlmb2vdA==
 
 react-native-side-menu@^1.1.3:
   version "1.1.3"

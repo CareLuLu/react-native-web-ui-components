@@ -2,7 +2,7 @@ import React from 'react';
 import camelCase from 'lodash/camelCase';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text } from 'react-native';
-import NativeFontAwesome, { Icons } from 'react-native-fontawesome';
+import NativeFontAwesome, { SolidIcons } from 'react-native-fontawesome';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 
 const Icon = ({ name, style }) => (
   <Text style={[styles.defaults, style]}>
-    <NativeFontAwesome>{Icons[camelCase(name)]}</NativeFontAwesome>
+    <NativeFontAwesome>{SolidIcons[camelCase(name)]}</NativeFontAwesome>
   </Text>
 );
 
