@@ -25,7 +25,7 @@ test(testDescription, () => {
   const tree = renderer.create(
     <ThemeProvider>
       <View class="Test__class" onref={(component) => { view = component; }}>
-        <Button onPress={() => { view.setNativeProps({ style: { backgroundColor: '#20B2AA' } }); }}>
+        <Button type="navy" onPress={() => { view.setNativeProps({ style: { backgroundColor: '#20B2AA' } }); }}>
             Change Background Color
         </Button>
       </View>
@@ -41,7 +41,7 @@ test(testDescription, () => {
   const tree = renderer.create(
     <ThemeProvider>
       <View onref={(component) => { view = component; }}>
-        <Button onPress={() => { view.setNativeProps({ style: { backgroundColor: '#20B2AA' } }); }}>
+        <Button type="navy" onPress={() => { view.setNativeProps({ style: { backgroundColor: '#20B2AA' } }); }}>
             Change Background Color
         </Button>
       </View>

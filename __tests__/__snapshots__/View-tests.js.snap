@@ -55,7 +55,7 @@ There should have an onRef referencing to a Function. 1`] = `
     }
   >
     <View
-      data-class="button button-undefined"
+      data-class="button button-navy"
       style={
         Array [
           undefined,
@@ -65,8 +65,12 @@ There should have an onRef referencing to a Function. 1`] = `
               "marginBottom": 5,
               "marginRight": 5,
             },
-            undefined,
-            undefined,
+            Object {
+              "borderColor": "#055396",
+            },
+            Object {
+              "backgroundColor": "#0E73CA",
+            },
             undefined,
             Object {},
             Object {
@@ -162,7 +166,7 @@ There should have an onRef referencing to a Function. 1`] = `
     }
   >
     <View
-      data-class="button button-undefined"
+      data-class="button button-navy"
       style={
         Array [
           undefined,
@@ -172,8 +176,12 @@ There should have an onRef referencing to a Function. 1`] = `
               "marginBottom": 5,
               "marginRight": 5,
             },
-            undefined,
-            undefined,
+            Object {
+              "borderColor": "#055396",
+            },
+            Object {
+              "backgroundColor": "#0E73CA",
+            },
             undefined,
             Object {},
             Object {
