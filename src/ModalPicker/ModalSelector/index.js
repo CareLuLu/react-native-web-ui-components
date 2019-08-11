@@ -6,8 +6,8 @@ import {
   Text,
   ViewPropTypes as RNViewPropTypes,
 } from 'react-native';
-import NativeFontAwesome, { SolidIcons } from 'react-native-fontawesome';
 import styles from './style';
+import Icon from '../../Icon';
 import ScrollView from '../../ScrollView';
 import TouchableOpacity from '../../TouchableOpacity';
 import TouchableWithoutFeedback from '../../TouchableWithoutFeedback';
@@ -252,9 +252,10 @@ export default class ModalSelector extends React.Component {
           {this.state.selected}
           &nbsp;
         </Text>
-        <Text style={[styles.selectTextIconStyle, this.props.selectTextStyle]}>
-          <NativeFontAwesome>{SolidIcons[this.props.icon]}</NativeFontAwesome>
-        </Text>
+        <Icon
+          name={this.props.icon}
+          style={[styles.selectTextIconStyle, this.props.selectTextStyle]}
+        />
       </View>
     );
   }

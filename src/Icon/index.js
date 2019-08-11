@@ -1,21 +1,18 @@
 import React from 'react';
-import camelCase from 'lodash/camelCase';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text } from 'react-native';
-import NativeFontAwesome, { SolidIcons } from 'react-native-fontawesome';
+import { StyleSheet } from 'react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 
 const styles = StyleSheet.create({
   empty: {},
-  defaults: {},
+  defaults: {
+    fontSize: 13,
+  },
 });
 
-const Icon = ({ name, style }) => (
-  <Text style={[styles.defaults, style]}>
-    <NativeFontAwesome>{SolidIcons[camelCase(name)]}</NativeFontAwesome>
-  </Text>
-);
+const Icon = ({ name, style }) => <FontAwesome name={name} style={[styles.defaults, style]} />;
 
 Icon.propTypes = {
   name: PropTypes.string.isRequired,

@@ -143,7 +143,7 @@ ModalPicker.propTypes = {
 };
 
 ModalPicker.defaultProps = {
-  icon: 'alignJustify',
+  icon: 'align-justify',
   value: null,
   placeholder: 'Select...',
   type: 'gray',

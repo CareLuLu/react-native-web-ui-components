@@ -111,7 +111,7 @@ yarn add react-native-web-ui-components
 
 ### Mobile
 
-1. You need to import [FontAwesome](https://fontawesome.com). First, [download](https://github.com/CareLuLu/react-native-web-ui-components/raw/docs/update-readme/assets/fonts.zip) the font files and add them to `src/assets/fonts` in your project. Then, make sure you import the font at `App.js`.
+1. You need to import the fonts. First, [download](https://github.com/CareLuLu/react-native-web-ui-components/raw/master/assets/fonts.zip) the font files and add them to `src/assets/fonts` in your project. Then, make sure you import the font at `App.js`.
 2. Wrap your entry screen with `UIProvider`. Note that `UIProvider` must be within `Router`.
 
 ```javascript
@@ -141,7 +141,6 @@ class App extends React.Component {
     await Font.loadAsync({
       'Lucida Sans': require('./src/assets/fonts/Lucida-Sans.ttf'),
       'Lucida Sans Bold': require('./src/assets/fonts/Lucida-Sans-Bold.ttf'),
-      FontAwesome5FreeSolid: require('./src/assets/fonts/FontAwesome5FreeSolid.ttf'),
     });
     this.setState({ fontLoaded: true });
   }
@@ -406,19 +405,19 @@ Displays a horizontal rule.
 
 ### Icon
 
-Displays an icon. This library uses [React Fontawesome](https://github.com/FortAwesome/react-fontawesome) and [React Native Fontawesome](https://github.com/entria/react-native-fontawesome) to render icons for web and mobile respectively.
+Displays an icon. This library uses [React Fontawesome](https://github.com/FortAwesome/react-fontawesome) and [Expo Vector Icons](https://github.com/expo/vector-icons) to render icons for web and mobile respectively.
 
 ![Icon Component Example](https://divin2sy6ce0b.cloudfront.net/docs/icon.png)
 
 ### IconLink
 
-Displays a link with an icon. This library uses [React Fontawesome](https://github.com/FortAwesome/react-fontawesome) and [React Native Fontawesome](https://github.com/entria/react-native-fontawesome) to render icons for web and mobile respectively.
+Displays a link with an icon. This library uses [React Fontawesome](https://github.com/FortAwesome/react-fontawesome) and [Expo Vector Icons](https://github.com/expo/vector-icons) to render icons for web and mobile respectively.
 
 ![IconLink Component Example](https://divin2sy6ce0b.cloudfront.net/docs/iconlink.png)
 
 ### IconText
 
-Displays a text with an icon. This library uses [React Fontawesome](https://github.com/FortAwesome/react-fontawesome) and [React Native Fontawesome](https://github.com/entria/react-native-fontawesome) to render icons for web and mobile respectively.
+Displays a text with an icon. This library uses [React Fontawesome](https://github.com/FortAwesome/react-fontawesome) and [Expo Vector Icons](https://github.com/expo/vector-icons) to render icons for web and mobile respectively.
 
 ![IconText Component Example](https://divin2sy6ce0b.cloudfront.net/docs/icontext.png)
 
