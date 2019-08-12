@@ -35,7 +35,7 @@
     "eslint-plugin-react": "7.14.3",
     "eslint-plugin-react-hooks": "1.7.0",
     "jest": "24.8.0",
-    "metro-react-native-babel-preset": "0.55.0",
+    "metro-react-native-babel-preset": "0.56.0",
     "react": "16.9.0",
     "react-art": "16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
