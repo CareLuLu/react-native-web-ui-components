@@ -2,6 +2,7 @@ import React from 'react';
 import { Dimensions, Keyboard } from 'react-native';
 
 /* eslint react/no-multi-comp: 0 */
+/* eslint max-classes-per-file: 0 */
 
 function calculateType(width) {
   if (width >= 1200) {
