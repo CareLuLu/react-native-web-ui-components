@@ -215,11 +215,18 @@ const Dropzone = compose(
     };
   }),
   withHandlers({
-    selectMime: ({ setStep, acceptsImageVideo, pickDocument }) => () => {
-      if (acceptsImageVideo) {
-        setStep('mime');
-      } else {
-        pickDocument();
+    selectMime: ({
+      disabled,
+      setStep,
+      acceptsImageVideo,
+      pickDocument,
+    }) => () => {
+      if (!disabled) {
+        if (acceptsImageVideo) {
+          setStep('mime');
+        } else {
+          pickDocument();
+        }
       }
     },
     cancelMimeSelection: ({ setStep }) => () => setStep('dropzone'),
@@ -242,6 +249,8 @@ const Dropzone = compose(
     ],
   })),
 )(({
+  theme,
+  disabled,
   step,
   style,
   children,
@@ -256,9 +265,13 @@ const Dropzone = compose(
   if (Platform.OS !== 'ios' && hasPicker()) {
     setTimeout(() => onDismiss(), 1000);
   }
+  const currentStyle = [styles.container];
+  if (disabled) {
+    currentStyle.push(theme.input.disabled.opacity);
+  }
   return (
     <TouchableWithoutFeedback onPress={selectMime}>
-      <View style={[styles.container, style]}>
+      <View style={[currentStyle, style]}>
         <Modal
           transparent
           ref={onModalMounted}
@@ -289,6 +302,7 @@ const Dropzone = compose(
 });
 
 Dropzone.propTypes = {
+  theme: PropTypes.shape().isRequired,
   accept: PropTypes.arrayOf(PropTypes.string),
   onDrop: PropTypes.func,
   style: StylePropType,
@@ -296,6 +310,7 @@ Dropzone.propTypes = {
   albumText: PropTypes.string,
   fileText: PropTypes.string,
   cancelText: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 Dropzone.defaultProps = {
@@ -306,6 +321,7 @@ Dropzone.defaultProps = {
   albumText: 'Photo & Video Library',
   fileText: 'File',
   cancelText: 'Cancel',
+  disabled: false,
 };
 
 export default withTheme('Dropzone')(Dropzone);
