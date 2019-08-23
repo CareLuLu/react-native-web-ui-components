@@ -81,18 +81,21 @@ const Datepicker = compose(
       minDate,
       maxDate,
     }) => (event) => {
-      const date = moment(event.target.value, format, true);
-      if (date.isValid()) {
-        if (
-          (minDate && moment(minDate, FORMAT).isAfter(date)) // before min date
-          || (maxDate && moment(maxDate, FORMAT).isBefore(date)) // after max date
-        ) {
-          alert('This date cannot be selected. Please choose another one.'); // eslint-disable-line
-          return onDateChange('');
+      if (event.target.value !== '') {
+        const date = moment(event.target.value, format, true);
+        if (date.isValid()) {
+          if (
+            (minDate && moment(minDate, FORMAT).isAfter(date)) // before min date
+            || (maxDate && moment(maxDate, FORMAT).isBefore(date)) // after max date
+          ) {
+            alert('This date cannot be selected. Please choose another one.'); // eslint-disable-line
+            return onDateChange('');
+          }
+          return onDateChange(date.format(format));
         }
-        return onDateChange(date.format(format));
+        return onDateChange('');
       }
-      return onDateChange('');
+      return null;
     },
   }),
 )(({
