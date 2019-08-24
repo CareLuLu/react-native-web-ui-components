@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import noop from 'lodash/noop';
-import compose from 'recompact/compose';
-import withHandlers from 'recompact/withHandlers';
-import withState from 'recompact/withState';
 import { StyleSheet, Linking } from 'react-native';
 import { withTheme } from '../Theme';
 import StylePropType from '../StylePropType';
@@ -35,45 +32,50 @@ const go = (basepath, to, history, external, replace) => () => {
   return history[replace ? 'replace' : 'push'](href);
 };
 
-const Link = compose(
-  withState('opacity', 'setOpacity', 1),
-  withHandlers({
-    setOpacity25: ({
-      to,
-      onPress,
-      history,
-      external,
-      replace,
-      setOpacity,
-      basepath,
-    }) => () => {
-      setTimeout(onPress || go(basepath, to, history, external, replace));
-      setOpacity(0.25);
-    },
-    setOpacity50: ({ setOpacity }) => () => setOpacity(0.5),
-    setOpacity100: ({ setOpacity }) => () => setOpacity(1),
-  }),
-)(({
+const Link = ({
   to,
-  opacity,
   auto,
   type,
   style,
   children,
   onPress,
-  setOpacity25,
-  setOpacity50,
-  setOpacity100,
+  basepath,
+  external,
+  history,
+  replace,
 }) => {
+  const [opacity, setOpacity] = useState(1);
+
+  const setOpacity25 = useCallback(() => setOpacity(0.25), [setOpacity]);
+
+  const setOpacity50 = useCallback(() => setOpacity(0.5), [setOpacity]);
+
+  const setOpacity100 = useCallback(() => {
+    setOpacity(1);
+    setTimeout(onPress || go(basepath, to, history, external, replace));
+  }, [
+    onPress,
+    basepath,
+    to,
+    history,
+    external,
+    replace,
+    setOpacity,
+  ]);
+
+  useEffect(() => {
+    if (opacity === 0.5) {
+      setOpacity25();
+    }
+    if (opacity === 0.25) {
+      setTimeout(() => setOpacity100(), 100);
+    }
+  }, [opacity, setOpacity25, setOpacity100]);
+
   if (onPress === null && to === null) {
     throw new Error('Either `onPress` or `to` must be provided');
   }
-  if (opacity === 0.5) {
-    setTimeout(() => setOpacity25());
-  }
-  if (opacity === 0.25) {
-    setTimeout(() => setOpacity100(), 200);
-  }
+
   if (!children || typeof children !== 'string') {
     return (
       <TouchableOpacity
@@ -94,7 +96,7 @@ const Link = compose(
       {children}
     </Text>
   );
-});
+};
 
 Link.propTypes = {
   history: PropTypes.shape({
@@ -124,4 +126,4 @@ Link.defaultProps = {
   basepath: 'localhost',
 };
 
-export default withRouter(withTheme('Link')(Link));
+export default withTheme('Link')(withRouter(Link));

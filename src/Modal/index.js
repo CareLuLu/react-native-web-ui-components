@@ -6,7 +6,6 @@ import {
   ViewPropTypes,
 } from 'react-native';
 import noop from 'lodash/noop';
-import compose from 'recompact/compose';
 import * as Animatable from 'react-native-animatable';
 import Screen, { withKeyboard } from '../Screen';
 import { withTheme } from '../Theme';
@@ -221,7 +220,4 @@ class Modal extends React.PureComponent {
   }
 }
 
-export default compose(
-  withKeyboard(),
-  withTheme('Modal'),
-)(Modal);
+export default withTheme('Modal')(withKeyboard()(Modal));

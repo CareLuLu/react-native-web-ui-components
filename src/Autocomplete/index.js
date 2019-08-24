@@ -2,14 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Platform, StyleSheet } from 'react-native';
 import { throttle, debounce } from 'throttle-debounce';
-import {
-  noop,
-  omit,
-  filter,
-  isFunction,
-  isEqual,
-} from 'lodash';
-import { compose } from 'recompact';
+import noop from 'lodash/noop';
+import omit from 'lodash/omit';
+import filter from 'lodash/filter';
+import isFunction from 'lodash/isFunction';
+import isEqual from 'lodash/isEqual';
 import { isEmpty } from '../utils';
 import { withTheme } from '../Theme';
 import Screen, { withKeyboard } from '../Screen';
@@ -381,7 +378,4 @@ class Autocomplete extends EventHandler {
   }
 }
 
-export default compose(
-  withTheme('Autocomplete'),
-  withKeyboard(),
-)(Autocomplete);
+export default withTheme('Autocomplete')(withKeyboard()(Autocomplete));

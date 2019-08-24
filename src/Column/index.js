@@ -5,8 +5,7 @@ import {
   View,
   ViewPropTypes,
 } from 'react-native';
-import compose from 'recompact/compose';
-import { withScreen } from '../Screen';
+import { useScreen } from '../Screen';
 import { withTheme } from '../Theme';
 import { pick } from '../utils';
 
@@ -32,7 +31,6 @@ const styles = StyleSheet.create({
 });
 
 const Column = ({
-  screen,
   lg,
   md,
   sm,
@@ -41,6 +39,8 @@ const Column = ({
   absolute,
   children,
 }) => {
+  const screen = useScreen();
+
   let width;
   switch (screen.type) {
     case 'lg': width = pick(lg, md, sm, xs); break;
@@ -71,9 +71,6 @@ const Column = ({
 };
 
 Column.propTypes = {
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-  }).isRequired,
   children: PropTypes.node,
   style: ViewPropTypes.style,
   xs: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -93,7 +90,4 @@ Column.defaultProps = {
   absolute: false,
 };
 
-export default compose(
-  withScreen(),
-  withTheme('Column'),
-)(Column);
+export default withTheme('Column')(Column);

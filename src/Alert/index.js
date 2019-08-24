@@ -1,9 +1,6 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
-import withState from 'recompact/withState';
-import withHandlers from 'recompact/withHandlers';
-import compose from 'recompact/compose';
 import noop from 'lodash/noop';
 import { withTheme } from '../Theme';
 import Popup from '../Popup';
@@ -19,38 +16,37 @@ const styles = StyleSheet.create({
   },
 });
 
-const Alert = compose(
-  withState('visible', 'setVisible', ({ visible }) => visible),
-  withHandlers({
-    hide: ({ setVisible, onOk }) => () => {
-      setVisible(false);
-      onOk();
-    },
-  }),
-)(({
+const Alert = ({
   theme,
   children,
   visible,
   onOk,
-  hide,
   ...props
-}) => (
-  <Popup
-    shouldCloseOnEsc
-    {...props}
-    onClose={onOk}
-    followKeyboard
-    visible={visible}
-    className="NoAdjustment"
-  >
-    {typeof children === 'string' ? (
-      <Text style={styles.text}>{children}</Text>
-    ) : children}
-    <Center>
-      <Button auto type={theme.colors.primary} flat={false} onPress={hide}>Ok</Button>
-    </Center>
-  </Popup>
-));
+}) => {
+  const [isVisible, setVisible] = useState(visible);
+  const hide = useCallback(() => {
+    setVisible(false);
+    onOk();
+  }, [setVisible, onOk]);
+
+  return (
+    <Popup
+      shouldCloseOnEsc
+      {...props}
+      onClose={onOk}
+      followKeyboard
+      visible={isVisible}
+      className="NoAdjustment"
+    >
+      {typeof children === 'string' ? (
+        <Text style={styles.text}>{children}</Text>
+      ) : children}
+      <Center>
+        <Button auto type={theme.colors.primary} flat={false} onPress={hide}>Ok</Button>
+      </Center>
+    </Popup>
+  );
+};
 
 Alert.propTypes = {
   theme: PropTypes.shape().isRequired,

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import { TextInput as RNTextInput, StyleSheet, Platform } from 'react-native';
 import { withTheme } from '../Theme';
 import StylePropType from '../StylePropType';

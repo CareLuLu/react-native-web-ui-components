@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { withHandlers, compose } from 'recompact';
 import { StyleSheet } from 'react-native';
 import Text from '../Text';
 import Bold from '../Bold';
@@ -16,11 +15,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const Item = compose(
-  withHandlers({
-    onPress: ({ item, index, onPress }) => () => onPress(item, index),
-  }),
-)(({
+const Item = ({
+  item,
+  index,
   text,
   onPress,
   value,
@@ -31,6 +28,8 @@ const Item = compose(
   themeInputStyle,
   numberOfLines,
 }) => {
+  const onItemPress = useCallback(() => onPress(item, index), [item, index, onPress]);
+
   const textStyle = [styles.defaults, themeTextStyle.text, style];
   if (active) {
     textStyle.push([{
@@ -45,19 +44,24 @@ const Item = compose(
     const css = StyleSheet.flatten(textStyle);
     const regex = new RegExp(escapeRegExp(value), 'i');
     let lastIndex = 0;
-    text.replace(regex, (match, index) => {
-      components.push(text.substring(lastIndex, index));
-      components.push(<Bold style={{ color: css.color }} key={`${index}__${match}`}>{match}</Bold>);
-      lastIndex = index + match.length;
+    text.replace(regex, (match, i) => {
+      components.push(text.substring(lastIndex, i));
+      components.push(<Bold style={{ color: css.color }} key={`${i}__${match}`}>{match}</Bold>);
+      lastIndex = i + match.length;
     });
     components.push(text.substring(lastIndex));
   }
   return (
-    <Text onPress={onPress} style={textStyle} numberOfLines={numberOfLines} ellipsizeMode="tail">
+    <Text
+      onPress={onItemPress}
+      style={textStyle}
+      numberOfLines={numberOfLines}
+      ellipsizeMode="tail"
+    >
       {components}
     </Text>
   );
-});
+};
 
 Item.propTypes = {
   themeTextStyle: PropTypes.shape().isRequired,

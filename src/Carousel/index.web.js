@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import map from 'lodash/map';
-import compose from 'recompact/compose';
 import murmurhash from 'murmurhash';
 import { Helmet, style, script } from '../Helmet';
 import { withAmp } from '../Amp';
@@ -245,7 +244,4 @@ class Carousel extends React.Component {
   }
 }
 
-export default compose(
-  withAmp(),
-  withTheme('Carousel'),
-)(Carousel);
+export default withTheme('Carousel')(withAmp()(Carousel));

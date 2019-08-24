@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import each from 'lodash/each';
 
 const maskOptions = {
@@ -177,3 +178,16 @@ export const toTime = (value, format = 'MIX') => {
 };
 
 export const escapeRegExp = text => blankOr(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
+export const useDerivedState = (prop) => {
+  const [value, setValue] = useState(prop);
+  const [valueProp, setValueProp] = useState(prop);
+
+  if (prop !== valueProp) {
+    setTimeout(() => {
+      setValue(prop);
+      setValueProp(prop);
+    });
+  }
+  return [value, setValue];
+};

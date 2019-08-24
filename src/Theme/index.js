@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Platform } from 'react-native';
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 import PropTypes from 'prop-types';
 import merge from 'lodash/merge';
 

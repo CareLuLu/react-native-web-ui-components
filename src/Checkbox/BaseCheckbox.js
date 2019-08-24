@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
 import { StyleSheet } from 'react-native';
-import withHandlers from 'recompact/withHandlers';
-import withProps from 'recompact/withProps';
-import compose from 'recompact/compose';
 import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
 import Icon from '../Icon';
@@ -30,89 +27,82 @@ const styles = StyleSheet.create({
   },
 });
 
-const BaseCheckbox = compose(
-  withProps(({
-    type,
-    themeTextStyle,
-    themeInputStyle,
-    checked,
-    iconChecked,
-    iconUnchecked,
-    styleChecked,
-    styleUnchecked,
-    styleCheckedText,
-    styleUncheckedText,
-    style, // eslint-disable-line
-  }) => ({
-    className: `${type} ${!checked ? `${type}__unchecked` : ''}`,
-    viewStyle: [styles.container, style],
-    iconName: checked ? iconChecked : iconUnchecked,
-    iconStyle: [
-      styles.icon,
-      checked
-        ? [themeInputStyle.selected, styleChecked]
-        : [themeInputStyle.unselected, styleUnchecked],
-    ],
-    textStyle: [
-      styles.text,
-      checked
-        ? [themeInputStyle.selected, styleCheckedText]
-        : [themeTextStyle.text, styleUncheckedText],
-    ],
-  })),
-  withHandlers({
-    press: ({
-      checked,
-      value,
-      onPress,
-      disabled,
-      readonly,
-    }) => () => {
-      if (!disabled && !readonly) {
-        onPress(checked, value);
-      }
-    },
-  }),
-)(({
-  type,
+const BaseCheckbox = ({
   text,
-  className,
-  viewStyle,
-  iconName,
-  iconStyle,
-  textStyle,
-  iconUncheckedContent,
-  press,
+  type,
+  themeTextStyle,
+  themeInputStyle,
   disabled,
   readonly,
-}) => (
-  <React.Fragment>
-    <Helmet>
-      <style>
-        {`
-          [data-class~="${type}"] {
-            cursor: pointer;
-          }
-          ${!disabled && !readonly ? `
-            [data-class~="${type}__unchecked"]:hover .fa:before {
-              content: "${iconUncheckedContent}";
+  onPress,
+  value,
+  checked,
+  iconChecked,
+  iconUnchecked,
+  styleChecked,
+  styleUnchecked,
+  styleCheckedText,
+  styleUncheckedText,
+  iconUncheckedContent,
+  ...props
+}) => {
+  const press = useCallback(() => {
+    if (!disabled && !readonly) {
+      onPress(checked, value);
+    }
+  }, [
+    readonly,
+    disabled,
+    checked,
+    value,
+    onPress,
+  ]);
+
+  const className = `${type} ${!checked ? `${type}__unchecked` : ''}`;
+  const viewStyle = [styles.container, props.style]; // eslint-disable-line
+  const iconName = checked ? iconChecked : iconUnchecked;
+  const iconStyle = [
+    styles.icon,
+    checked
+      ? [themeInputStyle.selected, styleChecked]
+      : [themeInputStyle.unselected, styleUnchecked],
+  ];
+  const textStyle = [
+    styles.text,
+    checked
+      ? [themeInputStyle.selected, styleCheckedText]
+      : [themeTextStyle.text, styleUncheckedText],
+  ];
+
+  return (
+    <React.Fragment>
+      <Helmet>
+        <style>
+          {`
+            [data-class~="${type}"] {
+              cursor: pointer;
             }
-          ` : ''}
-        `}
-      </style>
-    </Helmet>
-    <TouchableWithoutFeedback className={className} onPress={press}>
-      <View style={viewStyle}>
-        <Icon name={iconName} style={iconStyle} />
-        {text !== null ? (
-          <Text auto style={textStyle}>
-            {text}
-          </Text>
-        ) : null}
-      </View>
-    </TouchableWithoutFeedback>
-  </React.Fragment>
-));
+            ${!disabled && !readonly ? `
+              [data-class~="${type}__unchecked"]:hover .fa:before {
+                content: "${iconUncheckedContent}";
+              }
+            ` : ''}
+          `}
+        </style>
+      </Helmet>
+      <TouchableWithoutFeedback className={className} onPress={press}>
+        <View style={viewStyle}>
+          <Icon name={iconName} style={iconStyle} />
+          {text !== null ? (
+            <Text auto style={textStyle}>
+              {text}
+            </Text>
+          ) : null}
+        </View>
+      </TouchableWithoutFeedback>
+    </React.Fragment>
+  );
+};
 
 BaseCheckbox.propTypes = {
   themeTextStyle: PropTypes.shape().isRequired,

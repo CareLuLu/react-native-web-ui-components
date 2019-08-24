@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ScrollView as RNScrollView,
 } from 'react-native';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 

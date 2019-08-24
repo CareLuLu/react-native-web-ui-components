@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import noop from 'lodash/noop';
-import withHandlers from 'recompact/withHandlers';
-import compose from 'recompact/compose';
 import createDomStyle from '../createDomStyle';
 import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
@@ -40,14 +38,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const Select = compose(
-  withHandlers({
-    onWrappedChange: ({ onChange, name }) => selected => onChange(selected.value, name),
-  }),
-)(({
+const Select = ({
   themeInputStyle,
   onFocus,
-  onWrappedChange,
   name,
   autoFocus,
   value,
@@ -58,9 +51,12 @@ const Select = compose(
   placeholder,
   css,
   auto,
+  onChange,
   nomargin,
   ...props
 }) => {
+  const onWrappedChange = useCallback(selected => onChange(selected.value, name), [onChange, name]);
+
   const valueLabels = labels === null ? values : labels;
   const options = values.map((v, i) => ({
     value: `${v}`,
@@ -166,7 +162,7 @@ const Select = compose(
       />
     </React.Fragment>
   );
-});
+};
 
 Select.propTypes = {
   themeInputStyle: PropTypes.shape().isRequired,

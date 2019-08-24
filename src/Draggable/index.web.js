@@ -1,33 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RNDraggable from 'react-draggable';
-import withHandlers from 'recompact/withHandlers';
-import compose from 'recompact/compose';
 import noop from 'lodash/noop';
 
-const Draggable = compose(
-  withHandlers({
-    onStart: ({ onDragStart }) => (e, data) => onDragStart(data),
-    onStop: ({ onDragEnd }) => (e, data) => onDragEnd(data),
-  }),
-)(({
+const Draggable = ({
   children,
-  onStart,
-  onStop,
   axis,
   disabled,
   handle,
-}) => (
-  <RNDraggable
-    handle={handle ? `.${handle}` : undefined}
-    disabled={disabled}
-    onStart={onStart}
-    onStop={onStop}
-    axis={axis}
-  >
-    {children({})}
-  </RNDraggable>
-));
+  onDragStart,
+  onDragEnd,
+}) => {
+  const onStart = (e, data) => onDragStart(data);
+  const onStop = (e, data) => onDragEnd(data);
+
+  return (
+    <RNDraggable
+      handle={handle ? `.${handle}` : undefined}
+      disabled={disabled}
+      onStart={onStart}
+      onStop={onStop}
+      axis={axis}
+    >
+      {children({})}
+    </RNDraggable>
+  );
+};
 
 Draggable.propTypes = {
   children: PropTypes.func.isRequired,

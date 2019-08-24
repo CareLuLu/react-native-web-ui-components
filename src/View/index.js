@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View as RNView } from 'react-native';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import { withTheme } from '../Theme';
 
 const View = ({

@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import noop from 'lodash/noop';
 import RNDatepicker from 'react-datepicker';
-import withHandlers from 'recompact/withHandlers';
-import compose from 'recompact/compose';
 import moment from 'moment';
 import { withTheme } from '../Theme';
 import { formatMask } from '../utils';
@@ -57,68 +55,74 @@ const DATE_FORMAT = /[a-zA-Z]/g;
 
 const FORMAT = ['MM/DD/YYYY', 'MM/D/YYYY', 'M/D/YYYY', 'M/DD/YYYY'];
 
-const Datepicker = compose(
-  withHandlers({
-    onRef: ({ autoFocus }) => (ref) => {
-      if (autoFocus && ref) {
-        ref.input.focus();
-      }
-    },
-    onChange: ({ format, onDateChange }) => date => onDateChange(moment(date, FORMAT)
-      .format(format)),
-    onChangeRaw: ({ format }) => (e) => {
-      const input = e.target;
-      const { value } = input;
-      const mask = format.replace(DATE_FORMAT, '9');
-      const formattedValue = formatMask(value, mask);
-      if (value !== formattedValue) {
-        input.value = formattedValue;
-      }
-    },
-    onBlur: ({
-      format,
-      onDateChange,
-      minDate,
-      maxDate,
-    }) => (event) => {
-      if (event.target.value !== '') {
-        const date = moment(event.target.value, format, true);
-        if (date.isValid()) {
-          if (
-            (minDate && moment(minDate, FORMAT).isAfter(date)) // before min date
-            || (maxDate && moment(maxDate, FORMAT).isBefore(date)) // after max date
-          ) {
-            alert('This date cannot be selected. Please choose another one.'); // eslint-disable-line
-            return onDateChange('');
-          }
-          return onDateChange(date.format(format));
-        }
-        return onDateChange('');
-      }
-      return null;
-    },
-  }),
-)(({
-  themeInputStyle,
-  auto,
+const useEvents = ({
   format,
-  onChange,
-  onChangeRaw,
-  placeholder,
   minDate,
   maxDate,
-  disabled,
-  readonly,
-  excludeDates,
-  css,
-  name,
+  autoFocus,
+  showCalendarOnFocus,
+  onDateChange = noop,
+}) => {
+  const [locals] = useState({});
+
+  const onRef = useCallback((ref) => {
+    locals.input = ref && ref.input;
+    if (locals.input && autoFocus && showCalendarOnFocus) {
+      locals.input.focus();
+    }
+  }, [locals, autoFocus, showCalendarOnFocus]);
+
+  const onChange = useCallback((date) => {
+    const nextDate = moment(date, FORMAT).format(format);
+    if (locals.input) {
+      locals.input.value = nextDate;
+    }
+    locals.value = nextDate;
+    setTimeout(() => onDateChange(nextDate));
+  }, [locals, format, onDateChange]);
+
+  const onChangeRaw = useCallback((e) => {
+    const input = e.target;
+    const { value } = input;
+    const mask = format.replace(DATE_FORMAT, '9');
+    const formattedValue = formatMask(value, mask);
+    if (value !== formattedValue) {
+      input.value = formattedValue;
+    }
+  }, [format]);
+
+  const onBlur = useCallback((e) => {
+    if (locals.value !== e.target.value) {
+      const nextDate = moment(e.target.value, format, true);
+      if (nextDate.isValid()) {
+        if (
+          (minDate && moment(minDate, FORMAT).isAfter(nextDate)) // before min date
+          || (maxDate && moment(maxDate, FORMAT).isBefore(nextDate)) // after max date
+        ) {
+          alert('This date cannot be selected. Please choose another one.'); // eslint-disable-line
+          return onDateChange('');
+        }
+        return onDateChange(nextDate.format(format));
+      }
+      return onDateChange('');
+    }
+    return null;
+  }, [format, onDateChange, minDate, maxDate, locals]);
+
+  return [
+    onRef,
+    onChange,
+    onChangeRaw,
+    onBlur,
+  ];
+};
+
+const useCss = ({
   date,
-  onRef,
-  onFocus,
-  onBlur,
+  auto,
+  name,
+  themeInputStyle,
   selectedDateColor,
-  className,
-  ...props
 }) => {
   const id = `DatePicker__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`;
   const customCss = `
@@ -155,7 +159,42 @@ const Datepicker = compose(
       }
     ` : ''}
   `;
+
+  return [id, customCss];
+};
+
+const Datepicker = (props) => {
+  const {
+    auto,
+    format,
+    placeholder,
+    minDate,
+    maxDate,
+    disabled,
+    readonly,
+    excludeDates,
+    css,
+    date,
+    onFocus,
+    className,
+  } = props;
+
+  const [
+    onRef,
+    onChange,
+    onChangeRaw,
+    onBlur,
+  ] = useEvents(props);
+
+  const [id, customCss] = useCss(props);
+
   const selected = moment(date, FORMAT);
+
+  const currentStyle = [
+    styles.datepicker,
+    auto ? null : styles.fullWidth,
+    props.style, // eslint-disable-line
+  ];
   return (
     <View className={id}>
       <Helmet>
@@ -180,16 +219,14 @@ const Datepicker = compose(
         excludeDates={excludeDates}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[styles.datepicker, auto ? null : styles.fullWidth, props.style]}
+        style={currentStyle}
       />
     </View>
   );
-});
+};
 
 Datepicker.propTypes = {
-  themeInputStyle: PropTypes.shape().isRequired,
   className: PropTypes.string,
-  name: PropTypes.string,
   css: PropTypes.string,
   auto: PropTypes.bool,
   style: StylePropType,
@@ -202,13 +239,11 @@ Datepicker.propTypes = {
   date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   excludeDates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
   onFocus: PropTypes.func,
-  autoFocus: PropTypes.bool,
-  selectedDateColor: PropTypes.string,
+  showCalendarOnFocus: PropTypes.bool, // eslint-disable-line
 };
 
 Datepicker.defaultProps = {
   className: '',
-  name: '',
   css: '',
   auto: false,
   style: null,
@@ -221,8 +256,7 @@ Datepicker.defaultProps = {
   date: null,
   excludeDates: [],
   onFocus: noop,
-  autoFocus: false,
-  selectedDateColor: null,
+  showCalendarOnFocus: true,
 };
 
 export default withTheme('Datepicker')(Datepicker);

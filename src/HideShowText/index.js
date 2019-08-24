@@ -1,20 +1,12 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import withStateHandlers from 'recompact/withStateHandlers';
 import StylePropType from '../StylePropType';
 import { toDescription, isSSR } from '../utils';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 import ReadMoreLessLink from '../ReadMoreLessLink';
 
-const HideShowText = withStateHandlers(
-  ({ visible = false }) => ({ show: visible }),
-  {
-    toggle: ({ show }) => () => ({ show: !show }),
-  },
-)(({
-  toggle,
-  show,
+const HideShowText = ({
   visible,
   threshold,
   children,
@@ -25,6 +17,9 @@ const HideShowText = withStateHandlers(
   auto,
   ...props
 }) => {
+  const [isVisible, setVisible] = useState(visible);
+  const toggle = useCallback(() => setVisible(!isVisible), [isVisible]);
+
   if (isSSR()) {
     return <Text {...props}>{children}</Text>;
   }
@@ -32,7 +27,7 @@ const HideShowText = withStateHandlers(
   return (
     <React.Fragment>
       <Text auto={auto} {...props}>
-        {show ? children : visibleText}
+        {isVisible ? children : visibleText}
         {auto && visibleText !== children ? (
           <React.Fragment>
             {' '}
@@ -43,7 +38,7 @@ const HideShowText = withStateHandlers(
               style={buttonStyle}
               type="pink"
               onChange={toggle}
-              visible={show}
+              visible={isVisible}
             />
           </React.Fragment>
         ) : null}
@@ -55,12 +50,12 @@ const HideShowText = withStateHandlers(
           style={buttonStyle}
           type="pink"
           onChange={toggle}
-          visible={show}
+          visible={isVisible}
         />
       ) : null}
     </React.Fragment>
   );
-});
+};
 
 HideShowText.propTypes = {
   children: PropTypes.string.isRequired,

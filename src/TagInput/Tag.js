@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { withHandlers } from 'recompact';
 import { StyleSheet } from 'react-native';
 import { withTheme } from '../Theme';
 import StylePropType from '../StylePropType';
@@ -22,17 +21,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const Tag = withHandlers({
-  onPress: ({ index, onDelete }) => () => onDelete(index),
-})(({
+const Tag = ({
   tag,
   style,
   index,
-  onPress,
+  onDelete,
   getItemValue,
   themeInputStyle,
 }) => {
+  const onPress = useCallback(() => onDelete(index), [onDelete, index]);
+
   const { color } = StyleSheet.flatten(themeInputStyle.selected);
+
   return (
     <Text
       auto
@@ -52,7 +52,7 @@ const Tag = withHandlers({
       {`${getItemValue(tag)} ×`}
     </Text>
   );
-});
+};
 
 Tag.propTypes = {
   themeInputStyle: PropTypes.shape().isRequired,

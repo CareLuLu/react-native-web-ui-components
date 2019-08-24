@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableWithoutFeedback as RNTouchableWithoutFeedback } from 'react-native';
-import { noop } from 'lodash';
+import noop from 'lodash/noop';
 import { withTheme } from '../Theme';
 
 const TouchableWithoutFeedback = ({

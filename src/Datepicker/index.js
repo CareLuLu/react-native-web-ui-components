@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Alert, StyleSheet } from 'react-native';
-import withHandlers from 'recompact/withHandlers';
+import noop from 'lodash/noop';
 import moment from 'moment';
 import RNDatepicker from 'react-native-datepicker';
 import StylePropType from '../StylePropType';
@@ -54,8 +54,8 @@ const FORMAT = 'MM/DD/YYYY';
 
 const icon = { uri: 'https://divin2sy6ce0b.cloudfront.net/images/calendar-icon.png' };
 
-const Datepicker = withHandlers({
-  onChange: ({ onDateChange, excludeDates }) => (dateString) => {
+const useOnChange = ({ onDateChange, excludeDates }) => {
+  const onChange = useCallback((dateString) => {
     if (excludeDates) {
       const date = moment(dateString, FORMAT).format(FORMAT);
       const notValid = excludeDates.filter(d => (moment(d).format(FORMAT) === date)).length;
@@ -65,8 +65,12 @@ const Datepicker = withHandlers({
       }
     }
     return onDateChange(dateString);
-  },
-})(({
+  }, [onDateChange, excludeDates]);
+
+  return onChange;
+};
+
+const Datepicker = ({
   fontFamily,
   themeTextStyle,
   themeInputStyle,
@@ -74,13 +78,15 @@ const Datepicker = withHandlers({
   auto,
   customStyles,
   placeholder,
-  onChange,
   minDate,
   maxDate,
   disabled,
   readonly,
+  onDateChange,
+  excludeDates,
   ...props
 }) => {
+  const onChange = useOnChange({ onDateChange, excludeDates });
   const mergedStyles = {
     dateInput: [
       styles.input,
@@ -125,7 +131,7 @@ const Datepicker = withHandlers({
     datepickerProps.maxDate = moment(maxDate, FORMAT).format('MM/DD/YYYY');
   }
   return <RNDatepicker {...datepickerProps} />;
-});
+};
 
 Datepicker.propTypes = {
   fontFamily: PropTypes.shape().isRequired,
@@ -137,6 +143,7 @@ Datepicker.propTypes = {
   style: StylePropType,
   customStyles: StylePropType,
   placeholder: PropTypes.string,
+  onDateChange: PropTypes.func,
   minDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   maxDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   excludeDates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
@@ -149,6 +156,7 @@ Datepicker.defaultProps = {
   style: null,
   customStyles: {},
   placeholder: ' ',
+  onDateChange: noop,
   excludeDates: [],
   minDate: null,
   maxDate: null,

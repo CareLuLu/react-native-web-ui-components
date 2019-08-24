@@ -2,12 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
 import NativeSidebar from 'react-native-side-menu';
-import compose from 'recompact/compose';
 import { withTheme } from '../Theme';
-import { withScreen } from '../Screen';
+import { useScreen } from '../Screen';
 
 const Sidebar = ({
-  screen,
   leftOpen,
   rightOpen,
   leftOnChange,
@@ -17,6 +15,8 @@ const Sidebar = ({
   disabled,
   children,
 }) => {
+  const screen = useScreen();
+
   const { width } = screen;
   const openMenuOffset = Math.min(width * 0.8, 400);
   const edgeHitWidth = 120;
@@ -112,7 +112,4 @@ Sidebar.defaultProps = {
   disabled: false,
 };
 
-export default compose(
-  withTheme('Sidebar'),
-  withScreen(),
-)(Sidebar);
+export default withTheme('Sidebar')(Sidebar);

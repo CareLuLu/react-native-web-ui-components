@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
-import { compose } from 'recompact';
 import StylePropType from '../StylePropType';
 import { pick } from '../utils';
-import { withScreen } from '../Screen';
+import { useScreen } from '../Screen';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 
@@ -17,7 +16,6 @@ const styles = StyleSheet.create({
 
 const Title = ({
   style,
-  screen,
   level,
   xs,
   sm,
@@ -25,6 +23,8 @@ const Title = ({
   lg,
   ...props
 }) => {
+  const screen = useScreen();
+
   let fontSize;
   switch (screen.type) {
     case 'lg': fontSize = pick(lg, md, sm, xs); break;
@@ -59,9 +59,6 @@ const Title = ({
 
 Title.propTypes = {
   id: PropTypes.string.isRequired,
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-  }).isRequired,
   style: StylePropType,
   level: PropTypes.number,
   xs: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -79,7 +76,4 @@ Title.defaultProps = {
   lg: null,
 };
 
-export default compose(
-  withScreen(),
-  withTheme('Title'),
-)(Title);
+export default withTheme('Title')(Title);

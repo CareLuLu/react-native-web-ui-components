@@ -1,10 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import compose from 'recompact/compose';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import StylePropType from '../StylePropType';
-import { withAmp } from '../Amp';
+import { useAmp } from '../Amp';
 import { withTheme } from '../Theme';
 
 const PROTOCOL_REGEX = /^[a-zA-Z\-_]+:\/\//;
@@ -33,10 +32,7 @@ const go = (basepath, to, history, external, replace) => (e) => {
   history[replace ? 'replace' : 'push'](href);
 };
 
-const Link = compose(
-  withAmp(),
-)(({
-  amp,
+const Link = ({
   theme,
   blank,
   className,
@@ -54,6 +50,8 @@ const Link = compose(
   basepath,
   fontFamily,
 }) => {
+  const amp = useAmp();
+
   if (onPress === null && to === null) {
     throw new Error('Either `onPress` or `to` must be provided');
   }
@@ -99,7 +97,7 @@ const Link = compose(
       {children}
     </Wrapper>
   );
-});
+};
 
 Link.propTypes = {
   theme: PropTypes.shape().isRequired,
@@ -142,4 +140,4 @@ Link.defaultProps = {
   basepath: 'localhost',
 };
 
-export default withRouter(withTheme('Link')(Link));
+export default withTheme('Link')(withRouter(Link));

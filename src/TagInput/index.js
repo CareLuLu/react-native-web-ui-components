@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { noop, omit, reduce } from 'lodash';
-import {
-  withProps,
-  withHandlers,
-  withStateHandlers,
-  compose,
-} from 'recompact';
+import noop from 'lodash/noop';
+import omit from 'lodash/omit';
+import reduce from 'lodash/reduce';
 import isEqual from 'fast-deep-equal';
 import { withTheme } from '../Theme';
 import StylePropType from '../StylePropType';
 import View from '../View';
 import DefaultTag from './Tag';
 import DefaultInput from './Input';
+
+const defaultTags = [];
+
+const forbiddenProps = [
+  'style',
+  'tagStyle',
+  'inputStyle',
+  'Tag',
+  'Input',
+  'allowNew',
+  'buildNew',
+  'onChange',
+];
 
 const styles = StyleSheet.create({
   container: {
@@ -27,65 +36,94 @@ const styles = StyleSheet.create({
   },
 });
 
-const onChangeTextHandler = () => text => ({ text });
-
-const onSelectHandler = (__, { tags, onChange }) => (___, tag) => {
-  const duplicate = reduce(tags, (r, t) => (r || isEqual(t, tag)), false);
-  if (!duplicate) {
-    onChange(tags.concat(tag));
-  }
-  return { text: '' };
-};
-
-const onDeleteHandler = ({ tags, onChange }) => index => onChange(tags
-  .filter((tag, i) => (i !== index)));
-
-const onSubmitEditingHandler = ({ text }, {
-  tags,
+const useEvents = ({
+  text,
+  value,
   onChange,
   allowNew,
   buildNew,
-}) => () => {
-  if (text && allowNew) {
-    onChange(tags.concat(buildNew(text)));
-    return { text: '' };
-  }
-  return {};
+}) => {
+  const [currentText, setCurrentText] = useState(`${text}`);
+
+  const [params] = useState({});
+
+  const onRef = useCallback((input) => {
+    params.input = input;
+  }, [params]);
+
+  const focus = useCallback(() => (params.input && params.input.focus()), [params]);
+
+  const isFocused = useCallback(() => (params.input && params.input.isFocused()), [params]);
+
+  const onChangeText = useCallback(nextText => setCurrentText(nextText), [setCurrentText]);
+
+  const tags = value || defaultTags;
+
+  const onSelect = useCallback((__, tag) => {
+    const duplicate = reduce(tags, (r, t) => (r || isEqual(t, tag)), false);
+    if (!duplicate) {
+      onChange(tags.concat(tag));
+    }
+    setCurrentText('');
+  }, [tags, onChange, setCurrentText]);
+
+  const onSubmitEditing = useCallback(() => {
+    if (currentText && allowNew) {
+      onChange(tags.concat(buildNew(currentText)));
+      setCurrentText('');
+    }
+  }, [
+    tags,
+    onChange,
+    allowNew,
+    buildNew,
+    currentText,
+    setCurrentText,
+  ]);
+
+  const onDelete = useCallback(
+    index => onChange(tags.filter((tag, i) => (i !== index))),
+    [tags, onChange],
+  );
+
+  return {
+    tags,
+    focus,
+    isFocused,
+    onRef,
+    onChangeText,
+    onSelect,
+    onSubmitEditing,
+    onDelete,
+    text: currentText,
+  };
 };
 
-const TagInput = compose(
-  withProps(({ value }) => ({ tags: value || [] })),
-  withHandlers(() => {
-    let input;
-    return {
-      onDelete: onDeleteHandler,
-      onRef: () => (ref) => { input = ref; },
-      focus: () => () => (input && input.focus()),
-      isFocused: () => () => (input && input.isFocused()),
-    };
-  }),
-  withStateHandlers(({ text }) => ({ text: `${text}` }), {
-    onChangeText: onChangeTextHandler,
-    onSelect: onSelectHandler,
-    onSubmitEditing: onSubmitEditingHandler,
-  }),
-)(({
-  text,
-  tags,
-  style,
-  tagStyle,
-  inputStyle,
-  Tag,
-  Input,
-  focus,
-  isFocused,
-  onRef,
-  ...props
-}) => {
-  const { themeInputStyle, getItemValue, autoFocus } = props;
+const TagInput = (props) => {
+  const {
+    tags,
+    text,
+    focus,
+    isFocused,
+    onDelete,
+    ...handlers
+  } = useEvents(props);
+
+  const {
+    Tag,
+    tagStyle,
+    Input,
+    inputStyle,
+    style,
+    autoFocus,
+    getItemValue,
+    themeInputStyle,
+  } = props;
+
   if (autoFocus && !isFocused()) {
     setTimeout(focus);
   }
+
   return (
     <View
       style={[
@@ -99,6 +137,7 @@ const TagInput = compose(
       {tags.map((tag, index) => (
         <Tag
           {...props}
+          onDelete={onDelete}
           key={getItemValue(tag)}
           tag={tag}
           index={index}
@@ -106,14 +145,14 @@ const TagInput = compose(
         />
       ))}
       <Input
-        {...omit(props, ['allowNew', 'buildNew', 'onChange', 'onDelete'])}
-        onRef={onRef}
+        {...omit(props, forbiddenProps)}
+        {...handlers}
         value={text}
         style={inputStyle}
       />
     </View>
   );
-});
+};
 
 TagInput.propTypes = {
   themeInputStyle: PropTypes.shape().isRequired,
@@ -143,8 +182,7 @@ TagInput.defaultProps = {
   Input: DefaultInput,
   autoFocus: false,
   text: '',
-  value: [],
-
+  value: undefined,
 };
 
 export default withTheme('TagInput')(TagInput);

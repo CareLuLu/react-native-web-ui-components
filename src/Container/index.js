@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, ViewPropTypes } from 'react-native';
-import compose from 'recompact/compose';
 import { withTheme } from '../Theme';
-import { withScreen } from '../Screen';
+import { useScreen } from '../Screen';
 import View from '../View';
 
 const rowStyle = {
@@ -35,7 +34,8 @@ const styles = StyleSheet.create({
 });
 
 const Container = (props) => {
-  const { type, style, screen } = props;
+  const screen = useScreen();
+  const { type, style } = props;
   if (type === 'full') {
     return <View {...props} style={[styles.row, style]} />;
   }
@@ -54,9 +54,6 @@ const Container = (props) => {
 };
 
 Container.propTypes = {
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-  }).isRequired,
   type: PropTypes.oneOf(['limited', 'full']),
   children: PropTypes.node,
   style: ViewPropTypes.style,
@@ -68,7 +65,4 @@ Container.defaultProps = {
   style: styles.empty,
 };
 
-export default compose(
-  withScreen(),
-  withTheme('Container'),
-)(Container);
+export default withTheme('Container')(Container);
