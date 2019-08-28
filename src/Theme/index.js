@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import omit from 'lodash/omit';
 import PropTypes from 'prop-types';
@@ -206,6 +206,22 @@ export class Provider extends React.Component {
 }
 
 export const { Consumer } = Theme;
+
+export const useTheme = (type, { style, ...props }) => {
+  const theme = useContext(Theme);
+  return {
+    ...(theme['*'] || {}),
+    ...((theme.platform[Platform.OS] && theme.platform[Platform.OS]['*']) || {}),
+    ...(theme[type] || {}),
+    ...((theme.platform[Platform.OS] && theme.platform[Platform.OS][type]) || {}),
+    ...props,
+    style: [theme[type] && theme[type].style, style],
+    theme,
+    themeTextStyle: theme.colors[theme.colors.text],
+    themePrimaryStyle: theme.colors[theme.colors.primary],
+    themeInputStyle: getInputStyle(theme, props),
+  };
+};
 
 export const withTheme = type => Component => ({ style, ...props }) => { // eslint-disable-line
   Component.displayName = type; // eslint-disable-line
