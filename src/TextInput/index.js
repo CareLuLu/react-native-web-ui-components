@@ -62,8 +62,6 @@ const TextInput = (props) => {
 };
 
 TextInput.propTypes = {
-  theme: PropTypes.shape().isRequired,
-  themeInputStyle: PropTypes.shape().isRequired,
   style: StylePropType,
   multiline: PropTypes.bool,
   numberOfLines: PropTypes.number,
