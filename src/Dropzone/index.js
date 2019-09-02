@@ -106,9 +106,9 @@ const getMediaTypes = (accept) => {
   if (image && video) {
     mediaTypes = 'All';
   } else if (!video) {
-    mediaTypes = 'Image';
+    mediaTypes = 'Images';
   } else {
-    mediaTypes = 'Video';
+    mediaTypes = 'Videos';
   }
   return mediaTypes;
 };
