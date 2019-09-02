@@ -141,7 +141,7 @@ const Select = ({
       </Helmet>
       <ModalPicker
         name={id}
-        icon="caretDown"
+        icon="caret-down"
         type="white"
         value={`${value}`}
         style={[
