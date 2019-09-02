@@ -86,7 +86,7 @@ React Native Web UI Components was created to facilitate the development of `wri
 First you need to install react ^16.8.3 (this library uses react-hooks).
 
 ```sh
-yarn add react react-dom react-router react-router-dom react-router-native expo expo-blur expo-font expo-file-system
+yarn add react react-dom react-router react-router-dom react-router-native expo
 ```
 
 Expo uses a custom version of react-native and therefore you need to check what is the React Native repository for the Expo version you're using. For Expo v33.x.x you'd run:

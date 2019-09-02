@@ -5170,12 +5170,26 @@ expect@^24.9.0:
     jest-message-util "^24.9.0"
     jest-regex-util "^24.9.0"
 
+expo-blur@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-6.0.0.tgz#c63e7c464e1a8137dae8a71f893426a538eb9ed9"
+  integrity sha512-UqMaE2G2DfoeEJCYFfFLXq9nBeD0m3G1IISpxmdLXHDvzQuFl0kzNAZXX81a9sByWTV85KsxxnxoLImbfxV33A==
+  dependencies:
+    prop-types "^15.6.0"
+
 expo-document-picker@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-6.0.0.tgz#6dcf592a21224e8381c00372bf46bb1d3bdd397b"
   integrity sha512-P/RZDULmvEA3OMor3VjmCTIy5Dud4cb8rOah1qMLqnVZKTCwoXq6jr/p103/PlNbluQQSBYq7QkOA9IkylmGJg==
   dependencies:
     uuid "^3.3.2"
+
+expo-file-system@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-6.0.2.tgz#e65f30eb6a7213e07933df9688116eaf4e25bbf8"
+  integrity sha512-s+6oQpLhcT7MQp7fcoj1E+zttMr0WX6c0FrddzqB4dUfhIggV+nb35nQMASIiTHAj8VPUanTFliY5rETHRMHRA==
+  dependencies:
+    uuid-js "^0.7.5"
 
 expo-image-picker@^6.0.0:
   version "6.0.0"
@@ -12439,6 +12453,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
+
+uuid-js@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/uuid-js/-/uuid-js-0.7.5.tgz#6c886d02a53d2d40dcf25d91a170b4a7b25b94d0"
+  integrity sha1-bIhtAqU9LUDc8l2RoXC0p7JblNA=
 
 uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2:
   version "3.3.2"

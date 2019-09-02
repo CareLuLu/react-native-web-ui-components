@@ -1,6 +1,6 @@
 {
   "name": "react-native-web-ui-components",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -49,7 +49,9 @@
     "@expo/vector-icons": "^10.0.4",
     "@ptomasroos/react-native-multi-slider": "^1.0.0",
     "@tippy.js/react": "^2.0.0",
+    "expo-blur": "^6.0.0",
     "expo-document-picker": "^6.0.0",
+    "expo-file-system": "^6.0.2",
     "expo-image-picker": "^6.0.0",
     "expo-permissions": "^6.0.0",
     "fast-deep-equal": "^2.0.1",
