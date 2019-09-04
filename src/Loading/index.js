@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 import { withTheme } from '../Theme';
 import Popup from '../Popup';
 import View from '../View';
-import Spinner from '../Spinner';
+import DefaultSpinner from '../Spinner';
 
 const styles = StyleSheet.create({
   popup: {
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Loading = ({ children, SpinnerComponent, ...props }) => (
+const Loading = ({ children, Spinner, ...props }) => (
   <Popup
     {...props}
     className="NoAdjustment"
@@ -24,19 +24,19 @@ const Loading = ({ children, SpinnerComponent, ...props }) => (
   >
     {children}
     <View style={styles.popup}>
-      <SpinnerComponent />
+      <Spinner />
     </View>
   </Popup>
 );
 
 Loading.propTypes = {
   children: PropTypes.node,
-  SpinnerComponent: PropTypes.func,
+  Spinner: PropTypes.func,
 };
 
 Loading.defaultProps = {
   children: null,
-  SpinnerComponent: Spinner,
+  Spinner: DefaultSpinner,
 };
 
 export default withTheme('Loading')(Loading);

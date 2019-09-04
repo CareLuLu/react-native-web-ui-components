@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Tippy from '@tippy.js/react';
 import { withTheme } from '../Theme';
 import { Helmet, style } from '../Helmet';
 
-const Tooltip = props => (
+const Tooltip = ({ content, children }) => (
   <React.Fragment>
     <Helmet>
       <style>
@@ -11,12 +12,20 @@ const Tooltip = props => (
       </style>
     </Helmet>
     <Tippy
-      performance
       animateFill={false}
       theme="light"
-      {...props}
-    />
+      content={content}
+    >
+      <span>
+        {children}
+      </span>
+    </Tippy>
   </React.Fragment>
 );
+
+Tooltip.propTypes = {
+  content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
+  children: PropTypes.node.isRequired,
+};
 
 export default withTheme('Tooltip')(Tooltip);

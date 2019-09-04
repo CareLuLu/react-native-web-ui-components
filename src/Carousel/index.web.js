@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import map from 'lodash/map';
-import compose from 'recompact/compose';
 import murmurhash from 'murmurhash';
 import { Helmet, style, script } from '../Helmet';
 import { withAmp } from '../Amp';
 import { withTheme } from '../Theme';
 import Row from '../Row';
 import Icon from '../Icon';
+import TouchableOpacity from '../TouchableOpacity';
 
 const styles = StyleSheet.create({
   carousel: {
@@ -184,13 +184,13 @@ class Carousel extends React.Component {
         <Helmet>
           <style>
             {`
-              .Carousel__controlLeft:hover {
+              [data-class~="Carousel__controlLeft"]:hover {
                 cursor: pointer;
                 opacity: 0.9;
                 background-image: linear-gradient(to right,rgba(0,0,0,.5) 0,rgba(0,0,0,.0001) 100%);
                 background-repeat: repeat-x;
               }
-              .Carousel__controlRight:hover {
+              [data-class~="Carousel__controlRight"]:hover {
                 cursor: pointer;
                 opacity: 0.9;
                 background-image: linear-gradient(to right,rgba(0,0,0,.0001) 0,rgba(0,0,0,.5) 100%);
@@ -215,10 +215,18 @@ class Carousel extends React.Component {
         ))}
         {controls ? (
           <React.Fragment>
-            <TouchableOpacity onPress={this.tryPrev} className="Carousel__controlLeft" style={[styles.control, styles.leftControl]}>
+            <TouchableOpacity
+              onPress={this.tryPrev}
+              className="Carousel__controlLeft"
+              style={[styles.control, styles.leftControl]}
+            >
               <Icon name="chevron-left" style={styles.icon} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={this.tryNext} className="Carousel__controlRight" style={[styles.control, styles.rightControl]}>
+            <TouchableOpacity
+              onPress={this.tryNext}
+              className="Carousel__controlRight"
+              style={[styles.control, styles.rightControl]}
+            >
               <Icon name="chevron-right" style={styles.icon} />
             </TouchableOpacity>
           </React.Fragment>
@@ -236,7 +244,4 @@ class Carousel extends React.Component {
   }
 }
 
-export default compose(
-  withAmp(),
-  withTheme('Carousel'),
-)(Carousel);
+export default withTheme('Carousel')(withAmp()(Carousel));

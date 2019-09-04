@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import noop from 'lodash/noop';
-import withHandlers from 'recompact/withHandlers';
-import compose from 'recompact/compose';
 import createDomStyle from '../createDomStyle';
 import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
@@ -40,29 +38,26 @@ const styles = StyleSheet.create({
   },
 });
 
-const Select = compose(
-  withHandlers({
-    onWrappedChange: ({ onChange, name }) => selected => onChange(selected.value, name),
-  }),
-)(({
-  theme,
+const Select = ({
   themeInputStyle,
   onFocus,
-  onWrappedChange,
+  onBlur,
   name,
-  autofocus,
+  autoFocus,
   value,
   values,
   labels,
   readonly,
   disabled,
   placeholder,
-  hasError,
   css,
   auto,
+  onChange,
   nomargin,
   ...props
 }) => {
+  const onWrappedChange = selected => onChange(selected.value, name);
+
   const valueLabels = labels === null ? values : labels;
   const options = values.map((v, i) => ({
     value: `${v}`,
@@ -91,46 +86,54 @@ const Select = compose(
   if (empty) {
     selectTextStyle.push(themeInputStyle.placeholder);
   }
+  const id = `Select__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`;
   return (
     <React.Fragment>
       <Helmet>
         <style>
           {`
-            .select-${name} {
+            .select.select-${id} {
               ${auto ? '' : 'width: 100%;'}
               margin-bottom: ${auto || nomargin ? 0 : 10}px;
             }
-            .select-${name} .select__control {
+            .select.select-${id} .select__control {
               height: 40px;
             }
-            .select-${name} .select__placeholder {
+            .select.select-${id} .select__placeholder {
               ${createDomStyle(themeInputStyle[empty ? 'placeholder' : 'text'])}
               white-space: nowrap;
               overflow: hidden;
             }
-            .select-${name} .select__dropdown-indicator path {
+            .select.select-${id} .select__dropdown-indicator path {
               ${createDomStyle(themeInputStyle[empty ? 'placeholder' : 'text'])}
             }
-            .select-${name} .select__control.select__control--is-disabled {
-              ${createDomStyle(theme.input.disabled.background)}
-              ${createDomStyle(theme.input.disabled.border)}
-              ${createDomStyle(theme.input.disabled.opacity)}
+            .select.select-${id} .select__control.select__control--is-disabled {
+              ${createDomStyle(themeInputStyle.background)}
+              ${createDomStyle(themeInputStyle.border)}
+              ${createDomStyle(themeInputStyle.opacity)}
             }
             ${!empty && placeholder !== null ? `
-            .select-${name} .select__option:first-child {
+            .select.select-${id} .select__option:first-child {
               ${createDomStyle(themeInputStyle.placeholder)}
             }
-            .select-${name} .select__option--is-focused.select__option:first-child {
+            .select.select-${id} .select__option--is-focused.select__option:first-child {
               color: ${StyleSheet.flatten(themeInputStyle.background).backgroundColor};
             }
             ` : ''}
-            .select-${name} .select__control {
+            .select.select-${id} .select__control {
               ${createDomStyle(themeInputStyle.background)}
               ${createDomStyle(themeInputStyle.border)}
               ${createDomStyle(themeInputStyle.opacity)}
               border-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor}; !important;
             }
-            .select-${name} .select__indicator-separator {
+            .select.select-${id} .select__indicator-separator {
+              background-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
+            }
+            .select.select-${id} .select__control.select__control--is-focused {
+              border-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
+              box-shadow: none;
+            }
+            .select.select-${id} .select__option--is-focused {
               background-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
             }
             ${css}
@@ -138,8 +141,8 @@ const Select = compose(
         </style>
       </Helmet>
       <ModalPicker
-        name={name}
-        icon="caretDown"
+        name={id}
+        icon="caret-down"
         type="white"
         value={`${value}`}
         style={[
@@ -150,9 +153,10 @@ const Select = compose(
         ]}
         selectStyle={[styles.select, selectStyle, props.selectStyle]}
         selectTextStyle={[styles.selectText, selectTextStyle, props.selectTextStyle]}
-        autoFocus={autofocus}
-        isDisabled={disabled || readonly}
+        autoFocus={autoFocus}
+        disabled={disabled || readonly}
         onFocus={onFocus}
+        onBlur={onBlur}
         onChange={onWrappedChange}
         placeholder={label}
         options={options}
@@ -160,7 +164,7 @@ const Select = compose(
       />
     </React.Fragment>
   );
-});
+};
 
 Select.propTypes = {
   themeInputStyle: PropTypes.shape().isRequired,
@@ -169,14 +173,14 @@ Select.propTypes = {
     PropTypes.string,
   ]).isRequired).isRequired,
   name: PropTypes.string.isRequired,
-  autofocus: PropTypes.bool,
+  autoFocus: PropTypes.bool,
   labels: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   placeholder: PropTypes.string,
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
-  hasError: PropTypes.bool,
   onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   css: PropTypes.string,
   containerStyle: StylePropType,
@@ -187,14 +191,14 @@ Select.propTypes = {
 };
 
 Select.defaultProps = {
-  autofocus: false,
+  autoFocus: false,
   value: '',
   labels: null,
   placeholder: null,
   readonly: false,
   disabled: false,
-  hasError: false,
   onFocus: noop,
+  onBlur: noop,
   onChange: noop,
   css: '',
   containerStyle: styles.empty,

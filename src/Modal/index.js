@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  View as RNView,
   StyleSheet,
   ViewPropTypes,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import noop from 'lodash/noop';
-import compose from 'recompact/compose';
 import * as Animatable from 'react-native-animatable';
 import Screen, { withKeyboard } from '../Screen';
 import { withTheme } from '../Theme';
 import View from '../View';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 /* eslint react/no-unused-state: 0 */
 /* eslint react/no-unused-prop-types: 0 */
@@ -182,7 +182,7 @@ class Modal extends React.PureComponent {
       return null;
     }
     if (!overlayStyle) {
-      return <View ref={this.onRef} style={styles.marker} />;
+      return <RNView ref={this.onRef} style={styles.marker} />;
     }
     if (followKeyboard) {
       return (
@@ -220,7 +220,4 @@ class Modal extends React.PureComponent {
   }
 }
 
-export default compose(
-  withKeyboard(),
-  withTheme('Modal'),
-)(Modal);
+export default withTheme('Modal')(withKeyboard()(Modal));

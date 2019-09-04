@@ -21,6 +21,10 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.8)',
   },
 
+  optionScrollView: {
+    backgroundColor: 'transparent',
+  },
+
   cancelContainer: {
     alignSelf: 'stretch',
   },

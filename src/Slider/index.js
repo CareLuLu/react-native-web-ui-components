@@ -46,6 +46,8 @@ const Slider = ({
   onValuesChangeFinish,
   style,
   sliderLength,
+  disabled,
+  readonly,
 }) => {
   const selectedStyle = StyleSheet.flatten(themeInputStyle.selected);
   const unselectedStyle = StyleSheet.flatten(themeInputStyle.unselected);
@@ -57,7 +59,7 @@ const Slider = ({
       step={step}
       markerOffsetY={18}
       markerOffsetX={9}
-      containerStyle={[styles.container, style]}
+      containerStyle={[styles.container, themeInputStyle.opacity, style]}
       markerStyle={[
         styles.marker,
         {
@@ -79,6 +81,8 @@ const Slider = ({
       onValuesChange={onValuesChange}
       onValuesChangeStart={onValuesChangeStart}
       onValuesChangeFinish={onValuesChangeFinish}
+      enableOne={!(disabled || readonly)}
+      enableTwo={!(disabled || readonly)}
     />
   );
 };
@@ -94,6 +98,8 @@ Slider.propTypes = {
   onValuesChangeFinish: PropTypes.func,
   style: StylePropType,
   sliderLength: PropTypes.number.isRequired,
+  disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
 };
 
 Slider.defaultProps = {
@@ -104,6 +110,8 @@ Slider.defaultProps = {
   onValuesChangeStart: noop,
   onValuesChangeFinish: noop,
   style: null,
+  disabled: false,
+  readonly: false,
 };
 
 export default withTheme('Slider')(Slider);

@@ -3,17 +3,20 @@ import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
 import NativeSidebar from 'react-native-side-menu';
 import { withTheme } from '../Theme';
+import { useScreen } from '../Screen';
 
 const Sidebar = ({
-  screen,
   leftOpen,
   rightOpen,
   leftOnChange,
   rightOnChange,
   leftComponent,
   rightComponent,
+  disabled,
   children,
 }) => {
+  const screen = useScreen();
+
   const { width } = screen;
   const openMenuOffset = Math.min(width * 0.8, 400);
   const edgeHitWidth = 120;
@@ -28,6 +31,7 @@ const Sidebar = ({
         onChange={leftOnChange}
         openMenuOffset={openMenuOffset}
         edgeHitWidth={edgeHitWidth}
+        disableGestures={disabled || rightOpen}
       >
         <NativeSidebar
           isOpen={rightOpen}
@@ -37,6 +41,7 @@ const Sidebar = ({
           onChange={rightOnChange}
           openMenuOffset={openMenuOffset}
           edgeHitWidth={edgeHitWidth}
+          disableGestures={disabled}
         >
           {children}
         </NativeSidebar>
@@ -53,6 +58,7 @@ const Sidebar = ({
         onChange={leftOnChange}
         openMenuOffset={openMenuOffset}
         edgeHitWidth={edgeHitWidth}
+        disableGestures={disabled}
       >
         {children}
       </NativeSidebar>
@@ -68,6 +74,7 @@ const Sidebar = ({
         onChange={rightOnChange}
         openMenuOffset={openMenuOffset}
         edgeHitWidth={edgeHitWidth}
+        disableGestures={disabled}
       >
         {children}
       </NativeSidebar>
@@ -77,9 +84,7 @@ const Sidebar = ({
 };
 
 Sidebar.propTypes = {
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-  }).isRequired,
+  screen: PropTypes.shape().isRequired,
   leftOpen: PropTypes.bool,
   leftOnChange: PropTypes.func,
   leftComponent: PropTypes.oneOfType([
@@ -93,6 +98,7 @@ Sidebar.propTypes = {
     PropTypes.func,
   ]),
   children: PropTypes.node,
+  disabled: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
@@ -103,6 +109,7 @@ Sidebar.defaultProps = {
   rightOnChange: noop,
   rightComponent: null,
   children: null,
+  disabled: false,
 };
 
 export default withTheme('Sidebar')(Sidebar);

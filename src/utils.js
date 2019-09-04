@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import each from 'lodash/each';
 
 const maskOptions = {
@@ -33,6 +34,12 @@ const toFormat = (format, replaceMap) => {
   });
   return f.join('');
 };
+
+export const isEmpty = value => (
+  value === ''
+  || value === null
+  || value === undefined
+);
 
 export const isSSR = () => process.env.SERVER === '1';
 
@@ -168,4 +175,19 @@ export const toTime = (value, format = 'MIX') => {
     return '';
   }
   return toFormat(format, parseTime(value));
+};
+
+export const escapeRegExp = text => blankOr(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+
+export const useDerivedState = (prop) => {
+  const [value, setValue] = useState(prop);
+  const [valueProp, setValueProp] = useState(prop);
+
+  if (prop !== valueProp) {
+    setTimeout(() => {
+      setValue(prop);
+      setValueProp(prop);
+    });
+  }
+  return [value, setValue];
 };

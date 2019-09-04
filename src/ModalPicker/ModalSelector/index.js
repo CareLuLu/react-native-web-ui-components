@@ -4,13 +4,13 @@ import {
   View,
   Modal,
   Text,
-  ScrollView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   ViewPropTypes as RNViewPropTypes,
 } from 'react-native';
-import NativeFontAwesome, { Icons } from 'react-native-fontawesome';
 import styles from './style';
+import Icon from '../../Icon';
+import ScrollView from '../../ScrollView';
+import TouchableOpacity from '../../TouchableOpacity';
+import TouchableWithoutFeedback from '../../TouchableWithoutFeedback';
 
 /* Code copied from react-native-modal-selector and adapted for our needs */
 
@@ -213,6 +213,7 @@ export default class ModalSelector extends React.Component {
         <View style={[styles.overlayStyle, this.props.overlayStyle]}>
           <View style={[styles.optionContainer, this.props.optionContainerStyle]}>
             <ScrollView
+              style={styles.optionScrollView}
               keyboardShouldPersistTaps={this.props.keyboardShouldPersistTaps}
               accessible={this.props.accessible}
               accessibilityLabel={this.props.scrollViewAccessibilityLabel}
@@ -251,9 +252,10 @@ export default class ModalSelector extends React.Component {
           {this.state.selected}
           &nbsp;
         </Text>
-        <Text style={[styles.selectTextIconStyle, this.props.selectTextStyle]}>
-          <NativeFontAwesome>{Icons[this.props.icon]}</NativeFontAwesome>
-        </Text>
+        <Icon
+          name={this.props.icon}
+          style={[styles.selectTextIconStyle, this.props.selectTextStyle]}
+        />
       </View>
     );
   }

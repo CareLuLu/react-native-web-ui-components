@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import StylePropType from '../StylePropType';
 import { pick } from '../utils';
+import { useScreen } from '../Screen';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 
@@ -15,7 +16,6 @@ const styles = StyleSheet.create({
 
 const Title = ({
   style,
-  screen,
   level,
   xs,
   sm,
@@ -23,6 +23,8 @@ const Title = ({
   lg,
   ...props
 }) => {
+  const screen = useScreen();
+
   let fontSize;
   switch (screen.type) {
     case 'lg': fontSize = pick(lg, md, sm, xs); break;
@@ -57,9 +59,6 @@ const Title = ({
 
 Title.propTypes = {
   id: PropTypes.string.isRequired,
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-  }).isRequired,
   style: StylePropType,
   level: PropTypes.number,
   xs: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

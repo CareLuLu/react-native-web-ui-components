@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Image as NativeImage } from 'react-native';
+import { StyleSheet, Image as NativeImage } from 'react-native';
+import View from '../View';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import { isSSR } from '../utils';
@@ -9,14 +10,14 @@ const SSR_MODE = isSSR();
 
 const renderImage = ({
   alt,
-  className,
   fixed,
   source,
   style,
+  className,
 }, css) => (
   <NativeImage
     accessibilityLabel={alt}
-    className={`${className} image-${fixed ? 'fixed' : 'responsive'}`}
+    data-class={`${className} image-${fixed ? 'fixed' : 'responsive'}`}
     source={source}
     style={fixed ? style : {
       maxWidth: '100%',
@@ -55,7 +56,7 @@ const renderImageAmp = ({
   return (
     <amp-img
       alt={alt}
-      class={`${layout} ${className}`}
+      data-class={`${layout} ${className}`}
       width={`${css.width}`}
       height={`${css.height}`}
       src={source.uri}
@@ -64,7 +65,7 @@ const renderImageAmp = ({
       <noscript>
         <img
           alt={alt}
-          className={className}
+          data-class={className}
           width={css.width}
           height={css.height}
           src={source.uri}
@@ -98,7 +99,7 @@ const Image = (props) => {
       },
     });
     return (
-      <div className="image-outer-wrapper" style={{ width: css.width, height: css.height }}>
+      <div data-class="image-outer-wrapper" style={{ width: css.width, height: css.height }}>
         <View className="image-wrapper" style={dynamicStyles.fixedImage}>
           {SSR_MODE ? renderImageAmp(props, css) : renderImage(props, css)}
         </View>
@@ -106,7 +107,7 @@ const Image = (props) => {
     );
   }
   return (
-    <div className="image-outer-wrapper">
+    <div data-class="image-outer-wrapper">
       {SSR_MODE ? renderImageAmp(props, css) : renderImage(props, css)}
     </div>
   );

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, ImageBackground } from 'react-native';
-import compose from 'recompact/compose';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
-import { withScreen } from '../Screen';
+import { useScreen } from '../Screen';
 import Column from '../Column';
 
 const styles = StyleSheet.create({
@@ -25,7 +24,6 @@ const Banner = ({
   height,
   fit,
   maxHeight,
-  screen,
   children,
   lg,
   md,
@@ -33,6 +31,7 @@ const Banner = ({
   xs,
   style,
 }) => {
+  const screen = useScreen();
   const defaults = { height };
   if (fit) {
     defaults.height = screen.height;
@@ -67,11 +66,6 @@ Banner.propTypes = {
   theme: PropTypes.shape({
     resource: PropTypes.func.isRequired,
   }).isRequired,
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-  }).isRequired,
   children: PropTypes.node,
   fit: PropTypes.bool,
   height: PropTypes.number,
@@ -103,7 +97,4 @@ Banner.defaultProps = {
   style: styles.empty,
 };
 
-export default compose(
-  withScreen(),
-  withTheme('Banner')
-)(Banner);
+export default withTheme('Banner')(Banner);

@@ -84,6 +84,7 @@ const ModalPicker = ({
   icon,
   onChange,
   onFocus,
+  onBlur,
   style,
   disabled,
   fontFamily,
@@ -115,6 +116,7 @@ const ModalPicker = ({
         disabled={disabled}
         onChange={onChange}
         onModalOpen={onFocus}
+        onModalClose={onBlur}
       />
     </Row>
   );
@@ -140,10 +142,11 @@ ModalPicker.propTypes = {
   icon: PropTypes.string,
   disabled: PropTypes.bool,
   onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
 };
 
 ModalPicker.defaultProps = {
-  icon: 'alignJustify',
+  icon: 'align-justify',
   value: null,
   placeholder: 'Select...',
   type: 'gray',
@@ -157,6 +160,7 @@ ModalPicker.defaultProps = {
   selectTextStyle: styles.empty,
   disabled: false,
   onFocus: noop,
+  onBlur: noop,
 };
 
 export default withTheme('ModalPicker')(ModalPicker);

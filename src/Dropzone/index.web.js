@@ -17,32 +17,47 @@ const styles = {
   inner: {},
 };
 
-// @TODO: Upgrade to latest react-dropzone version.
-// In order to upgrade, we need to be able to upgrade
-// to react >= 16.8
 const Dropzone = ({
+  theme,
   style,
   accept,
   children,
   onDrop,
+  multiple,
+  disabled,
 }) => (
-  <RNDropzone onDrop={onDrop} accept={accept}>
-    {({ getRootProps, getInputProps }) => (
-      <div {...getRootProps()} style={{ ...styles.container, ...StyleSheet.flatten(style || {}) }}>
-        <input {...getInputProps()} />
-        <div style={styles.inner}>
-          {children}
+  <RNDropzone
+    onDrop={onDrop}
+    accept={accept[0] === '*/*' ? null : accept}
+    multiple={multiple}
+    disabled={disabled}
+  >
+    {({ getRootProps, getInputProps }) => {
+      const currentStyle = [styles.container];
+      if (disabled) {
+        currentStyle.push(theme.input.disabled.opacity);
+      }
+      currentStyle.push(style);
+      return (
+        <div {...getRootProps()} style={{ ...StyleSheet.flatten(currentStyle) }}>
+          <input {...getInputProps()} />
+          <div style={styles.inner}>
+            {children}
+          </div>
         </div>
-      </div>
-    )}
+      );
+    }}
   </RNDropzone>
 );
 
 Dropzone.propTypes = {
+  theme: PropTypes.shape().isRequired,
   accept: PropTypes.arrayOf(PropTypes.string),
   onDrop: PropTypes.func,
   style: StylePropType,
   children: PropTypes.node,
+  multiple: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 Dropzone.defaultProps = {
@@ -50,6 +65,8 @@ Dropzone.defaultProps = {
   onDrop: noop,
   style: null,
   children: null,
+  multiple: true,
+  disabled: false,
 };
 
 export default withTheme('Dropzone')(Dropzone);

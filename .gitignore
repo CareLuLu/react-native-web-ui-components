@@ -7,6 +7,9 @@
 build
 dist
 
+# docz
+.docz
+
 # dependencies
 /node_modules
 
@@ -19,3 +22,6 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.DS_Store
+.docz

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, StyleSheet } from 'react-native';
-import withHandlers from 'recompact/withHandlers';
+import noop from 'lodash/noop';
 import moment from 'moment';
 import RNDatepicker from 'react-native-datepicker';
 import StylePropType from '../StylePropType';
@@ -33,11 +33,15 @@ const styles = StyleSheet.create({
   text: {
     position: 'absolute',
     left: 12,
+    top: 10,
+    fontSize: 13,
     textAlign: 'left',
   },
   placeholder: {
     position: 'absolute',
     left: 10,
+    top: 10,
+    fontSize: 13,
     textAlign: 'left',
   },
   confirmText: {},
@@ -50,8 +54,8 @@ const FORMAT = 'MM/DD/YYYY';
 
 const icon = { uri: 'https://divin2sy6ce0b.cloudfront.net/images/calendar-icon.png' };
 
-const Datepicker = withHandlers({
-  onChange: ({ onDateChange, excludeDates }) => (dateString) => {
+const useOnChange = ({ onDateChange, excludeDates }) => {
+  const onChange = (dateString) => {
     if (excludeDates) {
       const date = moment(dateString, FORMAT).format(FORMAT);
       const notValid = excludeDates.filter(d => (moment(d).format(FORMAT) === date)).length;
@@ -61,46 +65,55 @@ const Datepicker = withHandlers({
       }
     }
     return onDateChange(dateString);
-  },
-})(({
-  theme,
+  };
+
+  return onChange;
+};
+
+const Datepicker = ({
+  fontFamily,
+  themeTextStyle,
+  themeInputStyle,
   style,
   auto,
   customStyles,
   placeholder,
-  onChange,
   minDate,
   maxDate,
   disabled,
+  readonly,
+  onDateChange,
+  excludeDates,
   ...props
 }) => {
-  const themeStyles = theme.input[disabled ? 'disabled' : 'regular'];
+  const onChange = useOnChange({ onDateChange, excludeDates });
   const mergedStyles = {
     dateInput: [
       styles.input,
-      themeStyles.background,
-      themeStyles.border,
-      themeStyles.opacity,
+      themeInputStyle.background,
+      themeInputStyle.border,
+      themeInputStyle.opacity,
       customStyles.input,
     ],
     dateIcon: [styles.icon, customStyles.icon],
     dateText: [
       styles.text,
-      themeStyles.text,
+      themeInputStyle.text,
+      { fontFamily: fontFamily.regular },
       customStyles.text,
     ],
     placeholderText: [
       styles.placeholder,
-      themeStyles.placeholder,
+      themeInputStyle.placeholder,
       customStyles.placeholder,
     ],
     dateTouch: [styles.datepicker, customStyles.datepicker],
     dateTouchBody: [styles.datepicker, customStyles.datepicker],
-    btnTextConfirm: [styles.confirmText, theme.colors.black.text, customStyles.confirmText],
+    btnTextConfirm: [styles.confirmText, themeTextStyle.text, customStyles.confirmText],
   };
   const datepickerProps = {
     ...props,
-    disabled,
+    disabled: disabled || readonly,
     format: FORMAT,
     onDateChange: onChange,
     confirmBtnText: 'Confirm',
@@ -118,15 +131,19 @@ const Datepicker = withHandlers({
     datepickerProps.maxDate = moment(maxDate, FORMAT).format('MM/DD/YYYY');
   }
   return <RNDatepicker {...datepickerProps} />;
-});
+};
 
 Datepicker.propTypes = {
-  theme: PropTypes.shape().isRequired,
+  fontFamily: PropTypes.shape().isRequired,
+  themeTextStyle: PropTypes.shape().isRequired,
+  themeInputStyle: PropTypes.shape().isRequired,
   auto: PropTypes.bool,
   disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
   style: StylePropType,
   customStyles: StylePropType,
   placeholder: PropTypes.string,
+  onDateChange: PropTypes.func,
   minDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   maxDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   excludeDates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
@@ -135,9 +152,11 @@ Datepicker.propTypes = {
 Datepicker.defaultProps = {
   auto: false,
   disabled: false,
+  readonly: false,
   style: null,
   customStyles: {},
   placeholder: ' ',
+  onDateChange: noop,
   excludeDates: [],
   minDate: null,
   maxDate: null,

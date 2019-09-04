@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Dimensions, Keyboard } from 'react-native';
 
 /* eslint react/no-multi-comp: 0 */
+/* eslint max-classes-per-file: 0 */
 
 function calculateType(width) {
   if (width >= 1200) {
@@ -84,7 +85,27 @@ export default {
   addEventListener,
 };
 
-export const withScreen = () => Component => class extends React.PureComponent {
+export const ScreenContext = React.createContext(screen);
+
+export const KeyboardContext = React.createContext(0);
+
+export const useScreen = () => useContext(ScreenContext);
+
+export const withScreen = () => Component => props => (
+  <ScreenContext.Consumer>
+    {value => <Component {...props} screen={value} />}
+  </ScreenContext.Consumer>
+);
+
+export const useKeyboard = () => useContext(KeyboardContext);
+
+export const withKeyboard = () => Component => props => (
+  <KeyboardContext.Consumer>
+    {value => <Component {...props} keyboard={value} />}
+  </KeyboardContext.Consumer>
+);
+
+export const calculateScreen = () => Component => class extends React.PureComponent {
   constructor(props) {
     super(props);
     this.mounted = false;
@@ -126,7 +147,7 @@ export const withScreen = () => Component => class extends React.PureComponent {
   }
 };
 
-export const withKeyboard = () => Component => class extends React.PureComponent {
+export const calculateKeyboard = () => Component => class extends React.PureComponent {
   constructor(props) {
     super(props);
     this.mounted = false;

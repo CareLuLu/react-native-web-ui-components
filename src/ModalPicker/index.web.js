@@ -49,6 +49,9 @@ class ModalPicker extends React.Component {
         <Helmet>
           <style>
             {`
+              .select {
+                font-family: ${props.fontFamily.regular};
+              }
               .select,
               .select.select--is-focused {
                 cursor: pointer;
@@ -186,10 +189,11 @@ class ModalPicker extends React.Component {
           name={props.name}
           placeholder={props.placeholder}
           value={props.value}
+          onBlur={props.onBlur}
           onFocus={props.onFocus}
           onChange={props.onChange}
           options={props.options}
-          isDisabled={props.isDisabled}
+          isDisabled={props.disabled}
           isSearchable={false}
           clearable={false}
           className={`select ${this.id} ${props.type} ${props.arrow ? 'arrow' : 'no-arrow'} ${props.center ? 'center' : ''}`}
@@ -201,10 +205,12 @@ class ModalPicker extends React.Component {
 }
 
 ModalPicker.propTypes = {
+  fontFamily: PropTypes.shape().isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
   value: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
@@ -213,11 +219,12 @@ ModalPicker.propTypes = {
   fitContent: PropTypes.bool,
   align: PropTypes.string,
   autoFocus: PropTypes.bool,
-  isDisabled: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 ModalPicker.defaultProps = {
   onFocus: noop,
+  onBlur: noop,
   value: null,
   placeholder: 'Select...',
   type: 'gray',
@@ -226,7 +233,7 @@ ModalPicker.defaultProps = {
   fitContent: true,
   align: 'left',
   autoFocus: false,
-  isDisabled: false,
+  disabled: false,
 };
 
 export default withTheme('ModalPicker')(ModalPicker);

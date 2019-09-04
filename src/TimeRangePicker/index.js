@@ -1,24 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  StyleSheet,
-  Platform,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import times from 'lodash/times';
 import without from 'lodash/without';
 import uniq from 'lodash/uniq';
 import noop from 'lodash/noop';
-import withHandlers from 'recompact/withHandlers';
-import withProps from 'recompact/withProps';
-import withStateHandlers from 'recompact/withStateHandlers';
-import compose from 'recompact/compose';
 import { toTime } from '../utils';
 import { withTheme } from '../Theme';
 import Row from '../Row';
 import View from '../View';
 import Text from '../Text';
+import TouchableOpacity from '../TouchableOpacity';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
+import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
 
 const styles = StyleSheet.create({
@@ -64,23 +58,23 @@ const styles = StyleSheet.create({
 
 const sorter = (a, b) => (a - b);
 
-const TimeCell = compose(
-  withHandlers({
-    press: ({ onPress, value }) => () => onPress(value),
-  }),
-)(({
+const TimeCell = ({
+  id,
   width,
   index,
   value,
   values,
   pressed,
-  press,
   hover,
+  onPress,
   disabled,
   selectedStyle,
   unselectedStyle,
   themeInputStyle,
+  filterTime,
 }) => {
+  const press = () => onPress(value);
+
   const reverse = pressed === value;
   let active = values.indexOf(value) >= 0;
   if (reverse) {
@@ -88,17 +82,18 @@ const TimeCell = compose(
   }
   let className = `${hover}`;
   if (pressed === value) {
-    className += ' Timepicker__pressed';
+    className += ` ${id}__pressed`;
   } else if (value > pressed) {
-    className += ' TimePicker__after';
+    className += ` ${id}__after`;
   } else {
-    className += ' TimePicker__before';
+    className += ` ${id}__before`;
   }
   if (pressed === null) {
-    className += active ? ' TimePicker__active' : ' TimePicker__inactive';
+    className += active ? ` ${id}__active` : ` ${id}__inactive`;
   }
-  if (disabled) {
-    className += ' TimePicker__disabled';
+  const isDisabled = disabled || !filterTime(value);
+  if (isDisabled) {
+    className += ` ${id}__disabled`;
   }
   const css = [{
     width: `${width}%`,
@@ -106,16 +101,16 @@ const TimeCell = compose(
     borderStyle: index === 0 || index % 2 ? 'solid' : 'dashed',
   }];
   if (index === 0) {
-    css.borderRightColor = 'transparent';
+    css.push({ borderRightColor: 'transparent' });
   }
   const background = [];
   if (active) {
     background.push({ backgroundColor: selectedStyle.color });
   } else {
-    css.opacity = 0.2;
+    css.push({ opacity: 0.2 });
     background.push({ backgroundColor: selectedStyle.color });
   }
-  if (disabled) {
+  if (isDisabled) {
     css.push(themeInputStyle.opacity);
     background.push({ backgroundColor: unselectedStyle.color });
   }
@@ -138,9 +133,10 @@ const TimeCell = compose(
       </Wrapper>
     </View>
   );
-});
+};
 
 TimeCell.propTypes = {
+  id: PropTypes.string.isRequired,
   selectedStyle: PropTypes.shape().isRequired,
   unselectedStyle: PropTypes.shape().isRequired,
   hover: PropTypes.string.isRequired,
@@ -150,6 +146,8 @@ TimeCell.propTypes = {
   index: PropTypes.number.isRequired,
   onPress: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
+  filterTime: PropTypes.func.isRequired,
+  themeInputStyle: PropTypes.shape().isRequired,
   pressed: PropTypes.number,
 };
 
@@ -157,39 +155,62 @@ TimeCell.defaultProps = {
   pressed: null,
 };
 
-const TimeRangePicker = compose(
-  withProps(({
-    themeInputStyle,
+const getParams = ({
+  themeInputStyle,
+  minTime,
+  maxTime,
+  interval,
+  value,
+  decoder,
+  name,
+  selectedStyle,
+  unselectedStyle,
+}) => ({
+  id: `TimeRangePicker__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`,
+  length: Math.ceil((maxTime - minTime) / interval),
+  width: 100 / Math.ceil((maxTime - minTime) / interval),
+  values: decoder(value).sort(sorter),
+  selectedStyle: StyleSheet.flatten([themeInputStyle.selected, selectedStyle]),
+  unselectedStyle: StyleSheet.flatten([themeInputStyle.unselected, unselectedStyle]),
+});
+
+const TimeRangePicker = (props) => {
+  const {
+    onFocus,
+    onBlur,
+    onChange,
+    interval,
+    encoder,
+    disabled,
+    readonly,
+    filterTime,
+    header,
     minTime,
     maxTime,
-    interval,
-    value,
-    decoder,
-  }) => ({
-    length: Math.ceil((maxTime - minTime) / interval),
-    width: 100 / Math.ceil((maxTime - minTime) / interval),
-    values: decoder(value).sort(sorter),
-    selectedStyle: StyleSheet.flatten(themeInputStyle.selected),
-    unselectedStyle: StyleSheet.flatten(themeInputStyle.unselected),
-  })),
-  withStateHandlers({ pressed: null }, {
-    onStart: (__, { onFocus, disabled }) => (start) => {
-      if (disabled) {
-        return {};
-      }
+    themeInputStyle,
+  } = props;
+
+  const {
+    id,
+    length,
+    width,
+    values,
+    selectedStyle,
+    unselectedStyle,
+  } = getParams(props);
+
+  const [pressed, setPressed] = useState(null);
+
+  const onStart = (start) => {
+    if (!disabled && !readonly && filterTime(start)) {
       onFocus();
-      return { pressed: start };
-    },
-    onEnd: ({ pressed }, {
-      onChange,
-      values,
-      interval,
-      disabled,
-      encoder,
-    }) => (end) => {
-      if (disabled) {
-        return {};
-      }
+      setPressed(start);
+    }
+  };
+
+  const onEnd = (end) => {
+    if (!disabled && !readonly) {
+      onBlur();
       const reverse = values.indexOf(pressed) >= 0;
       const range = [];
       for (let i = pressed; i <= end; i += interval) {
@@ -198,113 +219,94 @@ const TimeRangePicker = compose(
       const newValues = reverse
         ? without(values, ...range) : uniq(values.concat(range)).sort(sorter);
       onChange(encoder(newValues));
-      return { pressed: null };
-    },
-  }),
-  withProps(({ pressed, values }) => ({
-    hover: pressed && (values.indexOf(pressed) < 0 ? 'TimePicker__enable' : 'TimePicker__disable'),
-  })),
-  withHandlers({
-    renderCell: ({
-      width,
-      values,
-      onStart,
-      pressed,
-      onEnd,
-      maxTime,
-      interval,
-      hover,
-      disabled,
-      selectedStyle,
-      unselectedStyle,
-      themeInputStyle,
-    }) => index => (
-      <TimeCell
-        key={index}
-        width={width}
-        index={index}
-        value={maxTime - ((index + 1) * interval)}
-        values={values}
-        pressed={pressed}
-        hover={hover || ''}
-        disabled={disabled}
-        onPress={pressed === null ? onStart : onEnd}
-        selectedStyle={selectedStyle}
-        unselectedStyle={unselectedStyle}
-        themeInputStyle={themeInputStyle}
-      />
-    ),
-    renderHeader: ({ width, minTime, interval }) => index => (
-      <Text
-        key={`header-${index}`}
-        type="gray"
-        style={[styles.header, {
-          width: `${2 * width}%`,
-          left: `${(2 * index * width) - width}%`,
-        }]}
-      >
-        {toTime(minTime + (index * 2 * interval), 'H:MMA').replace('m', '').replace(':00', '')}
-      </Text>
-    ),
-  }),
-)(({
-  maxTime,
-  width,
-  header,
-  length,
-  renderCell,
-  renderHeader,
-  selectedStyle,
-  unselectedStyle,
-}) => (
-  <React.Fragment>
-    {header ? (
-      <Row style={styles.headerContainer}>
-        {times(!(length % 2) ? (length / 2) : ((length + 1) / 2), renderHeader)}
-        <Text
-          type="gray"
-          style={[styles.header, {
-            width: `${2 * width}%`,
-            right: `-${width}%`,
-          }]}
-        >
-          {toTime(maxTime, 'H:MMA').replace('m', '').replace(':00', '')}
-        </Text>
+      setPressed(null);
+    }
+  };
+
+  const hover = pressed && (values.indexOf(pressed) < 0 ? `${id}__enable` : `${id}__disable`);
+
+  const renderCell = index => (
+    <TimeCell
+      id={id}
+      key={index}
+      width={width}
+      index={index}
+      value={maxTime - ((index + 1) * interval)}
+      values={values}
+      pressed={pressed}
+      hover={hover || ''}
+      disabled={disabled || readonly}
+      onPress={pressed === null ? onStart : onEnd}
+      selectedStyle={selectedStyle}
+      unselectedStyle={unselectedStyle}
+      themeInputStyle={themeInputStyle}
+      filterTime={filterTime}
+    />
+  );
+
+  const renderHeader = index => (
+    <Text
+      key={`header-${index}`}
+      type="gray"
+      style={[styles.header, {
+        width: `${2 * width}%`,
+        left: `${(2 * index * width) - width}%`,
+      }]}
+    >
+      {toTime(minTime + (index * 2 * interval), 'H:MMA').replace('m', '').replace(':00', '')}
+    </Text>
+  );
+
+  return (
+    <React.Fragment>
+      {header ? (
+        <Row style={styles.headerContainer}>
+          {times(!(length % 2) ? (length / 2) : ((length + 1) / 2), renderHeader)}
+          <Text
+            type="gray"
+            style={[styles.header, {
+              width: `${2 * width}%`,
+              right: `-${width}%`,
+            }]}
+          >
+            {toTime(maxTime, 'H:MMA').replace('m', '').replace(':00', '')}
+          </Text>
+        </Row>
+      ) : null}
+      <Row style={styles.container}>
+        <Helmet>
+          <style>
+            {`
+              [data-class~="${id}__after"],
+              [data-class~="${id}__pressed"],
+              [data-class~="${id}__before"],
+              [data-class~="${id}__disabled"] {
+                user-drag: none; 
+                user-select: none;
+              }
+              [data-class~="${id}__after"][data-class~="${id}__disable"]:hover,
+              [data-class~="${id}__after"][data-class~="${id}__disable"]:hover ~ [data-class~="${id}__after"] {
+                ${!(disabled || readonly) ? 'opacity: 0.2 !important;' : ''}
+                background-color: ${selectedStyle.color};
+              }
+              [data-class~="${id}__inactive"]:hover,
+              [data-class~="${id}__after"][data-class~="${id}__enable"]:hover,
+              [data-class~="${id}__after"][data-class~="${id}__enable"]:hover ~ [data-class~="${id}__after"] {
+                ${!(disabled || readonly) ? 'opacity: 1 !important;' : ''}
+                background-color: ${selectedStyle.color};
+              }
+              [data-class~="${id}__disabled"],
+              [data-class~="${id}__disabled"]:hover {
+                background-color: ${unselectedStyle.color};
+              }
+            `}
+          </style>
+        </Helmet>
+        {times(length, renderCell)}
       </Row>
-    ) : null}
-    <Row style={styles.container}>
-      <Helmet>
-        <style>
-          {`
-            .TimePicker__after,
-            .Timepicker__pressed,
-            .TimePicker__before,
-            .TimePicker__disabled {
-              user-drag: none; 
-              user-select: none;
-            }
-            .TimePicker__after.TimePicker__disable:hover,
-            .TimePicker__after.TimePicker__disable:hover ~ .TimePicker__after {
-              opacity: 0.2;
-              background-color: ${selectedStyle.color};
-            }
-            .TimePicker__inactive:hover,
-            .TimePicker__after.TimePicker__enable:hover,
-            .TimePicker__after.TimePicker__enable:hover ~ .TimePicker__after {
-              opacity: 1;
-              background-color: ${selectedStyle.color};
-            }
-            .TimePicker__disabled,
-            .TimePicker__disabled:hover {
-              background-color: ${unselectedStyle.color};
-            }
-          `}
-        </style>
-      </Helmet>
-      {times(length, renderCell)}
-    </Row>
-  </React.Fragment>
-));
+    </React.Fragment>
+  );
+};
 
 export const NUMBER_DECODER = value => (value || []);
 export const NUMBER_ENCODER = value => value;
@@ -317,13 +319,19 @@ TimeRangePicker.propTypes = {
   minTime: PropTypes.number,
   maxTime: PropTypes.number,
   interval: PropTypes.number,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  decoder: PropTypes.func,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]), // eslint-disable-line
+  decoder: PropTypes.func, // eslint-disable-line
   encoder: PropTypes.func,
   onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   header: PropTypes.bool,
   disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
+  name: PropTypes.string, // eslint-disable-line
+  filterTime: PropTypes.func,
+  selectedStyle: StylePropType, // eslint-disable-line
+  unselectedStyle: StylePropType, // eslint-disable-line
 };
 
 TimeRangePicker.defaultProps = {
@@ -334,9 +342,15 @@ TimeRangePicker.defaultProps = {
   decoder: NUMBER_DECODER,
   encoder: NUMBER_ENCODER,
   onFocus: noop,
+  onBlur: noop,
   onChange: noop,
   header: true,
   disabled: false,
+  readonly: false,
+  name: '',
+  filterTime: () => true,
+  selectedStyle: {},
+  unselectedStyle: {},
 };
 
 export default withTheme('TimeRangePicker')(TimeRangePicker);

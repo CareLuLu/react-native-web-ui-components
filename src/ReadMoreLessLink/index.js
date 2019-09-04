@@ -1,9 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
-import withState from 'recompact/withState';
-import withHandlers from 'recompact/withHandlers';
-import compose from 'recompact/compose';
 import noop from 'lodash/noop';
 import { withTheme } from '../Theme';
 import stylePropType from '../StylePropType';
@@ -14,34 +11,31 @@ const styles = StyleSheet.create({
   defaults: {},
 });
 
-const ReadMoreLessLink = compose(
-  withState('opacity', 'setOpacity', 1),
-  withHandlers({
-    setOpacity25: ({ setOpacity, onChange, visible }) => () => {
-      setTimeout(() => onChange(!visible));
-      setOpacity(0.25);
-    },
-    setOpacity50: ({ setOpacity }) => () => setOpacity(0.5),
-    setOpacity100: ({ setOpacity }) => () => setOpacity(1),
-  }),
-)(({
-  opacity,
+const ReadMoreLessLink = ({
   auto,
   type,
   style,
   showLabel,
   hideLabel,
   visible,
-  setOpacity25,
-  setOpacity50,
-  setOpacity100,
+  onChange,
 }) => {
-  if (opacity === 0.5) {
-    setTimeout(() => setOpacity25());
-  }
-  if (opacity === 0.25) {
-    setTimeout(() => setOpacity100(), 200);
-  }
+  const [opacity, setOpacity] = useState(1);
+
+  const setOpacity50 = () => setOpacity(0.5);
+
+  useEffect(() => {
+    if (opacity === 0.5) {
+      setTimeout(() => setOpacity(0.25));
+    }
+    if (opacity === 0.25) {
+      setTimeout(() => {
+        setOpacity(1);
+        setTimeout(() => onChange(!visible));
+      }, 100);
+    }
+  }, [opacity]); // eslint-disable-line
+
   return (
     <Text
       type={type}
@@ -52,7 +46,7 @@ const ReadMoreLessLink = compose(
       {visible ? hideLabel : showLabel}
     </Text>
   );
-});
+};
 
 ReadMoreLessLink.propTypes = {
   auto: PropTypes.bool,

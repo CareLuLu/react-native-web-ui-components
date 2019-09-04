@@ -2,11 +2,10 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import murmurhash from 'murmurhash';
-import compose from 'recompact/compose';
+import { pick } from '../utils';
 import stylePropType from '../StylePropType';
-import { withAmp } from '../Amp';
 import { withTheme } from '../Theme';
-import { withScreen } from '../Screen';
+import { useScreen } from '../Screen';
 import { Helmet, style } from '../Helmet';
 import Column from '../Column';
 
@@ -15,15 +14,6 @@ import Column from '../Column';
 const styles = StyleSheet.create({
   empty: {},
 });
-
-const pick = (...args) => {
-  for (let i = 0; i < args.length; i += 1) {
-    if (args[i] !== undefined && args[i] !== null) {
-      return args[i];
-    }
-  }
-  return args[args.length - 1];
-};
 
 const Banner = ({
   theme,
@@ -34,7 +24,6 @@ const Banner = ({
   height,
   fit,
   maxHeight,
-  screen,
   children,
   lg,
   md,
@@ -42,6 +31,7 @@ const Banner = ({
   xs,
   ...props
 }) => {
+  const screen = useScreen();
   let uri;
   switch (screen.type) {
     case 'lg': uri = pick(lg, md, sm, xs); break;
@@ -67,7 +57,7 @@ const Banner = ({
       <Helmet>
         <style>
           {`
-            .${className} {
+            [data-class~="${className}"] {
               width: 100%;
               height: ${fit ? '100vh' : `${height}px`};
               max-height: ${maxHeight || height}px;
@@ -87,11 +77,6 @@ const Banner = ({
 Banner.propTypes = {
   theme: PropTypes.shape({
     resource: PropTypes.func.isRequired,
-  }).isRequired,
-  screen: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
   }).isRequired,
   style: stylePropType,
   children: PropTypes.node,
@@ -124,8 +109,4 @@ Banner.defaultProps = {
   columnLg: null,
 };
 
-export default compose(
-  withAmp(),
-  withScreen(),
-  withTheme('Banner'),
-)(Banner);
+export default withTheme('Banner')(Banner);

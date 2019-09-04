@@ -25,6 +25,8 @@ const Slider = ({
   values,
   onValuesChange,
   onValuesChangeFinish,
+  disabled,
+  readonly,
   ...props
 }) => {
   const selectedStyle = StyleSheet.flatten(themeInputStyle.selected);
@@ -83,6 +85,7 @@ const Slider = ({
           step={step}
           onChange={onValuesChange}
           onAfterChange={onValuesChangeFinish}
+          disabled={disabled || readonly}
         />
       </View>
     </React.Fragment>
@@ -98,6 +101,8 @@ Slider.propTypes = {
   onValuesChange: PropTypes.func,
   onValuesChangeFinish: PropTypes.func,
   style: StylePropType,
+  disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
 };
 
 Slider.defaultProps = {
@@ -107,6 +112,8 @@ Slider.defaultProps = {
   onValuesChange: noop,
   onValuesChangeFinish: noop,
   style: null,
+  disabled: false,
+  readonly: false,
 };
 
 export default withTheme('Slider')(Slider);

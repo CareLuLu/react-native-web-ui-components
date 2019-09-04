@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   defaults: {
     color: '#545454',
     lineHeight: 20,
+    fontSize: 13,
   },
   fullWidth: {
     width: '100%',
@@ -26,19 +27,26 @@ const screenType = Screen.getType();
 const screenSizes = ['xs', 'sm', 'md', 'lg'];
 
 const NativeText = ({
-  theme,
   type,
   style,
   auto,
   className,
   fontFamily,
+  theme,
   ...props
 }) => {
-  const css = StyleSheet.flatten(style);
+  const currentStyle = [
+    styles.defaults,
+    !auto ? styles.fullWidth : null,
+    theme.colors[type] && theme.colors[type].text,
+    style,
+  ];
+  const css = StyleSheet.flatten(currentStyle);
+  const font = {};
   if (css.fontWeight === 'bold' && (!css.fontFamily || css.fontFamily === fontFamily.regular)) {
-    css.fontFamily = fontFamily.bold;
-  } else {
-    css.fontFamily = fontFamily.regular;
+    font.fontFamily = fontFamily.bold;
+  } else if (!css.fontFamily) {
+    font.fontFamily = fontFamily.regular;
   }
   const classNames = [className];
   for (let i = 0; i < screenSizes.length; i += 1) {
@@ -53,19 +61,15 @@ const NativeText = ({
   }
   return (
     <TextRN
-      {...omit(props, 'hideXs', 'hideSm', 'hideMd', 'hideLg')}
-      className={classNames.join(' ')}
-      style={[
-        styles.defaults,
-        !auto ? styles.fullWidth : null,
-        theme.colors[type] && theme.colors[type].text,
-        css,
-      ]}
+      {...omit(theme.omit(props), 'hideXs', 'hideSm', 'hideMd', 'hideLg')}
+      data-class={classNames.join(' ')}
+      style={[currentStyle, font]}
     />
   );
 };
 
 NativeText.propTypes = {
+  fontFamily: PropTypes.shape().isRequired,
   theme: PropTypes.shape().isRequired,
   className: PropTypes.string,
   auto: PropTypes.bool,
@@ -75,7 +79,6 @@ NativeText.propTypes = {
   hideSm: PropTypes.bool,
   hideMd: PropTypes.bool,
   hideLg: PropTypes.bool,
-  fontFamily: PropTypes.shape(),
 };
 
 NativeText.defaultProps = {
@@ -87,10 +90,6 @@ NativeText.defaultProps = {
   hideSm: false,
   hideMd: false,
   hideLg: false,
-  fontFamily: {
-    regular: 'Lucida Sans',
-    bold: 'Lucida Sans Bold',
-  },
 };
 
 export default withTheme('Text')(NativeText);

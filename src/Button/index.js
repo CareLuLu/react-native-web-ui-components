@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewPropTypes,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 import Link from '../Link';
+import View from '../View';
+import TouchableOpacity from '../TouchableOpacity';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -89,19 +87,33 @@ const Button = (props) => {
     auto,
     type,
     style,
+    textStyle,
     blank,
     onPress,
     replace,
     children,
     textType,
-    className,
     theme,
+    className,
   } = props;
+  let width = null;
+  let height = null;
+  let isAuto = auto;
+  let buttonWidth = isAuto ? 'button-auto' : 'button-full';
+  const css = StyleSheet.flatten(style || {});
+  if (css.width !== undefined) {
+    isAuto = true;
+    buttonWidth = 'button-auto';
+    width = { width: css.width };
+  }
+  if (css.height !== undefined) {
+    height = { height: css.height };
+  }
   return (
     <TouchableOpacity
-      className={`${className} button-wrapper ${!auto ? 'button-full' : ''}`}
+      className={`${className} button-wrapper ${buttonWidth}`}
       onPress={onPress}
-      style={[auto ? styles.empty : styles.fullWidth, style]}
+      style={[isAuto ? styles.empty : styles.fullWidth, style]}
     >
       <View
         className={`button button-${type}`}
@@ -110,10 +122,12 @@ const Button = (props) => {
           theme.colors[type] && theme.colors[type].border,
           theme.colors[type] && theme.colors[type].background,
           styles[`${type}Outer`],
-          ifProp(props, 'auto'),
+          isAuto ? styles.auto : styles.empty,
           ifProp(props, 'flat'),
           ifProp(props, 'radius'),
           ifProp(props, 'nomargin'),
+          width,
+          height,
         ]}
       >
         {to ? (
@@ -122,12 +136,15 @@ const Button = (props) => {
             type={getTextType(textType, type)}
             blank={blank}
             to={to}
-            style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall')]}
+            style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall'), textStyle]}
           >
             {children}
           </Link>
         ) : (
-          <Text type={getTextType(textType, type)} style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall')]}>
+          <Text
+            type={getTextType(textType, type)}
+            style={[styles.text, ifProp(props, 'small'), ifProp(props, 'extraSmall'), textStyle]}
+          >
             {children}
           </Text>
         )}
@@ -144,7 +161,8 @@ Button.propTypes = {
   to: PropTypes.string,
   blank: PropTypes.bool,
   textType: PropTypes.string,
-  style: ViewPropTypes.style,
+  style: StylePropType,
+  textStyle: StylePropType,
   auto: PropTypes.bool,
   className: PropTypes.string,
   replace: PropTypes.bool,
@@ -166,6 +184,7 @@ Button.defaultProps = {
   blank: false,
   textType: null,
   style: null,
+  textStyle: null,
   nomargin: false,
   auto: false,
   className: '',

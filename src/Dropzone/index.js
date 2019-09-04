@@ -1,27 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Modal,
   StyleSheet,
   Platform,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
 } from 'react-native';
-import {
-  DocumentPicker,
-  ImagePicker,
-  Permissions,
-} from 'expo';
-import withProps from 'recompact/withProps';
-import withHandlers from 'recompact/withHandlers';
-import withState from 'recompact/withState';
-import compose from 'recompact/compose';
+import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
+import * as Permissions from 'expo-permissions';
 import noop from 'lodash/noop';
 import last from 'lodash/last';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import View from '../View';
 import Text from '../Text';
+import TouchableOpacity from '../TouchableOpacity';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 const styles = StyleSheet.create({
   container: {
@@ -112,9 +106,9 @@ const getMediaTypes = (accept) => {
   if (image && video) {
     mediaTypes = 'All';
   } else if (!video) {
-    mediaTypes = 'Image';
+    mediaTypes = 'Images';
   } else {
-    mediaTypes = 'Video';
+    mediaTypes = 'Videos';
   }
   return mediaTypes;
 };
@@ -152,116 +146,112 @@ CancelOption.propTypes = {
   onPress: PropTypes.func.isRequired,
 };
 
-const Dropzone = compose(
-  withProps(({ accept }) => ({
-    acceptsImageVideo: !!hasMimeType(accept, imageVideoRegex),
-  })),
-  withState('step', 'setStep', 'dropzone'),
-  withHandlers(() => {
-    const handlers = {
-      onDismiss: null,
+const Dropzone = (props) => {
+  const {
+    theme,
+    style,
+    accept,
+    onDrop,
+    disabled,
+    fileText,
+    albumText,
+    cameraText,
+    cancelText,
+    children,
+  } = props;
+
+  const acceptsImageVideo = !!hasMimeType(accept, imageVideoRegex);
+
+  const [step, setStep] = useState('dropzone');
+  const [handlers] = useState({});
+
+  const hasPicker = () => !!handlers.onDismiss;
+
+  const onDismiss = () => (handlers.onDismiss && handlers.onDismiss());
+
+  const pickDocument = () => {
+    setStep('dropzone');
+    handlers.onDismiss = async () => {
+      handlers.onDismiss = null;
+      const result = await DocumentPicker.getDocumentAsync({ type: accept.join(',') });
+      if (result.type === 'success') {
+        onDrop([toFile({ ...result, type: '' })]);
+      }
     };
-    return {
-      hasPicker: () => () => !!handlers.onDismiss,
-      onDismiss: () => () => (handlers.onDismiss && handlers.onDismiss()),
-      pickDocument: ({ setStep, accept, onDrop }) => () => {
-        setStep('dropzone');
-        handlers.onDismiss = async () => {
-          handlers.onDismiss = null;
-          const result = await DocumentPicker.getDocumentAsync({ type: accept.join(',') });
-          if (result.type === 'success') {
-            onDrop([toFile({ ...result, type: '' })]);
-          }
-        };
-      },
-      pickImage: ({ setStep, accept, onDrop }) => () => {
-        setStep('dropzone');
-        handlers.onDismiss = async () => {
-          handlers.onDismiss = null;
-          const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-          if (status === 'granted') {
-            const { cancelled, ...result } = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: getMediaTypes(accept),
-            });
-            if (!cancelled) {
-              onDrop([toFile({ ...result })]);
-            }
-          }
-        };
-      },
-      pickPhoto: ({ setStep, accept, onDrop }) => () => {
-        setStep('dropzone');
-        handlers.onDismiss = async () => {
-          handlers.onDismiss = null;
-          const { status } = await Permissions.askAsync(
-            Permissions.CAMERA_ROLL,
-            Permissions.CAMERA,
-          );
-          if (status === 'granted') {
-            const { cancelled, ...result } = await ImagePicker.launchCameraAsync({});
-            if (!cancelled) {
-              const mediaTypes = getMediaTypes(accept);
-              if (
-                mediaTypes === 'All'
-                || (mediaTypes === 'Image' && imageExtensionRegex.test(result.uri))
-                || (mediaTypes === 'Video' && videoExtensionRegex.test(result.uri))
-              ) {
-                onDrop([toFile({ ...result })]);
-              }
-            }
-          }
-        };
-      },
+  };
+
+  const pickImage = () => {
+    setStep('dropzone');
+    handlers.onDismiss = async () => {
+      handlers.onDismiss = null;
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status === 'granted') {
+        const { cancelled, ...result } = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: getMediaTypes(accept),
+        });
+        if (!cancelled) {
+          onDrop([toFile({ ...result })]);
+        }
+      }
     };
-  }),
-  withHandlers({
-    selectMime: ({ setStep, acceptsImageVideo, pickDocument }) => () => {
+  };
+
+  const pickPhoto = () => {
+    setStep('dropzone');
+    handlers.onDismiss = async () => {
+      handlers.onDismiss = null;
+      const { status } = await Permissions.askAsync(
+        Permissions.CAMERA_ROLL,
+        Permissions.CAMERA,
+      );
+      if (status === 'granted') {
+        const { cancelled, ...result } = await ImagePicker.launchCameraAsync({});
+        if (!cancelled) {
+          const mediaTypes = getMediaTypes(accept);
+          if (
+            mediaTypes === 'All'
+            || (mediaTypes === 'Image' && imageExtensionRegex.test(result.uri))
+            || (mediaTypes === 'Video' && videoExtensionRegex.test(result.uri))
+          ) {
+            onDrop([toFile({ ...result })]);
+          }
+        }
+      }
+    };
+  };
+
+  const selectMime = () => {
+    if (!disabled) {
       if (acceptsImageVideo) {
         setStep('mime');
       } else {
         pickDocument();
       }
-    },
-    cancelMimeSelection: ({ setStep }) => () => setStep('dropzone'),
-  }),
-  withProps(({
-    acceptsImageVideo,
-    pickPhoto,
-    pickImage,
-    pickDocument,
-    cameraText,
-    albumText,
-    fileText,
-  }) => ({
-    selectionOptions: acceptsImageVideo ? [
-      [cameraText, pickPhoto],
-      [albumText, pickImage],
-      [fileText, pickDocument],
-    ] : [
-      [fileText, pickDocument],
-    ],
-  })),
-)(({
-  step,
-  style,
-  children,
-  selectMime,
-  cancelMimeSelection,
-  onModalMounted,
-  selectionOptions,
-  cancelText,
-  onDismiss,
-  hasPicker,
-}) => {
+    }
+  };
+
+  const cancelMimeSelection = () => setStep('dropzone');
+
+  const selectionOptions = acceptsImageVideo ? [
+    [cameraText, pickPhoto],
+    [albumText, pickImage],
+    [fileText, pickDocument],
+  ] : [
+    [fileText, pickDocument],
+  ];
+
   if (Platform.OS !== 'ios' && hasPicker()) {
     setTimeout(() => onDismiss(), 1000);
   }
+  const currentStyle = [styles.container];
+  if (disabled) {
+    currentStyle.push(theme.input.disabled.opacity);
+  }
   return (
     <TouchableWithoutFeedback onPress={selectMime}>
-      <View style={[styles.container, style]}>
+      <View style={[currentStyle, style]}>
         <Modal
           transparent
-          ref={onModalMounted}
           visible={step === 'mime'}
           onRequestClose={cancelMimeSelection}
           animationType="slide"
@@ -286,9 +276,10 @@ const Dropzone = compose(
       </View>
     </TouchableWithoutFeedback>
   );
-});
+};
 
 Dropzone.propTypes = {
+  theme: PropTypes.shape().isRequired,
   accept: PropTypes.arrayOf(PropTypes.string),
   onDrop: PropTypes.func,
   style: StylePropType,
@@ -296,6 +287,8 @@ Dropzone.propTypes = {
   albumText: PropTypes.string,
   fileText: PropTypes.string,
   cancelText: PropTypes.string,
+  disabled: PropTypes.bool,
+  children: PropTypes.node,
 };
 
 Dropzone.defaultProps = {
@@ -306,6 +299,8 @@ Dropzone.defaultProps = {
   albumText: 'Photo & Video Library',
   fileText: 'File',
   cancelText: 'Cancel',
+  disabled: false,
+  children: null,
 };
 
 export default withTheme('Dropzone')(Dropzone);

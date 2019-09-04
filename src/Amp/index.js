@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 const AMP = React.createContext('amp');
 
@@ -12,8 +12,11 @@ export const withAmp = () => Component => props => (
   </AMP.Consumer>
 );
 
+export const useAmp = () => useContext(AMP);
+
 export default {
-  withAmp,
   Provider,
   Consumer,
+  useAmp,
+  withAmp,
 };

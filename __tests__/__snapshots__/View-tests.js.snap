@@ -1,0 +1,242 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Outer View should render with class="Test__parent class".
+Inner View should render with class="Test__child".
+ 1`] = `
+<View
+  data-class="Test__parent"
+  style={
+    Array [
+      undefined,
+      undefined,
+    ]
+  }
+>
+  <View
+    data-class="Test__child"
+    style={
+      Array [
+        undefined,
+        undefined,
+      ]
+    }
+  />
+</View>
+`;
+
+exports[`View should render with class="".
+There should have an onRef referencing to a Function. 1`] = `
+<View
+  data-class=""
+  onref={[Function]}
+  style={
+    Array [
+      undefined,
+      undefined,
+    ]
+  }
+>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      data-class="button button-navy"
+      style={
+        Array [
+          undefined,
+          Array [
+            Object {
+              "borderBottomWidth": 2,
+              "marginBottom": 5,
+              "marginRight": 5,
+            },
+            Object {
+              "borderColor": "#055396",
+            },
+            Object {
+              "backgroundColor": "#0E73CA",
+            },
+            undefined,
+            Object {},
+            Object {
+              "borderBottomWidth": 0,
+              "borderWidth": 0,
+            },
+            Object {},
+            Object {},
+            null,
+            null,
+          ],
+        ]
+      }
+    >
+      <Text
+        data-class=""
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#545454",
+                "fontSize": 13,
+                "lineHeight": 20,
+              },
+              Object {
+                "width": "100%",
+              },
+              Object {
+                "color": "#FFFFFF",
+              },
+              Array [
+                undefined,
+                Array [
+                  undefined,
+                  Array [
+                    Object {
+                      "fontSize": 14,
+                      "paddingBottom": 7,
+                      "paddingLeft": 20,
+                      "paddingRight": 20,
+                      "paddingTop": 7,
+                      "textAlign": "center",
+                    },
+                    Object {},
+                    Object {},
+                    null,
+                  ],
+                ],
+              ],
+            ],
+            Object {
+              "fontFamily": "Lucida Sans",
+            },
+          ]
+        }
+      >
+        Change Background Color
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`View should render with class="Test__class".
+There should have an onRef referencing to a Function. 1`] = `
+<View
+  class="Test__class"
+  data-class=""
+  onref={[Function]}
+  style={
+    Array [
+      undefined,
+      undefined,
+    ]
+  }
+>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      data-class="button button-navy"
+      style={
+        Array [
+          undefined,
+          Array [
+            Object {
+              "borderBottomWidth": 2,
+              "marginBottom": 5,
+              "marginRight": 5,
+            },
+            Object {
+              "borderColor": "#055396",
+            },
+            Object {
+              "backgroundColor": "#0E73CA",
+            },
+            undefined,
+            Object {},
+            Object {
+              "borderBottomWidth": 0,
+              "borderWidth": 0,
+            },
+            Object {},
+            Object {},
+            null,
+            null,
+          ],
+        ]
+      }
+    >
+      <Text
+        data-class=""
+        style={
+          Array [
+            Array [
+              Object {
+                "color": "#545454",
+                "fontSize": 13,
+                "lineHeight": 20,
+              },
+              Object {
+                "width": "100%",
+              },
+              Object {
+                "color": "#FFFFFF",
+              },
+              Array [
+                undefined,
+                Array [
+                  undefined,
+                  Array [
+                    Object {
+                      "fontSize": 14,
+                      "paddingBottom": 7,
+                      "paddingLeft": 20,
+                      "paddingRight": 20,
+                      "paddingTop": 7,
+                      "textAlign": "center",
+                    },
+                    Object {},
+                    Object {},
+                    null,
+                  ],
+                ],
+              ],
+            ],
+            Object {
+              "fontFamily": "Lucida Sans",
+            },
+          ]
+        }
+      >
+        Change Background Color
+      </Text>
+    </View>
+  </View>
+</View>
+`;

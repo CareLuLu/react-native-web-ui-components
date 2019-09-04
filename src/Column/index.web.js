@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
-  View,
   ViewPropTypes,
 } from 'react-native';
+import View from '../View';
 import { withTheme } from '../Theme';
 import { pick } from '../utils';
 
