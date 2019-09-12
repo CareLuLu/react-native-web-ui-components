@@ -55,6 +55,7 @@
     "expo-image-picker": "^6.0.0",
     "expo-permissions": "^6.0.0",
     "fast-deep-equal": "^2.0.1",
+    "html-to-react": "^1.4.1",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "murmurhash": "^0.0.2",
