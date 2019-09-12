@@ -1,3 +1,3 @@
-import WebView from 'react-native-web-webview';
+const WebView = () => null;
 
 export default WebView;

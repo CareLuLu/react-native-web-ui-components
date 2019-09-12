@@ -566,7 +566,7 @@ Shows a component only for web platforms.
 
 ### WebView
 
-See [React Native's WebView](https://facebook.github.io/react-native/docs/webview). For web, this component uses [React Native Web Webview](https://github.com/react-native-web-community/react-native-web-webview).
+See [React Native's WebView](https://facebook.github.io/react-native/docs/webview). For web, this component is ignored.
 
 ## Theme
 
