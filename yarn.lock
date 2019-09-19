@@ -5295,36 +5295,36 @@ expect@^24.9.0:
     jest-message-util "^24.9.0"
     jest-regex-util "^24.9.0"
 
-expo-blur@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-6.0.0.tgz#c63e7c464e1a8137dae8a71f893426a538eb9ed9"
-  integrity sha512-UqMaE2G2DfoeEJCYFfFLXq9nBeD0m3G1IISpxmdLXHDvzQuFl0kzNAZXX81a9sByWTV85KsxxnxoLImbfxV33A==
+expo-blur@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-7.0.0.tgz#0e21355d5bff27e07ae24d1cd74b64cd20dc2f61"
+  integrity sha512-ZTjg9sM/t9JaV5Hqxqt6xprFcw0871H55uYcvlqxkuMlBRTGM698t5ZVrYHmTbRq7w5bvxkZ47e/gm2gbOKyPA==
   dependencies:
     prop-types "^15.6.0"
 
-expo-document-picker@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-6.0.0.tgz#6dcf592a21224e8381c00372bf46bb1d3bdd397b"
-  integrity sha512-P/RZDULmvEA3OMor3VjmCTIy5Dud4cb8rOah1qMLqnVZKTCwoXq6jr/p103/PlNbluQQSBYq7QkOA9IkylmGJg==
+expo-document-picker@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-7.0.0.tgz#4ba98020995466bad7025345482916ca8efd5574"
+  integrity sha512-r84QXdUtnb5mXBUlTZf6GWauxYgBvuM3swu3Itp0l9qoIzI3LGlFl0MtsawyyYAHgPCbRSpbOhojh48Xi9fxkw==
   dependencies:
     uuid "^3.3.2"
 
-expo-file-system@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-6.0.2.tgz#e65f30eb6a7213e07933df9688116eaf4e25bbf8"
-  integrity sha512-s+6oQpLhcT7MQp7fcoj1E+zttMr0WX6c0FrddzqB4dUfhIggV+nb35nQMASIiTHAj8VPUanTFliY5rETHRMHRA==
+expo-file-system@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-7.0.0.tgz#ac98233b18774cce299fffd9451f08f21b116564"
+  integrity sha512-ignf5Vf5cPDYO/4HgUkgnL574wMbCNxyazlOvBgV34rLGJzBbFsn++hqC7njr2VTpIIXh2G9vp1+8g6cvsQdqA==
   dependencies:
     uuid-js "^0.7.5"
 
-expo-image-picker@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-6.0.0.tgz#776f4487d986ba9cc82169a47445e8c13ca3108b"
-  integrity sha512-7IW4WxDe0xQclGhTnX3DOgTkMvt2kF/MNOPbk2y9fS5k/8am9I8jErjURPxRUGH7+TvYLEWPy63DRAJP7TYyEg==
+expo-image-picker@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-7.0.0.tgz#e4a5a52bd6f9655f75ecf3cc866aa9bb0c99e24b"
+  integrity sha512-LeGdAqbeuB2KsT369ns1kDtCGbyDCmY2gIFlf/rsD3+UmagRFX9emZLGPEnUNdCWXoctSejjFwxDnCUtpvL6yw==
 
-expo-permissions@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-6.0.0.tgz#2943f1aa98de833b88cea73cf03d18d08957cb68"
-  integrity sha512-O+RdyfGiq7i+5Vi9fE38DgKn436lNWiqhnS5/Z7CC00bmKahhjVMNDbZvNn/nrdRGyaPneJk1Co1s1sexSnv0A==
+expo-permissions@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-7.0.0.tgz#f4135c3cf8e49c673a9a714459a1eb2b40fe2092"
+  integrity sha512-C+qyVz+pdZO4YpVR2HSC3gsBZg0Qb8brCFgzmDmWcAtgrOiHClaLPdhI2XtQuGh8ubXcKPUGZp++UCEGiG0Jxg==
 
 express@^4.16.3, express@^4.16.4, express@^4.17.1:
   version "4.17.1"
