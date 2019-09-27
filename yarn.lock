@@ -10420,10 +10420,10 @@ react-simple-code-editor@^0.9.0:
   resolved "https://registry.yarnpkg.com/react-simple-code-editor/-/react-simple-code-editor-0.9.14.tgz#5b8fdc36a975cbf02fdafa2597398d8e212afebc"
   integrity sha512-doNaIIt4w7QIiB6ysWHMtYL4M3xOGPvZJH8vGq3W/hGk43pn25RDA27IS8GkbfhA1eLX72CWDhuC7KmDKax13g==
 
-react-slider@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/react-slider/-/react-slider-0.11.2.tgz#ae014e1454c3cdd5f28b5c2495b2a08abd9971e6"
-  integrity sha512-y49ZwJJ7OcPdihgt71xYI8GRdAzpFuSLQR8b+cKotutxqf8MAEPEtqvWKlg+3ZQRe5PMN6oWbIb7wEYDF8XhNQ==
+react-slider@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-slider/-/react-slider-1.0.0.tgz#c258616f1c1c135bd7a139b73531dac9280da393"
+  integrity sha512-NPd41T8WBi1SbpqJP7Tj/z3HO5qZDXJ3DJei9pS5IuSYc4mmqt/Vs5pJVivN9+C6AiOti3mjI4++g+/oDXmIlQ==
 
 react-test-renderer@16.9.0:
   version "16.9.0"
