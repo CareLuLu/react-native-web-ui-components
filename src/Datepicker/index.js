@@ -50,15 +50,29 @@ const styles = StyleSheet.create({
   },
 });
 
-const FORMAT = 'MM/DD/YYYY';
+const DATE_FORMAT = 'MM/DD/YYYY';
+
+const FORMAT = [
+  'YYYY-MM-DD[T]HH:mm:ssZ',
+  'YYYY-MM-DD[T]HH:mm:ss.SSSZ',
+  'MM/DD/YYYY',
+  'MM/D/YYYY',
+  'M/D/YYYY',
+  'M/DD/YYYY',
+  'MM/DD/YYYY h:mma',
+  'MM/D/YYYY h:mma',
+  'M/D/YYYY h:mma',
+  'M/DD/YYYY h:mma',
+  'h:mma',
+];
 
 const icon = { uri: 'https://divin2sy6ce0b.cloudfront.net/images/calendar-icon.png' };
 
-const useOnChange = ({ onDateChange, excludeDates }) => {
+const useOnChange = ({ format, onDateChange, excludeDates }) => {
   const onChange = (dateString) => {
     if (excludeDates) {
-      const date = moment(dateString, FORMAT).format(FORMAT);
-      const notValid = excludeDates.filter(d => (moment(d).format(FORMAT) === date)).length;
+      const date = moment(dateString, format).format(DATE_FORMAT);
+      const notValid = excludeDates.filter(d => (moment(d).format(DATE_FORMAT) === date)).length;
       if (notValid) {
         setTimeout(() => Alert.alert('This date cannot be selected. Please choose another one.'), 500);
         return onDateChange('');
@@ -71,6 +85,7 @@ const useOnChange = ({ onDateChange, excludeDates }) => {
 };
 
 const Datepicker = ({
+  mode,
   fontFamily,
   themeTextStyle,
   themeInputStyle,
@@ -84,9 +99,23 @@ const Datepicker = ({
   readonly,
   onDateChange,
   excludeDates,
+  format,
   ...props
 }) => {
-  const onChange = useOnChange({ onDateChange, excludeDates });
+  let currentFormat = format;
+  if (!currentFormat) {
+    switch (mode) {
+      case 'time': currentFormat = 'h:mma'; break;
+      case 'datetime': currentFormat = 'MM/DD/YYYY h:mma'; break;
+      default: currentFormat = 'MM/DD/YYYY';
+    }
+  }
+
+  const onChange = useOnChange({
+    onDateChange,
+    excludeDates,
+    format: currentFormat,
+  });
   const mergedStyles = {
     dateInput: [
       styles.input,
@@ -113,22 +142,21 @@ const Datepicker = ({
   };
   const datepickerProps = {
     ...props,
+    format: currentFormat,
     disabled: disabled || readonly,
-    format: FORMAT,
     onDateChange: onChange,
     confirmBtnText: 'Confirm',
     cancelBtnText: 'Cancel',
     placeholder: placeholder === '' ? ' ' : placeholder,
-    mode: 'date',
     iconSource: icon,
     customStyles: mergedStyles,
     style: [styles.datepicker, auto ? null : styles.fullWidth, style],
   };
   if (minDate) {
-    datepickerProps.minDate = moment(minDate, FORMAT).format('MM/DD/YYYY');
+    datepickerProps.minDate = moment(minDate, FORMAT.concat([currentFormat])).toDate();
   }
   if (maxDate) {
-    datepickerProps.maxDate = moment(maxDate, FORMAT).format('MM/DD/YYYY');
+    datepickerProps.maxDate = moment(maxDate, FORMAT.concat([currentFormat])).toDate();
   }
   return <RNDatepicker {...datepickerProps} />;
 };
@@ -147,6 +175,9 @@ Datepicker.propTypes = {
   minDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   maxDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   excludeDates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+  mode: PropTypes.oneOf(['date', 'datetime', 'time']),
+  format: PropTypes.string,
+  is24Hour: PropTypes.bool,
 };
 
 Datepicker.defaultProps = {
@@ -160,6 +191,9 @@ Datepicker.defaultProps = {
   excludeDates: [],
   minDate: null,
   maxDate: null,
+  mode: 'date',
+  format: null,
+  is24Hour: false,
 };
 
 export default withTheme('Datepicker')(Datepicker);

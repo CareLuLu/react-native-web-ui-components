@@ -49,11 +49,32 @@ const baseCustomCss = `
     background-repeat: no-repeat;
     background-position: right 10px center;
   }
+  .react-datepicker-popper {
+    width: max-content;
+  }
+  .react-datepicker__time-container .react-datepicker__time {
+    border-bottom-right-radius: 3px;
+  }
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
+    width: 69px;
+  }
 `;
 
 const DATE_FORMAT = /[a-zA-Z]/g;
 
-const FORMAT = ['MM/DD/YYYY', 'MM/D/YYYY', 'M/D/YYYY', 'M/DD/YYYY'];
+const FORMAT = [
+  'YYYY-MM-DD[T]HH:mm:ssZ',
+  'YYYY-MM-DD[T]HH:mm:ss.SSSZ',
+  'MM/DD/YYYY',
+  'MM/D/YYYY',
+  'M/D/YYYY',
+  'M/DD/YYYY',
+  'MM/DD/YYYY h:mma',
+  'MM/D/YYYY h:mma',
+  'M/D/YYYY h:mma',
+  'M/DD/YYYY h:mma',
+  'h:mma',
+];
 
 const useEvents = ({
   onBlur,
@@ -62,6 +83,8 @@ const useEvents = ({
   maxDate,
   onDateChange = noop,
 }) => {
+  const formats = FORMAT.concat([format]);
+
   const input = useRef();
   const value = useRef();
 
@@ -70,7 +93,7 @@ const useEvents = ({
   };
 
   const onChange = (date) => {
-    const nextDate = moment(date, FORMAT).format(format);
+    const nextDate = moment(date, formats).format(format);
     if (input.current) {
       input.current.value = nextDate;
     }
@@ -94,8 +117,8 @@ const useEvents = ({
       const nextDate = moment(e.target.value, format, true);
       if (nextDate.isValid()) {
         if (
-          (minDate && moment(minDate, FORMAT).isAfter(nextDate)) // before min date
-          || (maxDate && moment(maxDate, FORMAT).isBefore(nextDate)) // after max date
+          (minDate && moment(minDate, formats).isAfter(nextDate)) // before min date
+          || (maxDate && moment(maxDate, formats).isBefore(nextDate)) // after max date
         ) {
           alert('This date cannot be selected. Please choose another one.'); // eslint-disable-line
           return onDateChange('');
@@ -134,13 +157,15 @@ const useCss = ({
     .react-datepicker__day--selected,
     .react-datepicker__day--in-selecting-range,
     .react-datepicker__day--in-range,
-    .react-datepicker__day--keyboard-selected {
+    .react-datepicker__day--keyboard-selected,
+    .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
       background-color: ${selectedDateColor || StyleSheet.flatten(themeInputStyle.selected).color};
     }
     .react-datepicker__day--selected:hover,
     .react-datepicker__day--in-selecting-range:hover,
     .react-datepicker__day--in-range:hover,
-    .react-datepicker__day--keyboard-selected:hover {
+    .react-datepicker__day--keyboard-selected:hover,
+    .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected:hover {
       opacity: 0.8;
       background-color: ${selectedDateColor || StyleSheet.flatten(themeInputStyle.selected).color};
     }
@@ -164,6 +189,7 @@ const useCss = ({
 const Datepicker = (props) => {
   const {
     auto,
+    mode,
     format,
     placeholder,
     minDate,
@@ -175,18 +201,36 @@ const Datepicker = (props) => {
     date,
     onFocus,
     className,
+    is24Hour,
+    timeIntervals,
   } = props;
+
+  let currentFormat = format;
+  if (!currentFormat) {
+    switch (mode) {
+      case 'time': currentFormat = 'h:mma'; break;
+      case 'datetime': currentFormat = 'MM/DD/YYYY h:mma'; break;
+      default: currentFormat = 'MM/DD/YYYY';
+    }
+  }
+
+  const formats = FORMAT.concat([format]);
+  const params = {
+    ...props,
+    formats,
+    format: currentFormat,
+  };
 
   const [
     onRef,
     onChange,
     onChangeRaw,
     onBlur,
-  ] = useEvents(props);
+  ] = useEvents(params);
 
-  const [id, customCss] = useCss(props);
+  const [id, customCss] = useCss(params);
 
-  const selected = moment(date, FORMAT);
+  const selected = moment(date, formats);
 
   const currentStyle = [
     styles.datepicker,
@@ -204,15 +248,17 @@ const Datepicker = (props) => {
         ref={onRef}
         className={`${id} ${className}`}
         selected={selected.isValid() ? selected.toDate() : null}
-        format={format}
+        dateFormat={currentFormat.replace(/Y/g, 'y').replace(/d/g, '<>').replace(/D/g, 'd').replace(/<>/g, 'D')}
         onChange={onChange}
         onChangeRaw={onChangeRaw}
         placeholderText={placeholder}
         popperPlacement="bottom"
         popperModifiers={popperModifiers}
-        showTimeSelect={false}
-        minDate={minDate ? moment(minDate, FORMAT).toDate() : null}
-        maxDate={maxDate ? moment(maxDate, FORMAT).toDate() : null}
+        showTimeSelect={mode === 'time' || mode === 'datetime'}
+        timeFormat={is24Hour ? 'HH:mm' : 'h:mma'}
+        timeIntervals={timeIntervals}
+        minDate={minDate ? moment(minDate, formats).toDate() : null}
+        maxDate={maxDate ? moment(maxDate, formats).toDate() : null}
         disabled={disabled || readonly}
         excludeDates={excludeDates}
         onFocus={onFocus}
@@ -228,7 +274,6 @@ Datepicker.propTypes = {
   css: PropTypes.string,
   auto: PropTypes.bool,
   style: StylePropType,
-  format: PropTypes.string,
   placeholder: PropTypes.string,
   minDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   maxDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
@@ -238,6 +283,10 @@ Datepicker.propTypes = {
   excludeDates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
   onFocus: PropTypes.func,
   onBlur: PropTypes.func, // eslint-disable-line
+  mode: PropTypes.oneOf(['date', 'datetime', 'time']),
+  format: PropTypes.string,
+  is24Hour: PropTypes.bool,
+  timeIntervals: PropTypes.number,
 };
 
 Datepicker.defaultProps = {
@@ -245,7 +294,6 @@ Datepicker.defaultProps = {
   css: '',
   auto: false,
   style: null,
-  format: 'MM/DD/YYYY',
   placeholder: '',
   minDate: null,
   maxDate: null,
@@ -255,6 +303,10 @@ Datepicker.defaultProps = {
   excludeDates: [],
   onFocus: noop,
   onBlur: noop,
+  mode: 'date',
+  format: null,
+  is24Hour: false,
+  timeIntervals: 15,
 };
 
 export default withTheme('Datepicker')(Datepicker);
