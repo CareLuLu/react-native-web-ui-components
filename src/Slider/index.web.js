@@ -40,13 +40,13 @@ const Slider = ({
               width: 100%;
               height: 18px;
             }
-            .slider-1 .bar, .slider-2 .bar {
+            .slider-1 .track, .slider-2 .track {
               position: relative;
               height: 12px;
               border-radius: 32px;
               top: 3px;
             }
-            .slider-1 .handle, .slider-2 .handle {
+            .slider-1 .thumb, .slider-2 .thumb {
               margin-left: -9px;
               width: 18px;
               height: 18px;
@@ -54,22 +54,22 @@ const Slider = ({
               border-radius: 50%;
               background-color: ${selectedStyle.color};
             }
-            .slider-1 .handle:hover, .slider-2 .handle:hover {
+            .slider-1 .thumb:hover, .slider-2 .thumb:hover {
               opacity: 0.7;
             }
-            .slider-1 .bar.bar-0 {
+            .slider-1 .track.track-0 {
               background: ${selectedStyle.color};
             }
-            .slider-1 .bar.bar-1 {
+            .slider-1 .track.track-1 {
               background: ${unselectedStyle.color};
             }
-            .slider-2 .bar.bar-0 {
+            .slider-2 .track.track-0 {
               background: ${unselectedStyle.color};
             }
-            .slider-2 .bar.bar-1 {
+            .slider-2 .track.track-1 {
               background: ${selectedStyle.color};
             }
-            .slider-2 .bar.bar-2 {
+            .slider-2 .track.track-2 {
               background: ${unselectedStyle.color};
             }
           `}
