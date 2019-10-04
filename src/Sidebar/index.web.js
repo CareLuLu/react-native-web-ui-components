@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import DomSidebar from 'react-sidebar';
 import { withTheme } from '../Theme';
 import { useScreen } from '../Screen';
-import { useDerivedState } from '../utils';
+import { useDerivedState, isSSR } from '../utils';
 import Row from '../Row';
 
 const edgeHitWidth = 120;
@@ -33,6 +33,10 @@ const Sidebar = ({
       }
     });
   });
+
+  if (isSSR()) {
+    return <span>{children}</span>;
+  }
 
   if (screen.type === 'xs' || screen.type === 'sm') {
     const styles = {
