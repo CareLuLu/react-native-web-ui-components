@@ -35,7 +35,7 @@ const Sidebar = ({
   });
 
   if (isSSR()) {
-    return <span>{children}</span>;
+    return <span style={{ width: '100%' }}>{children}</span>;
   }
 
   if (screen.type === 'xs' || screen.type === 'sm') {

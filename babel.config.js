@@ -1,6 +1,6 @@
 module.exports = {
   plugins: [
-    ['lodash', { id: ['lodash', 'recompact'] }],
+    ['lodash', { id: ['lodash'] }],
     '@babel/plugin-transform-react-jsx',
     '@babel/plugin-proposal-class-properties',
   ],
