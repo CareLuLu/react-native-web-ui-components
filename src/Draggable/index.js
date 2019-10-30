@@ -62,7 +62,7 @@ class Draggable extends Component {
     });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (typeof this.props.onMove === 'function') {
       this.state.pan.addListener(values => this.props.onMove(values));
     }
