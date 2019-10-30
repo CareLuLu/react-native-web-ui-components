@@ -21,6 +21,7 @@ const Alert = ({
   children,
   visible,
   onOk,
+  okLabel,
   ...props
 }) => {
   const [isVisible, setVisible] = useState(visible);
@@ -42,7 +43,7 @@ const Alert = ({
         <Text style={styles.text}>{children}</Text>
       ) : children}
       <Center>
-        <Button auto type={theme.colors.primary} flat={false} onPress={hide}>Ok</Button>
+        <Button auto type={theme.colors.primary} flat={false} onPress={hide}>{okLabel}</Button>
       </Center>
     </Popup>
   );
@@ -53,12 +54,14 @@ Alert.propTypes = {
   visible: PropTypes.bool,
   children: PropTypes.node,
   onOk: PropTypes.func,
+  okLabel: PropTypes.string,
 };
 
 Alert.defaultProps = {
   visible: true,
   children: null,
   onOk: noop,
+  okLabel: 'Ok',
 };
 
 export default withTheme('Alert')(Alert);
