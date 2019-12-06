@@ -20,8 +20,8 @@
   "author": "Gabriel Marques <gabriel@carelulu.com>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "7.7.4",
-    "@babel/core": "7.7.4",
+    "@babel/cli": "7.7.5",
+    "@babel/core": "7.7.5",
     "@babel/plugin-proposal-class-properties": "7.7.4",
     "@babel/plugin-transform-react-jsx": "7.7.4",
     "@babel/register": "7.7.4",
