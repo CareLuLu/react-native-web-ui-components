@@ -57,7 +57,7 @@
     "expo-file-system": "^7.0.0",
     "expo-image-picker": "^7.0.0",
     "expo-permissions": "^7.0.0",
-    "fast-deep-equal": "^2.0.1",
+    "fast-deep-equal": "^3.0.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "murmurhash": "^0.0.2",
