@@ -103,9 +103,9 @@ const useEvents = ({
 
   const onChangeRaw = (e) => {
     const inputNode = e.target;
-    const nodeValue = inputNode;
+    const nodeValue = inputNode.value;
     const mask = format.replace(DATE_FORMAT, '9');
-    const formattedValue = formatMask(value, mask);
+    const formattedValue = formatMask(nodeValue, mask);
     if (nodeValue !== formattedValue) {
       inputNode.value = formattedValue;
     }
@@ -264,6 +264,7 @@ const Datepicker = (props) => {
         onFocus={onFocus}
         onBlur={onBlur}
         style={currentStyle}
+        strictParsing
       />
     </View>
   );
