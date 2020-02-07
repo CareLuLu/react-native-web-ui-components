@@ -8,8 +8,6 @@ import { useScreen } from '../Screen';
 import { useDerivedState, isSSR } from '../utils';
 import Row from '../Row';
 
-const edgeHitWidth = 120;
-
 const Sidebar = ({
   location,
   leftOpen,
@@ -18,6 +16,7 @@ const Sidebar = ({
   rightOnChange,
   leftComponent,
   rightComponent,
+  edgeHitWidth,
   disabled,
   children,
 }) => {
@@ -116,6 +115,7 @@ Sidebar.propTypes = {
     PropTypes.node,
     PropTypes.func,
   ]),
+  edgeHitWidth: PropTypes.number,
   children: PropTypes.node,
   disabled: PropTypes.bool,
 };
@@ -127,6 +127,7 @@ Sidebar.defaultProps = {
   rightOpen: false,
   rightOnChange: noop,
   rightComponent: null,
+  edgeHitWidth: 120,
   children: null,
   disabled: false,
 };
