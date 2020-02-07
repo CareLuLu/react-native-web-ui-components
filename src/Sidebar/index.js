@@ -12,6 +12,7 @@ const Sidebar = ({
   rightOnChange,
   leftComponent,
   rightComponent,
+  edgeHitWidth,
   disabled,
   children,
 }) => {
@@ -19,7 +20,6 @@ const Sidebar = ({
 
   const { width } = screen;
   const openMenuOffset = Math.min(width * 0.8, 400);
-  const edgeHitWidth = 120;
 
   if (leftComponent && rightComponent) {
     return (
@@ -97,6 +97,7 @@ Sidebar.propTypes = {
     PropTypes.node,
     PropTypes.func,
   ]),
+  edgeHitWidth: PropTypes.number,
   children: PropTypes.node,
   disabled: PropTypes.bool,
 };
@@ -108,6 +109,7 @@ Sidebar.defaultProps = {
   rightOpen: false,
   rightOnChange: noop,
   rightComponent: null,
+  edgeHitWidth: 120,
   children: null,
   disabled: false,
 };
