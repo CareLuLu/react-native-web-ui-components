@@ -10,11 +10,12 @@ import isEqual from 'lodash/isEqual';
 import { isEmpty } from '../utils';
 import { withTheme } from '../Theme';
 import Screen, { withKeyboard } from '../Screen';
-import EventHandler from '../EventHandler';
 import View from '../View';
 import StylePropType from '../StylePropType';
 import DefaultInput from '../TextInput';
 import DefaultMenu from './Menu';
+
+/* eslint react/destructuring-assignment: 0 */
 
 const defaultGetItemValue = item => item;
 
@@ -59,7 +60,7 @@ const propNames = [
   'throttleDebounceThreshold',
 ];
 
-class Autocomplete extends EventHandler {
+class Autocomplete extends React.Component {
   static propTypes = {
     keyboard: PropTypes.number.isRequired,
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
@@ -82,6 +83,7 @@ class Autocomplete extends EventHandler {
     throttleDelay: PropTypes.number,
     debounceDelay: PropTypes.number,
     throttleDebounceThreshold: PropTypes.number,
+    style: StylePropType,
   };
 
   static defaultProps = {
@@ -105,6 +107,7 @@ class Autocomplete extends EventHandler {
     throttleDelay: 500,
     debounceDelay: 500,
     throttleDebounceThreshold: 3,
+    style: {},
   };
 
   constructor(props) {
@@ -124,6 +127,7 @@ class Autocomplete extends EventHandler {
       highlightedIndex: 0,
       keyboardOffset: null,
     };
+    this.mountSteps = [];
     this.updateItemsThrottled = this.updateItems;
     this.updateItemsDebounced = this.updateItems;
     if (isFunction(items)) {
@@ -147,6 +151,18 @@ class Autocomplete extends EventHandler {
     this.mounted = false;
     if (Platform.OS === 'web') {
       window.removeEventListener('click', this.clickListener);
+    }
+  }
+
+  onMount(handler) {
+    if (handler) {
+      this.mountSteps.push(handler);
+    }
+    if (this.mounted) {
+      const fn = this.mountSteps.shift();
+      if (fn) {
+        fn.call(this);
+      }
     }
   }
 
@@ -254,21 +270,8 @@ class Autocomplete extends EventHandler {
     });
   };
 
-  clickListener = (event) => {
-    if (Platform.OS === 'web') {
-      if (!isField(event.target, this.fieldRegex)) {
-        this.onMount(() => this.setState({ open: false }));
-      }
-    }
-  };
-
   getParams() {
     return { ...this.props, ...this.state };
-  }
-
-  filterItems(text, items) {
-    const { isMatch } = this.props;
-    return filter(items, item => isMatch(text, item, this.getParams()));
   }
 
   async getItems(text) {
@@ -299,6 +302,14 @@ class Autocomplete extends EventHandler {
     return items;
   }
 
+  clickListener = (event) => {
+    if (Platform.OS === 'web') {
+      if (!isField(event.target, this.fieldRegex)) {
+        this.onMount(() => this.setState({ open: false }));
+      }
+    }
+  };
+
   updateItems = async (text) => {
     const items = await this.getItems(text);
     const highlightedIndex = isEqual(items, this.state.items) ? this.state.highlightedIndex : 0;
@@ -308,6 +319,11 @@ class Autocomplete extends EventHandler {
       loading: this.request.loading,
     }));
   };
+
+  filterItems(text, items) {
+    const { isMatch } = this.props;
+    return filter(items, item => isMatch(text, item, this.getParams()));
+  }
 
   render() {
     const {

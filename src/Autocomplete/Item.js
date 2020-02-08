@@ -28,7 +28,10 @@ const Item = ({
   themeInputStyle,
   numberOfLines,
 }) => {
-  const onItemPress = () => onPress(item, index);
+  const onItemPress = () => {
+    console.log(item, index, 'itemPress');
+    onPress(item, index);
+  };
 
   const textStyle = [styles.defaults, themeTextStyle.text, style];
   if (active) {

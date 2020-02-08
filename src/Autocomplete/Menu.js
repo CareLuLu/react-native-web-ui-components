@@ -107,19 +107,22 @@ class Menu extends React.PureComponent {
           ref={this.onRef}
         >
           {loading ? <Spinner key="spinner" /> : null}
-          {items.map((item, i) => (
-            <Item
-              {...this.props}
-              item={item}
-              index={i}
-              key={getItemValue(item)}
-              text={`${getItemValue(item)}`}
-              active={highlightedIndex === i}
-              onPress={onSelect}
-              style={itemStyle}
-              {...itemProps}
-            />
-          ))}
+          {items.map((item, i) => {
+            const key = `${i}-${getItemValue(item)}`; // eslint-disable-line
+            return (
+              <Item
+                {...this.props}
+                item={item}
+                index={i}
+                key={key}
+                text={`${getItemValue(item)}`}
+                active={highlightedIndex === i}
+                onPress={onSelect}
+                style={itemStyle}
+                {...itemProps}
+              />
+            );
+          })}
           {!items.length && !loading ? <EmptyResult key="emptyResult" /> : null}
         </ScrollView>
       </View>
