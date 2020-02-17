@@ -33,9 +33,9 @@ const Sidebar = ({
     });
   });
 
-  if (isSSR()) {
-    return <span style={{ width: '100%' }}>{children}</span>;
-  }
+  // if (isSSR()) {
+  //   return <span style={{ width: '100%' }}>{children}</span>;
+  // }
 
   if (screen.type === 'xs' || screen.type === 'sm') {
     const styles = {
