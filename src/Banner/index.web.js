@@ -6,7 +6,7 @@ import { pick } from '../utils';
 import stylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import { useScreen } from '../Screen';
-import { Helmet, style } from '../Helmet';
+import { Helmet, style, link } from '../Helmet';
 import Column from '../Column';
 
 /* eslint react/destructuring-assignment: 0 */
@@ -29,19 +29,38 @@ const Banner = ({
   md,
   sm,
   xs,
+  preload,
   ...props
 }) => {
   const screen = useScreen();
   let uri;
+  let maxWidth;
+
+  const uriLg = pick(lg, md, sm, xs);
+  const uriMd = pick(md, sm, xs);
+  const uriSm = pick(sm, xs);
+  const uriXs = xs;
+
   switch (screen.type) {
-    case 'lg': uri = pick(lg, md, sm, xs); break;
-    case 'md': uri = pick(md, sm, xs); break;
-    case 'sm': uri = pick(sm, xs); break;
-    default: uri = xs;
+    case 'lg':
+      uri = uriLg;
+      maxWidth = 1280;
+      break;
+    case 'md':
+      uri = uriMd;
+      maxWidth = 1199;
+      break;
+    case 'sm':
+      uri = uriSm;
+      maxWidth = 991;
+      break;
+    default:
+      uri = uriXs;
+      maxWidth = 767;
   }
   uri = theme.resource(uri, {
     maxHeight,
-    maxWidth: Math.max(screen.width, 1280),
+    maxWidth,
   });
   const currentStyle = props.style; // eslint-disable-line
   const className = `banner-${murmurhash.v3(`${height}-${fit}-${maxHeight}-${uri}`)}`;
@@ -55,6 +74,38 @@ const Banner = ({
       className={className}
     >
       <Helmet>
+        {preload ? (
+          <link
+            rel="preload"
+            as="image"
+            href={theme.resource(uriLg, { maxHeight, maxWidth: 1280 })}
+            media="(min-width: 1200px)"
+          />
+        ) : null}
+        {preload ? (
+          <link
+            rel="preload"
+            as="image"
+            href={theme.resource(uriMd, { maxHeight, maxWidth: 1199 })}
+            media="(min-width: 992px) and (max-width: 1199px)"
+          />
+        ) : null}
+        {preload ? (
+          <link
+            rel="preload"
+            as="image"
+            href={theme.resource(uriSm, { maxHeight, maxWidth: 991 })}
+            media="(min-width: 768px) and (max-width: 991px)"
+          />
+        ) : null}
+        {preload ? (
+          <link
+            rel="preload"
+            as="image"
+            href={theme.resource(uriSm, { maxHeight, maxWidth: 767 })}
+            media="(max-width: 767px)"
+          />
+        ) : null}
         <style>
           {`
             [data-class~="${className}"] {
@@ -91,6 +142,7 @@ Banner.propTypes = {
   columnSm: PropTypes.number,
   columnMd: PropTypes.number,
   columnLg: PropTypes.number,
+  preload: PropTypes.bool,
 };
 
 Banner.defaultProps = {
@@ -107,6 +159,7 @@ Banner.defaultProps = {
   columnSm: null,
   columnMd: null,
   columnLg: null,
+  preload: false,
 };
 
 export default withTheme('Banner')(Banner);
