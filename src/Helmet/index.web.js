@@ -13,33 +13,35 @@ const parseTags = (children, tags) => {
   let script;
   const list = isArray(children) ? children : [children];
   list.forEach((tag) => {
-    if (isArray(tag)) {
-      parseTags(tag, tags);
-    } else {
-      switch (tag.type) {
-        case 'title':
-          tags.title = tag.props.children || '';
-          break;
-        case 'style':
-          tags.style.push(Object.assign({
-            cssText: tag.props.children,
-            'amp-custom': '',
-          }));
-          break;
-        case 'meta':
-          tags.meta.push(pick(tag.props, 'name', 'property', 'content'));
-          break;
-        case 'link':
-          tags.link.push(pick(tag.props, 'rel', 'href', 'type', 'as', 'crossorigin'));
-          break;
-        case 'script':
-          script = omit(tag.props, 'children');
-          if (tag.props.type === 'application/ld+json') {
-            script.innerHTML = tag.props.children;
-          }
-          tags.script.push(script);
-          break;
-        default: break;
+    if (tag !== null && tag !== undefined) {
+      if (isArray(tag)) {
+        parseTags(tag, tags);
+      } else {
+        switch (tag.type) {
+          case 'title':
+            tags.title = tag.props.children || '';
+            break;
+          case 'style':
+            tags.style.push(Object.assign({
+              cssText: tag.props.children,
+              'amp-custom': '',
+            }));
+            break;
+          case 'meta':
+            tags.meta.push(pick(tag.props, 'name', 'property', 'content'));
+            break;
+          case 'link':
+            tags.link.push(pick(tag.props, 'rel', 'href', 'type', 'as', 'crossorigin', 'media'));
+            break;
+          case 'script':
+            script = omit(tag.props, 'children');
+            if (tag.props.type === 'application/ld+json') {
+              script.innerHTML = tag.props.children;
+            }
+            tags.script.push(script);
+            break;
+          default: break;
+        }
       }
     }
   });
