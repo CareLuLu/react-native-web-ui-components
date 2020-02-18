@@ -5,7 +5,6 @@ import murmurhash from 'murmurhash';
 import { pick } from '../utils';
 import stylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
-import { useScreen } from '../Screen';
 import { Helmet, style, link } from '../Helmet';
 import Column from '../Column';
 
@@ -32,38 +31,14 @@ const Banner = ({
   preload,
   ...props
 }) => {
-  const screen = useScreen();
-  let uri;
-  let maxWidth;
+  const uriLg = theme.resource(pick(lg, md, sm, xs), { maxHeight, maxWidth: 1280 });
+  const uriMd = theme.resource(pick(md, sm, xs), { maxHeight, maxWidth: 1199 });
+  const uriSm = theme.resource(pick(sm, xs), { maxHeight, maxWidth: 991 });
+  const uriXs = theme.resource(xs, { maxHeight, maxWidth: 767 });
 
-  const uriLg = pick(lg, md, sm, xs);
-  const uriMd = pick(md, sm, xs);
-  const uriSm = pick(sm, xs);
-  const uriXs = xs;
-
-  switch (screen.type) {
-    case 'lg':
-      uri = uriLg;
-      maxWidth = 1280;
-      break;
-    case 'md':
-      uri = uriMd;
-      maxWidth = 1199;
-      break;
-    case 'sm':
-      uri = uriSm;
-      maxWidth = 991;
-      break;
-    default:
-      uri = uriXs;
-      maxWidth = 767;
-  }
-  uri = theme.resource(uri, {
-    maxHeight,
-    maxWidth,
-  });
   const currentStyle = props.style; // eslint-disable-line
-  const className = `banner-${murmurhash.v3(`${height}-${fit}-${maxHeight}-${uri}`)}`;
+  const className = `banner-${murmurhash.v3(`${height}-${fit}-${maxHeight}-${uriLg}-${uriMd}-${uriSm}-${uriXs}`)}`;
+
   return (
     <Column
       xs={columnXs}
@@ -78,7 +53,7 @@ const Banner = ({
           <link
             rel="preload"
             as="image"
-            href={theme.resource(uriLg, { maxHeight, maxWidth: 1280 })}
+            href={uriLg}
             media="(min-width: 1200px)"
           />
         ) : null}
@@ -86,7 +61,7 @@ const Banner = ({
           <link
             rel="preload"
             as="image"
-            href={theme.resource(uriMd, { maxHeight, maxWidth: 1199 })}
+            href={uriMd}
             media="(min-width: 992px) and (max-width: 1199px)"
           />
         ) : null}
@@ -94,7 +69,7 @@ const Banner = ({
           <link
             rel="preload"
             as="image"
-            href={theme.resource(uriSm, { maxHeight, maxWidth: 991 })}
+            href={uriSm}
             media="(min-width: 768px) and (max-width: 991px)"
           />
         ) : null}
@@ -102,7 +77,7 @@ const Banner = ({
           <link
             rel="preload"
             as="image"
-            href={theme.resource(uriSm, { maxHeight, maxWidth: 767 })}
+            href={uriXs}
             media="(max-width: 767px)"
           />
         ) : null}
@@ -112,10 +87,29 @@ const Banner = ({
               width: 100%;
               height: ${fit ? '100vh' : `${height}px`};
               max-height: ${maxHeight || height}px;
-              background-image: url(${uri});
               background-position: center center;
               background-size: cover;
               background-repeat: no-repeat;
+            }
+            @media (max-width: 767px) {
+              [data-class~="${className}"] {
+                background-image: url(${uriXs});
+              }
+            }
+            @media (min-width: 768px) and (max-width: 991px)  {
+              [data-class~="${className}"] {
+                background-image: url(${uriSm});
+              }
+            }
+            @media (min-width: 992px) and (max-width: 1199px)  {
+              [data-class~="${className}"] {
+                background-image: url(${uriMd});
+              }
+            }
+            @media (min-width: 1200px) {
+              [data-class~="${className}"] {
+                background-image: url(${uriLg});
+              }
             }
           `}
         </style>
