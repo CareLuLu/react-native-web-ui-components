@@ -30,7 +30,7 @@ const parseTags = (children, tags) => {
           tags.meta.push(pick(tag.props, 'name', 'property', 'content'));
           break;
         case 'link':
-          tags.link.push(pick(tag.props, 'rel', 'href', 'type'));
+          tags.link.push(pick(tag.props, 'rel', 'href', 'type', 'as', 'crossorigin'));
           break;
         case 'script':
           script = omit(tag.props, 'children');
