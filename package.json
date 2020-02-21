@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.4",
-    "@ptomasroos/react-native-multi-slider": "^1.0.0",
+    "@ptomasroos/react-native-multi-slider": "^2.0.0",
     "@tippy.js/react": "^3.0.0",
     "expo-blur": "^8.0.0",
     "expo-document-picker": "^8.0.0",
