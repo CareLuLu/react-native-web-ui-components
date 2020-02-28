@@ -36,6 +36,7 @@ const isField = (element, classNameRegex) => {
 };
 
 const propNames = [
+  'allowEmpty',
   'items',
   'getItemValue',
   'onChangeText',
@@ -84,6 +85,7 @@ class Autocomplete extends React.Component {
     debounceDelay: PropTypes.number,
     throttleDebounceThreshold: PropTypes.number,
     style: StylePropType,
+    allowEmpty: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -108,6 +110,7 @@ class Autocomplete extends React.Component {
     debounceDelay: 500,
     throttleDebounceThreshold: 3,
     style: {},
+    allowEmpty: true,
   };
 
   constructor(props) {
@@ -167,13 +170,15 @@ class Autocomplete extends React.Component {
   }
 
   onChangeText = (text) => {
-    const { onChangeText, throttleDebounceThreshold } = this.props;
+    const { allowEmpty, onChangeText, throttleDebounceThreshold } = this.props;
     onChangeText(text);
     this.onMount(() => this.setState({
       open: true,
       loading: true,
     }));
-    if (text.length > throttleDebounceThreshold) {
+    if (allowEmpty && !text.length) {
+      this.onSelectEmpty();
+    } else if (text.length > throttleDebounceThreshold) {
       this.updateItemsDebounced(text);
     } else {
       this.updateItemsThrottled(text);
@@ -235,6 +240,16 @@ class Autocomplete extends React.Component {
       open: false,
       loading: false,
       highlightedIndex: index,
+    }));
+  };
+
+  onSelectEmpty = () => {
+    const { onSelect } = this.props;
+    onSelect('', null);
+    this.onMount(() => this.setState({
+      open: false,
+      loading: false,
+      highlightedIndex: 0,
     }));
   };
 
