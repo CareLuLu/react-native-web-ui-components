@@ -19,8 +19,6 @@ import DefaultMenu from './Menu';
 
 const defaultGetItemValue = item => item;
 
-const defaultGetItemLabel = item => item;
-
 const defaultIsMatch = (text, item, { getItemValue }) => {
   if (text === '' || `${getItemValue(item)}`.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
     return true;
@@ -117,7 +115,7 @@ class Autocomplete extends React.Component {
   static defaultProps = {
     items: [],
     getItemValue: defaultGetItemValue,
-    getItemLabel: defaultGetItemLabel,
+    getItemLabel: undefined,
     onChangeText: noop,
     onKeyPress: noop,
     onSelect: noop,
@@ -440,6 +438,8 @@ class Autocomplete extends React.Component {
       valueLabel,
       containerStyle,
       className,
+      getItemValue,
+      getItemLabel,
     } = this.props;
     const props = omit(this.props, propNames);
     if (Platform.OS === 'web') {
@@ -498,6 +498,7 @@ class Autocomplete extends React.Component {
           <Menu
             {...this.props}
             {...this.state}
+            getItemLabel={getItemLabel === undefined ? getItemValue : getItemLabel}
             style={[
               this.menuStyle,
               { height },
