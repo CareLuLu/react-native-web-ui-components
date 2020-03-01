@@ -1,239 +1,339 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
-import noop from 'lodash/noop';
+import Autocomplete from '../Autocomplete';
+import View from '../View';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
+import StylePropType from '../StylePropType';
+import TextInput from '../TextInput';
 import { withTheme } from '../Theme';
 import { Helmet, style } from '../Helmet';
 
-/* eslint react/prefer-stateless-function: 0 */
-/* eslint react/no-unused-prop-types: 0 */
+const styles = StyleSheet.create({
+  empty: {},
+  outerRow: {
+    alignItems: 'center',
+  },
+  inputDefaults: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 12,
+    paddingRight: 12,
+    height: 40,
+  },
+  fitOuterRowRight: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  fitOuterRowLeft: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  select: {},
+  menu: {
+    marginTop: 5,
+    maxHeight: 280,
+  },
+  item: {
+    lineHeight: 35,
+    height: 35,
+    paddingLeft: 10,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingRight: 10,
+  },
+  gray: {
+    borderColor: '#545454',
+    backgroundColor: '#545454',
+  },
+  grayText: {
+    color: '#FFFFFF',
+  },
+  lightGray: {
+    borderColor: '#BFBFBF',
+    backgroundColor: '#BFBFBF',
+  },
+  lightGrayText: {
+    color: '#FFFFFF',
+  },
+  yellow: {
+    borderColor: '#FEB715',
+    backgroundColor: '#FEB715',
+  },
+  yellowText: {
+    color: '#FFFFFF',
+  },
+  pink: {
+    borderColor: '#EE2D68',
+    backgroundColor: '#EE2D68',
+  },
+  pinkText: {
+    color: '#FFFFFF',
+  },
+  white: {
+    borderColor: '#D3D6D6',
+    backgroundColor: '#FFFFFF',
+  },
+  whiteText: {
+    color: '#545454',
+  },
+  active: {
+    opacity: 0.7,
+  },
+});
 
-class ModalPicker extends React.Component {
-  componentDidMount() {
-    const { align, fitContent } = this.props;
-    const select = document.getElementsByClassName(this.id)[0];
-    if (select) {
-      if (fitContent) {
-        const width = select
-          .getElementsByClassName('select__placeholder')[0]
-          .clientWidth;
-        select.children[0].style.width = `${(width + 50)}px`;
-        select.children[0].style.float = align;
-      } else {
-        select.children[0].style.width = '100%';
-      }
+const getItemValue = item => item.value;
+const getItemLabel = item => item.label;
+const isMatch = () => true;
+
+const measureTextWidth = (txt) => {
+  const width = (txt.length * 5) + 30;
+  return width;
+};
+
+const Input = ({
+  onPress,
+  fitContent,
+  center, // legacy
+  selectStyle,
+  selectTextStyle,
+  align,
+  type,
+  onRef,
+  value,
+  placeholder,
+  arrow,
+  themeInputStyle,
+  ...props
+}) => {
+  const input = useRef();
+
+  const { name } = props;
+
+  const [id] = useState(`ModalPicker__Input-${name || Math.random().toString(36).substr(2, 9)}`);
+
+  const inputOnRef = (ref) => {
+    input.current = ref;
+  };
+
+  const wrappedOnPress = () => {
+    if (input.current) {
+      input.current.focus();
+    }
+    onPress();
+  };
+
+  const currentStyle = [
+    styles.inputDefaults,
+    themeInputStyle.border,
+    themeInputStyle.background,
+    themeInputStyle.opacity,
+    themeInputStyle.text,
+    styles[type],
+    styles[`${type}Text`],
+    selectStyle,
+    selectTextStyle,
+  ];
+  const { color, ...otherStyles } = StyleSheet.flatten(currentStyle);
+
+  if (fitContent) {
+    currentStyle.push({ width: measureTextWidth(`${value || placeholder || 'aaa'}`) + 30 });
+  } else {
+    currentStyle.push({ width: '100%' });
+  }
+  if (type !== 'white') {
+    const padding = otherStyles.padding || 0;
+    const paddingTop = otherStyles.paddingTop || padding;
+    const paddingBottom = otherStyles.paddingBottom || padding;
+    if (paddingBottom && paddingBottom === paddingTop) {
+      currentStyle.push({ paddingTop: paddingTop - 2 });
     }
   }
 
-  componentDidUpdate() {
-    const { align, fitContent } = this.props;
-    const select = document.getElementsByClassName(this.id)[0];
-    if (select) {
-      if (fitContent) {
-        const width = select
-          .getElementsByClassName('select__placeholder')[0]
-          .clientWidth;
-        select.children[0].style.width = `${(width + 50)}px`;
-        select.children[0].style.float = align;
-      } else {
-        select.children[0].style.width = '100%';
-      }
-    }
+  let outer;
+  if (!fitContent) {
+    outer = styles.outerRow;
+  } else if (align === 'right') {
+    outer = styles.fitOuterRowRight;
+  } else {
+    outer = styles.fitOuterRowLeft;
   }
 
-  render() {
-    const { props } = this;
-    this.id = `select-${props.name}`;
-    return (
-      <React.Fragment>
-        <Helmet>
-          <style>
-            {`
-              .select {
-                font-family: ${props.fontFamily.regular};
-              }
-              .select,
-              .select.select--is-focused {
-                cursor: pointer;
-                border-radius: 2px;
-                min-height: 32px;
-                outline: none;
-              }
-              .select__control {
-                align-items: center;
-                background-color: rgb(255, 255, 255);
-                cursor: default;
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                min-height: 38px;
-                position: relative;
-                box-sizing: border-box;
-                border-color: rgb(204, 204, 204);
-                border-radius: 4px;
-                border-style: solid;
-                border-width: 1px;
-              }
-              .select__control, 
-              .select__control.select__control--is-focused {
-                cursor: pointer;
-                border-radius: 2px;
-                min-height: 32px;
-              }
-              .select .select__value-container {
-                padding: 0px 8px;
-                align-items: center;
-                display: flex;
-                flex-wrap: wrap;
-                position: relative;
-                box-sizing: border-box;
-                flex: 1 1 0%;
-                padding: 2px 8px;
-                overflow: hidden;
-              }
-              .select .select__value-container .select__placeholder {
-                margin-left: 2px;
-                margin-right: 2px;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                box-sizing: border-box; 
-              }
-              .select__indicator-separator {
-                align-self: stretch;
-                background-color: rgb(204, 204, 204);
-                margin-bottom: 8px;
-                margin-top: 8px;
-                width: 1px;
-                box-sizing: border-box;
-              }
-              .select .select__indicators {
-                min-height: 32px;
-                align-items: center;
-                align-self: stretch;
-                display: flex;
-                flex-shrink: 0;
-                box-sizing: border-box;
-              }
-              .select__indicator.select__dropdown-indicator {
-                padding: 0px 8px;
-                color: rgb(204, 204, 204);
-                display: flex;
-                box-sizing: border-box;
-                padding: 8px;
-              }
-              .select__indicator.select__dropdown-indicator svg {
-                display: inline-block;
-                fill: currentcolor;
-                line-height: 1;
-                stroke: currentcolor;
-                stroke-width: 0;
-              }
-              .select .select__option {
-                cursor: pointer;
-              }
-              .select .select__menu-list {
-                border-radius: 2px;
-              }
-              .select.no-arrow .select__indicators {
-                display: none;
-              }
-              .select.yellow *,
-              .select.yellow .select__control {
-                border-color: #FEB715;
-                background-color: #FEB715;
-                color: #FFFFFF;
-              }
-              .select.yellow .select__control.select__control--is-focused {
-                border-color: #FEB715;
-                background-color: #FEB715;
-              }
-              .select.yellow:hover,
-              .select.yellow .select__control:hover {
-                border-color: #FEB715;
-              }
-              .select.yellow .select__option--is-focused {
-                background-color: #F7AC00;
-              }
-              .select.pink * {
-                border-color: #EE2D68;
-                background-color: #EE2D68;
-                color: #FFFFFF
-              }
-              .select.pink .select__control.select__control--is-focused {
-                border-color: #EE2D68;
-                background-color: #EE2D68;
-              }
-              .select.pink:hover,
-              .select.pink .select__control:hover {
-                border-color: #EE2D68;
-              }
-              .select.pink .select__option--is-focused {
-                background-color: #F15786;
-              }
-              .select.white .select__control {
-                border-color: #D3D6D6;
-              }
-              .select.white .select__control.select__control--is-focused {
-                border-color: #EE2D68;
-                box-shadow: none;
-              }
-              .select.white .select__option--is-focused {
-                background-color: #FFA3C0;
-              }
-            `}
-          </style>
-        </Helmet>
-        <Select
-          autoFocus={props.autoFocus}
-          name={props.name}
-          placeholder={props.placeholder}
-          value={props.value}
-          onBlur={props.onBlur}
-          onFocus={props.onFocus}
-          onChange={props.onChange}
-          options={props.options}
-          isDisabled={props.disabled}
-          isSearchable={false}
-          clearable={false}
-          className={`select ${this.id} ${props.type} ${props.arrow ? 'arrow' : 'no-arrow'} ${props.center ? 'center' : ''}`}
-          classNamePrefix="select"
-        />
-      </React.Fragment>
-    );
+  outer = [props.style, outer]; // eslint-disable-line
+
+  return (
+    <>
+      <Helmet>
+        <style>
+          {`
+            [data-class~="${id}"] {
+              color: transparent;
+              caret-color: transparent;
+              pointer-events: none;
+              user-select: none;
+              text-shadow: 0 0 0 ${color};
+            }
+            [data-class~="${id}"]::placeholder {
+              color: ${color};
+            }
+            .ModalPicker__Arrow {
+              position: absolute;
+              top: calc(50% - 10px);
+              right: 5px;
+            }
+          `}
+        </style>
+      </Helmet>
+      <TouchableWithoutFeedback onPress={wrappedOnPress}>
+        <View onRef={onRef} style={outer}>
+          <TextInput
+            {...props}
+            value={value}
+            placeholder={placeholder}
+            onRef={inputOnRef}
+            style={currentStyle}
+            caretHidden
+            className={`ModalPicker__Input ${id}`}
+          />
+          {arrow ? (
+            <svg
+              className="ModalPicker__Arrow"
+              fill={color}
+              height="20"
+              width="20"
+              viewBox="0 0 20 20"
+              focusable={false}
+            >
+              <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z" />
+            </svg>
+          ) : null}
+        </View>
+      </TouchableWithoutFeedback>
+    </>
+  );
+};
+
+Input.propTypes = {
+  themeInputStyle: PropTypes.shape().isRequired,
+  arrow: PropTypes.bool.isRequired,
+  onRef: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  fitContent: PropTypes.bool,
+  center: PropTypes.bool,
+  align: PropTypes.string,
+  selectStyle: StylePropType,
+  selectTextStyle: StylePropType,
+  name: PropTypes.string,
+  value: PropTypes.any, // eslint-disable-line
+};
+
+Input.defaultProps = {
+  fitContent: true,
+  center: false,
+  align: 'left',
+  selectStyle: styles.empty,
+  selectTextStyle: styles.empty,
+  name: undefined,
+  value: undefined,
+};
+
+const ModalPicker = ({
+  options,
+  onChange,
+  type,
+  arrow,
+  themeInputStyle,
+  value,
+  menuStyle: originalMenuStyle,
+  itemStyle: originalItemStyle,
+  itemActiveStyle: originalItemActiveStyle,
+  activeStyle,
+  ...props
+}) => {
+  const [open, setOpen] = useState(false);
+
+  const onPress = () => setOpen(!open);
+  const onSelect = (__, item) => {
+    setOpen(false);
+    onChange(item);
+  };
+  const onMenuClose = () => setOpen(false);
+
+  const menuStyle = [styles.menu, originalMenuStyle];
+  const itemStyle = [styles.item, originalItemStyle];
+  const itemActiveStyle = [originalItemActiveStyle];
+  if (type !== 'white') {
+    menuStyle.push(styles[type]);
+    itemStyle.push([styles[type], styles[`${type}Text`]]);
+    itemActiveStyle.push([styles[type], styles[`${type}Text`], styles.active]);
   }
-}
+
+  const inputProps = {
+    open,
+    type,
+    arrow,
+    onPress,
+    themeInputStyle,
+  };
+
+  let valueLabel = '';
+  options.forEach((option) => {
+    if (option.value === value) {
+      valueLabel = option.label;
+    }
+  });
+
+  return (
+    <Autocomplete
+      {...props}
+      value={value}
+      valueLabel={valueLabel}
+      menuOpen={open}
+      items={options}
+      isMatch={isMatch}
+      onSelect={onSelect}
+      getItemLabel={getItemLabel}
+      getItemValue={getItemValue}
+      Input={Input}
+      inputProps={inputProps}
+      menuStyle={menuStyle}
+      itemStyle={itemStyle}
+      itemHeight={35}
+      itemActiveStyle={itemActiveStyle}
+      onMenuClose={onMenuClose}
+      highlightedIndex={-1}
+      highlightMatches={false}
+    />
+  );
+};
 
 ModalPicker.propTypes = {
-  fontFamily: PropTypes.shape().isRequired,
-  name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  themeInputStyle: PropTypes.shape().isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func,
-  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   type: PropTypes.string,
+  menuStyle: StylePropType,
+  itemStyle: StylePropType,
+  itemActiveStyle: StylePropType,
+  activeStyle: StylePropType,
   arrow: PropTypes.bool,
-  center: PropTypes.bool,
-  fitContent: PropTypes.bool,
-  align: PropTypes.string,
-  autoFocus: PropTypes.bool,
-  disabled: PropTypes.bool,
+  value: PropTypes.any, // eslint-disable-line
 };
 
 ModalPicker.defaultProps = {
-  onFocus: noop,
-  onBlur: noop,
-  value: null,
   placeholder: 'Select...',
   type: 'gray',
+  menuStyle: styles.empty,
+  itemStyle: styles.empty,
+  itemActiveStyle: styles.empty,
+  activeStyle: styles.empty,
   arrow: true,
-  center: false,
-  fitContent: true,
-  align: 'left',
-  autoFocus: false,
-  disabled: false,
+  value: undefined,
 };
 
 export default withTheme('ModalPicker')(ModalPicker);

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import noop from 'lodash/noop';
-import createDomStyle from '../createDomStyle';
 import StylePropType from '../StylePropType';
-import { Helmet, style } from '../Helmet';
 import { withTheme } from '../Theme';
+import createDomStyle from '../createDomStyle';
 import ModalPicker from '../ModalPicker';
+import { Helmet, style } from '../Helmet';
 
 /* eslint react/destructuring-assignment: 0 */
 
@@ -17,9 +17,9 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   selectText: {
-    paddingLeft: 5,
+    paddingLeft: Platform.OS === 'web' ? 10 : 5,
     textAlign: 'left',
-    fontSize: 13,
+    fontSize: Platform.OS === 'web' ? undefined : 13,
   },
   selectContainer: {
     marginBottom: 10,
@@ -60,7 +60,7 @@ const Select = ({
 
   const valueLabels = labels === null ? values : labels;
   const options = values.map((v, i) => ({
-    value: `${v}`,
+    value: v,
     label: valueLabels[i],
   }));
   const empty = value === '' || value === null || value === undefined;
@@ -88,55 +88,15 @@ const Select = ({
   }
   const id = `Select__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`;
   return (
-    <React.Fragment>
+    <>
       <Helmet>
         <style>
           {`
-            .select.select-${id} {
-              ${auto ? '' : 'width: 100%;'}
-              margin-bottom: ${auto || nomargin ? 0 : 10}px;
-            }
-            .select.select-${id} .select__control {
-              height: 40px;
-            }
-            .select.select-${id} .select__placeholder {
-              ${createDomStyle(themeInputStyle[empty ? 'placeholder' : 'text'])}
-              white-space: nowrap;
-              overflow: hidden;
-            }
-            .select.select-${id} .select__dropdown-indicator path {
-              ${createDomStyle(themeInputStyle[empty ? 'placeholder' : 'text'])}
-            }
-            .select.select-${id} .select__control.select__control--is-disabled {
-              ${createDomStyle(themeInputStyle.background)}
-              ${createDomStyle(themeInputStyle.border)}
-              ${createDomStyle(themeInputStyle.opacity)}
-            }
             ${!empty && placeholder !== null ? `
-            .select.select-${id} .select__option:first-child {
-              ${createDomStyle(themeInputStyle.placeholder)}
-            }
-            .select.select-${id} .select__option--is-focused.select__option:first-child {
-              color: ${StyleSheet.flatten(themeInputStyle.background).backgroundColor};
-            }
+              [data-class~="Autocomplete__${id}"] [data-class~="Autocomplete__Item-0"] {
+                ${createDomStyle([selectTextStyle, themeInputStyle.placeholder])}
+              }
             ` : ''}
-            .select.select-${id} .select__control {
-              ${createDomStyle(themeInputStyle.background)}
-              ${createDomStyle(themeInputStyle.border)}
-              ${createDomStyle(themeInputStyle.opacity)}
-              border-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor}; !important;
-            }
-            .select.select-${id} .select__indicator-separator {
-              background-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
-            }
-            .select.select-${id} .select__control.select__control--is-focused {
-              border-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
-              box-shadow: none;
-            }
-            .select.select-${id} .select__option--is-focused {
-              background-color: ${StyleSheet.flatten(themeInputStyle.border).borderColor};
-            }
-            ${css}
           `}
         </style>
       </Helmet>
@@ -144,7 +104,8 @@ const Select = ({
         name={id}
         icon="caret-down"
         type="white"
-        value={`${value}`}
+        className="Select__Container"
+        value={value}
         style={[
           styles.selectContainer,
           auto ? styles.auto : styles.fullWidth,
@@ -162,7 +123,7 @@ const Select = ({
         options={options}
         fitContent={false}
       />
-    </React.Fragment>
+    </>
   );
 };
 

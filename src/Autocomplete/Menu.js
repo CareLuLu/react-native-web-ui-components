@@ -23,15 +23,18 @@ const styles = StyleSheet.create({
 
 class Menu extends React.PureComponent {
   static propTypes = {
+    highlightMatches: PropTypes.bool.isRequired,
     theme: PropTypes.shape().isRequired,
     loading: PropTypes.bool.isRequired,
     items: PropTypes.arrayOf(PropTypes.any).isRequired,
     getItemValue: PropTypes.func.isRequired,
+    getItemLabel: PropTypes.func.isRequired,
     highlightedIndex: PropTypes.number.isRequired,
     onSelect: PropTypes.func.isRequired,
     Item: PropTypes.elementType,
     style: StylePropType,
     itemStyle: StylePropType,
+    itemActiveStyle: StylePropType,
     itemHeight: PropTypes.number,
     itemProps: PropTypes.shape(),
     Spinner: PropTypes.elementType,
@@ -45,6 +48,7 @@ class Menu extends React.PureComponent {
     EmptyResult: DefaultEmptyResult,
     style: null,
     itemStyle: null,
+    itemActiveStyle: null,
     itemProps: {},
   };
 
@@ -68,14 +72,17 @@ class Menu extends React.PureComponent {
       items,
       Item,
       itemStyle,
+      itemActiveStyle,
       itemProps,
       itemHeight,
       highlightedIndex,
       onSelect,
       getItemValue,
+      getItemLabel,
       theme,
       Spinner,
       EmptyResult,
+      highlightMatches,
     } = this.props;
 
     const themeInputStyle = theme.input.regular;
@@ -99,7 +106,7 @@ class Menu extends React.PureComponent {
       }
     }
     return (
-      <View style={containerStyle}>
+      <View className="Autocomplete__Menu" style={containerStyle}>
         <ScrollView
           style={themeInputStyle.background}
           scrollEventThrottle={1}
@@ -115,10 +122,12 @@ class Menu extends React.PureComponent {
                 item={item}
                 index={i}
                 key={key}
-                text={`${getItemValue(item)}`}
+                text={`${getItemLabel(item)}`}
                 active={highlightedIndex === i}
                 onPress={onSelect}
                 style={itemStyle}
+                activeStyle={itemActiveStyle}
+                highlightMatches={highlightMatches}
                 {...itemProps}
               />
             );

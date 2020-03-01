@@ -23,6 +23,13 @@ const ViewPropTypes = RNViewPropTypes || View.propTypes;
 
 let componentIndex = 0;
 
+const blankOr = (str) => {
+  if (str === null || str === undefined) {
+    return '';
+  }
+  return `${str}`;
+};
+
 const propTypes = {
   icon: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.object),
@@ -69,7 +76,7 @@ const defaultProps = {
   onModalOpen: () => {},
   onModalClose: () => {},
   keyExtractor: item => item.key,
-  labelExtractor: item => item.label,
+  labelExtractor: item => blankOr(item.label),
   visible: false,
   initValue: 'Select me!',
   animationType: 'slide',
@@ -249,7 +256,7 @@ export default class ModalSelector extends React.Component {
     return (
       <View style={[styles.selectStyle, this.props.selectStyle]}>
         <Text style={[styles.selectTextStyle, this.props.selectTextStyle]}>
-          {this.state.selected}
+          {blankOr(this.state.selected)}
           &nbsp;
         </Text>
         <Icon

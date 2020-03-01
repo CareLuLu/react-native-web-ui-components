@@ -31,6 +31,7 @@ const TextInput = (props) => {
     numberOfLines,
     disabled,
     readonly,
+    editable,
     className,
     theme,
     themeInputStyle,
@@ -55,7 +56,7 @@ const TextInput = (props) => {
         multiline ? { height: 40 * numberOfLines } : null,
         style,
       ]}
-      editable={!(disabled || readonly)}
+      editable={editable && !(disabled || readonly)}
       placeholderTextColor={StyleSheet.flatten(themeInputStyle.placeholder).color}
     />
   );
@@ -70,6 +71,7 @@ TextInput.propTypes = {
   hasError: PropTypes.bool,
   className: PropTypes.string,
   onRef: PropTypes.func,
+  editable: PropTypes.bool,
 };
 
 TextInput.defaultProps = {
@@ -81,6 +83,7 @@ TextInput.defaultProps = {
   hasError: false,
   className: '',
   onRef: noop,
+  editable: true,
 };
 
 export default TextInput;

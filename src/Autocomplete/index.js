@@ -7,7 +7,7 @@ import omit from 'lodash/omit';
 import filter from 'lodash/filter';
 import isFunction from 'lodash/isFunction';
 import isEqual from 'lodash/isEqual';
-import { isEmpty } from '../utils';
+import { isEmpty, isSSR } from '../utils';
 import { withTheme } from '../Theme';
 import Screen, { withKeyboard } from '../Screen';
 import View from '../View';
@@ -19,11 +19,20 @@ import DefaultMenu from './Menu';
 
 const defaultGetItemValue = item => item;
 
+const defaultGetItemLabel = item => item;
+
 const defaultIsMatch = (text, item, { getItemValue }) => {
   if (text === '' || `${getItemValue(item)}`.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
     return true;
   }
   return false;
+};
+
+const blankOr = (str) => {
+  if (str === null || str === undefined) {
+    return '';
+  }
+  return `${str}`;
 };
 
 const isField = (element, classNameRegex) => {
@@ -39,16 +48,20 @@ const propNames = [
   'allowEmpty',
   'items',
   'getItemValue',
+  'getItemLabel',
   'onChangeText',
   'onKeyPress',
   'onSelect',
   'onSubmitEditing',
   'isMatch',
   'Input',
+  'inputProps',
   'Menu',
   'menuStyle',
+  'menuOpen',
   'Item',
   'itemStyle',
+  'itemActiveStyle',
   'itemHeight',
   'itemProps',
   'Spinner',
@@ -59,6 +72,11 @@ const propNames = [
   'throttleDelay',
   'debounceDelay',
   'throttleDebounceThreshold',
+  'highlightedIndex',
+  'onMenuClose',
+  'className',
+  'highlightMatches',
+  'valueLabel',
 ];
 
 class Autocomplete extends React.Component {
@@ -66,6 +84,7 @@ class Autocomplete extends React.Component {
     keyboard: PropTypes.number.isRequired,
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
     getItemValue: PropTypes.func,
+    getItemLabel: PropTypes.func,
     onChangeText: PropTypes.func,
     onKeyPress: PropTypes.func,
     onSelect: PropTypes.func,
@@ -73,11 +92,14 @@ class Autocomplete extends React.Component {
     onSubmitEditing: PropTypes.func,
     isMatch: PropTypes.func,
     Input: PropTypes.elementType,
+    inputProps: PropTypes.shape(),
     Menu: PropTypes.elementType,
     menuStyle: StylePropType,
+    menuOpen: PropTypes.bool,
     containerStyle: StylePropType,
     name: PropTypes.string,
     value: PropTypes.any, // eslint-disable-line
+    valueLabel: PropTypes.any, // eslint-disable-line
     itemHeight: PropTypes.number,
     spinnerHeight: PropTypes.number,
     emptyResultHeight: PropTypes.number,
@@ -86,11 +108,16 @@ class Autocomplete extends React.Component {
     throttleDebounceThreshold: PropTypes.number,
     style: StylePropType,
     allowEmpty: PropTypes.bool,
+    highlightedIndex: PropTypes.number,
+    onMenuClose: PropTypes.func,
+    className: PropTypes.string,
+    highlightMatches: PropTypes.bool,
   };
 
   static defaultProps = {
     items: [],
     getItemValue: defaultGetItemValue,
+    getItemLabel: defaultGetItemLabel,
     onChangeText: noop,
     onKeyPress: noop,
     onSelect: noop,
@@ -98,11 +125,14 @@ class Autocomplete extends React.Component {
     onSubmitEditing: noop,
     isMatch: defaultIsMatch,
     Input: DefaultInput,
+    inputProps: {},
     Menu: DefaultMenu,
     menuStyle: null,
+    menuOpen: null,
     containerStyle: null,
     name: undefined,
     value: undefined,
+    valueLabel: undefined,
     itemHeight: 30,
     spinnerHeight: 30,
     emptyResultHeight: 30,
@@ -111,7 +141,35 @@ class Autocomplete extends React.Component {
     throttleDebounceThreshold: 3,
     style: {},
     allowEmpty: true,
+    highlightedIndex: 0,
+    onMenuClose: noop,
+    className: '',
+    highlightMatches: true,
   };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.menuOpen !== prevState.menuOpen) {
+      const { items, value, getItemValue } = nextProps;
+      let nextHighlightedIndex = prevState.highlightedIndex;
+      let nextItems = prevState.items;
+      if (!isFunction(items)) {
+        nextItems = items;
+        nextHighlightedIndex = -1;
+        nextItems.forEach((item, i) => {
+          if (getItemValue(item) === value) {
+            nextHighlightedIndex = i;
+          }
+        });
+      } else {
+        setTimeout(() => this.updateItems(value));
+      }
+      return {
+        items: nextItems,
+        highlightedIndex: nextHighlightedIndex,
+      };
+    }
+    return null;
+  }
 
   constructor(props) {
     super(props);
@@ -121,13 +179,14 @@ class Autocomplete extends React.Component {
       name,
       throttleDelay,
       debounceDelay,
+      highlightedIndex,
     } = props;
     this.fy = 0;
     this.state = {
+      highlightedIndex,
       items: isFunction(items) ? [] : items,
       open: false,
       loading: isFunction(items),
-      highlightedIndex: 0,
       keyboardOffset: null,
     };
     this.mountSteps = [];
@@ -143,7 +202,7 @@ class Autocomplete extends React.Component {
   }
 
   componentDidMount() {
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && !isSSR()) {
       window.addEventListener('click', this.clickListener);
     }
     this.mounted = true;
@@ -152,7 +211,7 @@ class Autocomplete extends React.Component {
 
   componentWillUnmount() {
     this.mounted = false;
-    if (Platform.OS === 'web') {
+    if (Platform.OS === 'web' && !isSSR()) {
       window.removeEventListener('click', this.clickListener);
     }
   }
@@ -301,7 +360,10 @@ class Autocomplete extends React.Component {
       loading: true,
       items: this.state.items,
     };
-    if (isFunction(items)) {
+    if (items && items.current) {
+      this.request.loading = false;
+      this.request.items = items;
+    } else if (isFunction(items)) {
       items = await items(parsedText, this.getParams());
       if (this.request.id === id) {
         this.request.loading = false;
@@ -320,6 +382,8 @@ class Autocomplete extends React.Component {
   clickListener = (event) => {
     if (Platform.OS === 'web') {
       if (!isField(event.target, this.fieldRegex)) {
+        const { onMenuClose } = this.props;
+        onMenuClose();
         this.onMount(() => this.setState({ open: false }));
       }
     }
@@ -349,14 +413,19 @@ class Autocomplete extends React.Component {
     } = this.state;
     const {
       Menu,
+      menuOpen,
       Input,
+      inputProps,
       style,
       itemHeight,
       spinnerHeight,
       emptyResultHeight,
       menuStyle,
       keyboard,
+      value,
+      valueLabel,
       containerStyle,
+      className,
     } = this.props;
     const props = omit(this.props, propNames);
     if (Platform.OS === 'web') {
@@ -382,16 +451,33 @@ class Autocomplete extends React.Component {
       }
     }
 
+    let showMenu = false;
+    if (menuOpen !== null) {
+      showMenu = menuOpen;
+    } else {
+      showMenu = open && !isEmpty(props.value);
+    }
+
+    let text = valueLabel;
+    if (text === undefined) {
+      text = value;
+    }
+
     return (
-      <View className={this.id} style={[{ minWidth, maxWidth, width }, containerStyle]}>
+      <View
+        className={`${className} Autocomplete__Container ${this.id}`}
+        style={[{ minWidth, maxWidth, width }, containerStyle]}
+      >
         <Input
           {...props}
+          {...inputProps}
+          value={blankOr(text)}
           onRef={this.onRef}
           onKeyPress={this.onKeyPress}
           onChangeText={this.onChangeText}
           onSubmitEditing={this.onSubmitEditing}
         />
-        {open && !isEmpty(props.value) ? (
+        {showMenu ? (
           <Menu
             {...this.props}
             {...this.state}
@@ -401,7 +487,9 @@ class Autocomplete extends React.Component {
               mobileMenuStyle,
               menuStyle,
             ]}
+            items={items && items.current ? items.current : items}
             onSelect={this.onSelect}
+            autocompleteId={this.id}
           />
         ) : null}
       </View>

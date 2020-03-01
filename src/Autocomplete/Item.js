@@ -6,6 +6,8 @@ import Bold from '../Bold';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import { isEmpty, escapeRegExp } from '../utils';
+import createDomStyle from '../createDomStyle';
+import { Helmet, style } from '../Helmet';
 
 const styles = StyleSheet.create({
   defaults: {
@@ -22,23 +24,32 @@ const Item = ({
   onPress,
   value,
   active,
-  style,
+  autocompleteId,
+  style: currentStyle,
   activeStyle,
   themeTextStyle,
   themeInputStyle,
   numberOfLines,
+  highlightMatches,
 }) => {
   const onItemPress = () => onPress(item, index);
 
-  const textStyle = [styles.defaults, themeTextStyle.text, style];
-  if (active) {
-    textStyle.push([{
+  let textStyle = [styles.defaults, themeTextStyle.text, currentStyle];
+  const activeTextStyle = [
+    styles.defaults,
+    themeTextStyle.text,
+    currentStyle,
+    {
       color: '#FFFFFF',
       backgroundColor: StyleSheet.flatten(themeInputStyle.selected).color,
-    }, activeStyle]);
+    },
+    activeStyle,
+  ];
+  if (active) {
+    textStyle = activeTextStyle;
   }
   const components = [];
-  if (isEmpty(value)) {
+  if (isEmpty(value) || !highlightMatches) {
     components.push(text);
   } else {
     const css = StyleSheet.flatten(textStyle);
@@ -51,19 +62,34 @@ const Item = ({
     });
     components.push(text.substring(lastIndex));
   }
+
   return (
-    <Text
-      onPress={onItemPress}
-      style={textStyle}
-      numberOfLines={numberOfLines}
-      ellipsizeMode="tail"
-    >
-      {components}
-    </Text>
+    <>
+      <Helmet>
+        <style>
+          {`
+            [data-class~="${autocompleteId}"] [data-class~="Autocomplete__Item-${index}"]:hover {
+              ${createDomStyle(activeTextStyle)}
+            }
+          `}
+        </style>
+      </Helmet>
+      <Text
+        className={`Autocomplete__Item Autocomplete__Item-${index} ${active ? 'Autocomplete__Item-active' : ''}`}
+        onPress={onItemPress}
+        style={textStyle}
+        numberOfLines={numberOfLines}
+        ellipsizeMode="tail"
+      >
+        {components}
+      </Text>
+    </>
   );
 };
 
 Item.propTypes = {
+  highlightMatches: PropTypes.bool.isRequired,
+  autocompleteId: PropTypes.string.isRequired,
   themeTextStyle: PropTypes.shape().isRequired,
   themeInputStyle: PropTypes.shape().isRequired,
   onPress: PropTypes.func.isRequired,
