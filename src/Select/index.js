@@ -66,7 +66,7 @@ const Select = ({
   const empty = value === '' || value === null || value === undefined;
   if (!empty && placeholder !== null) {
     options.unshift({
-      value: '',
+      value: null,
       label: placeholder,
     });
   }
@@ -129,14 +129,11 @@ const Select = ({
 
 Select.propTypes = {
   themeInputStyle: PropTypes.shape().isRequired,
-  values: PropTypes.arrayOf(PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-  ]).isRequired).isRequired,
+  values: PropTypes.arrayOf(PropTypes.any.isRequired).isRequired,
   name: PropTypes.string.isRequired,
   autoFocus: PropTypes.bool,
   labels: PropTypes.arrayOf(PropTypes.string),
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  value: PropTypes.any, // eslint-disable-line
   placeholder: PropTypes.string,
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
