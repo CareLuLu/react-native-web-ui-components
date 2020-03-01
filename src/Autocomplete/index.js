@@ -149,7 +149,12 @@ class Autocomplete extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.menuOpen !== prevState.menuOpen) {
-      const { items, value, getItemValue } = nextProps;
+      const {
+        items,
+        value,
+        menuOpen,
+        getItemValue,
+      } = nextProps;
       let nextHighlightedIndex = prevState.highlightedIndex;
       let nextItems = prevState.items;
       if (!isFunction(items)) {
@@ -164,6 +169,7 @@ class Autocomplete extends React.Component {
         setTimeout(() => this.updateItems(value));
       }
       return {
+        menuOpen,
         items: nextItems,
         highlightedIndex: nextHighlightedIndex,
       };
@@ -180,9 +186,11 @@ class Autocomplete extends React.Component {
       throttleDelay,
       debounceDelay,
       highlightedIndex,
+      menuOpen,
     } = props;
     this.fy = 0;
     this.state = {
+      menuOpen,
       highlightedIndex,
       items: isFunction(items) ? [] : items,
       open: false,
@@ -321,24 +329,30 @@ class Autocomplete extends React.Component {
     }
     setTimeout(() => {
       if (self.input) {
-        self.input.measure((fx, fy, width, height, px, py) => {
+        self.input.measure((fx, fy, width, height) => {
           self.fy = fy;
-          if (Platform.OS === 'web') {
-            self.menuStyle = {
-              width,
-              top: height,
-              left: fx,
-              maxHeight: 200,
-            };
-          } else {
-            const maxHeight = Math.max(0, Math.min(200, py));
-            self.menuStyle = {
-              width,
-              maxHeight,
-              top: fy - maxHeight,
-              left: fx,
-            };
-          }
+          self.menuStyle = {
+            width,
+            top: height,
+            left: fx,
+            maxHeight: 200,
+          };
+          // if (Platform.OS === 'web') {
+          //   self.menuStyle = {
+          //     width,
+          //     top: height,
+          //     left: fx,
+          //     maxHeight: 200,
+          //   };
+          // } else {
+          //   const maxHeight = Math.max(0, Math.min(200, py));
+          //   self.menuStyle = {
+          //     width,
+          //     maxHeight,
+          //     top: fy - maxHeight,
+          //     left: fx,
+          //   };
+          // }
         });
       }
     });
@@ -409,7 +423,7 @@ class Autocomplete extends React.Component {
       open,
       items,
       loading,
-      keyboardOffset,
+      // keyboardOffset,
     } = this.state;
     const {
       Menu,
@@ -421,7 +435,7 @@ class Autocomplete extends React.Component {
       spinnerHeight,
       emptyResultHeight,
       menuStyle,
-      keyboard,
+      // keyboard,
       value,
       valueLabel,
       containerStyle,
@@ -434,22 +448,25 @@ class Autocomplete extends React.Component {
       props.autoCompleteType = 'off';
     }
     const { minWidth, maxWidth, width } = StyleSheet.flatten([style]);
+    const { maxHeight } = StyleSheet.flatten([this.menuStyle, menuStyle]);
+
     const height = (
       2
-      + (items.length * itemHeight)
+      + Math.min(items.length * itemHeight, maxHeight)
       + (loading ? spinnerHeight : 0)
       + (!items.length && !loading ? emptyResultHeight : 0)
     );
-    let mobileMenuStyle = null;
-    if (Platform.OS !== 'web') {
-      mobileMenuStyle = { top: this.fy - height + (keyboardOffset || 0) };
-      if (keyboard > 0 && keyboardOffset === null) {
-        setTimeout(this.onKeyboardOpen);
-      }
-      if (keyboard === 0 && keyboardOffset !== null) {
-        setTimeout(this.onKeyboardClose);
-      }
-    }
+
+    // let mobileMenuStyle = null;
+    // if (Platform.OS !== 'web') {
+    //   mobileMenuStyle = { top: this.fy - height + (keyboardOffset || 0) };
+    //   if (keyboard > 0 && keyboardOffset === null) {
+    //     setTimeout(this.onKeyboardOpen);
+    //   }
+    //   if (keyboard === 0 && keyboardOffset !== null) {
+    //     setTimeout(this.onKeyboardClose);
+    //   }
+    // }
 
     let showMenu = false;
     if (menuOpen !== null) {
@@ -484,7 +501,7 @@ class Autocomplete extends React.Component {
             style={[
               this.menuStyle,
               { height },
-              mobileMenuStyle,
+              // mobileMenuStyle,
               menuStyle,
             ]}
             items={items && items.current ? items.current : items}
