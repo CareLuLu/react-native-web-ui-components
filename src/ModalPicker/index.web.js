@@ -89,7 +89,7 @@ const getItemLabel = item => item.label;
 const isMatch = () => true;
 
 const measureTextWidth = (txt) => {
-  const width = (txt.length * 5) + 30;
+  const width = (txt.length * 6) + 30;
   return width;
 };
 
