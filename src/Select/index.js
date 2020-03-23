@@ -70,7 +70,7 @@ const Select = ({
       label: placeholder,
     });
   }
-  let label = placeholder;
+  let label = placeholder || '';
   if (!empty) {
     const index = values.indexOf(value);
     if (index >= 0) {
