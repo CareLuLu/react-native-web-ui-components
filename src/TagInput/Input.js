@@ -26,6 +26,7 @@ const Input = ({
 }) => (
   <Autocomplete
     {...props}
+    allowEmpty={false}
     style={[styles.input, style]}
     menuStyle={[styles.menu, menuStyle]}
     containerStyle={[styles.container, containerStyle]}

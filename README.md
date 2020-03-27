@@ -486,7 +486,7 @@ See [React Native's ScrollView](https://facebook.github.io/react-native/docs/scr
 
 ### Select
 
-Displays a select input. This library uses [React Select](https://github.com/JedWatson/react-select) to render selects for web.
+Displays a select input.
 
 ![Select Component Example](https://divin2sy6ce0b.cloudfront.net/docs/select-web.gif)
 ![Select Component Example](https://divin2sy6ce0b.cloudfront.net/docs/select-mobile.gif)

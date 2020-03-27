@@ -57,10 +57,10 @@ const Link = ({
   }
   let href = to;
   if (amp && !href) {
-    href = `${location.pathname}${location.search}${location.hash}`.replace(/^\/amp/, '');
-  }
-  if (amp) {
-    href = href.indexOf('?') >= 0 ? href.replace('#', '&') : href.replace('#', '?');
+    href = `${location.pathname}${location.search}${location.hash}`.replace(/^\/amp(\/)?/, '$1').replace(/\/amp\/?$/, '');
+    if (!href || href[0] !== '/') {
+      href = `/${href}`;
+    }
   }
   const Wrapper = wrapper;
 

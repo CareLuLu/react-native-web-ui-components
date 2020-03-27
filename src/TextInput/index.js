@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
+import pick from 'lodash/pick';
 import { TextInput as RNTextInput, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '../Theme';
 import StylePropType from '../StylePropType';
@@ -15,6 +16,63 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
+
+const allowedAttributes = [
+  'allowFontScaling',
+  'autoCapitalize',
+  'autoCompleteType',
+  'autoCorrect',
+  'autoFocus',
+  'blurOnSubmit',
+  'caretHidden',
+  'clearButtonMode',
+  'clearTextOnFocus',
+  'contextMenuHidden',
+  'dataDetectorTypes',
+  'defaultValue',
+  'disableFullscreenUI',
+  'editable',
+  'enablesReturnKeyAutomatically',
+  'importantForAutofill',
+  'inlineImageLeft',
+  'inlineImagePadding',
+  'inputAccessoryViewID',
+  'keyboardAppearance',
+  'keyboardType',
+  'maxFontSizeMultiplier',
+  'maxLength',
+  'multiline',
+  'numberOfLines',
+  'onBlur',
+  'onChange',
+  'onChangeText',
+  'onContentSizeChange',
+  'onEndEditing',
+  'onFocus',
+  'onKeyPress',
+  'onLayout',
+  'onScroll',
+  'onSelectionChange',
+  'onSubmitEditing',
+  'placeholder',
+  'placeholderTextColor',
+  'returnKeyLabel',
+  'returnKeyType',
+  'rejectResponderTermination',
+  'scrollEnabled',
+  'secureTextEntry',
+  'selection',
+  'selectionColor',
+  'selectionState',
+  'selectTextOnFocus',
+  'showSoftInputOnFocus',
+  'spellCheck',
+  'textContentType',
+  'style',
+  'textBreakStrategy',
+  'underlineColorAndroid',
+  'value',
+];
 
 const androidProps = {};
 if (Platform.OS === 'android') {
@@ -31,6 +89,7 @@ const TextInput = (props) => {
     numberOfLines,
     disabled,
     readonly,
+    editable,
     className,
     theme,
     themeInputStyle,
@@ -41,7 +100,7 @@ const TextInput = (props) => {
   return (
     <RNTextInput
       {...androidProps}
-      {...theme.omit(params)}
+      {...pick(theme.omit(params), allowedAttributes)}
       ref={onRef}
       data-class={`TextInput ${className}`}
       multiline={multiline}
@@ -55,7 +114,7 @@ const TextInput = (props) => {
         multiline ? { height: 40 * numberOfLines } : null,
         style,
       ]}
-      editable={!(disabled || readonly)}
+      editable={editable && !(disabled || readonly)}
       placeholderTextColor={StyleSheet.flatten(themeInputStyle.placeholder).color}
     />
   );
@@ -70,6 +129,7 @@ TextInput.propTypes = {
   hasError: PropTypes.bool,
   className: PropTypes.string,
   onRef: PropTypes.func,
+  editable: PropTypes.bool,
 };
 
 TextInput.defaultProps = {
@@ -81,6 +141,7 @@ TextInput.defaultProps = {
   hasError: false,
   className: '',
   onRef: noop,
+  editable: true,
 };
 
 export default TextInput;
