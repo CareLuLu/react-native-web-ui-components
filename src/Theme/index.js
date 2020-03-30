@@ -225,22 +225,33 @@ export const useTheme = (type, { style, ...props }) => {
 
 export const withTheme = type => Component => ({ style, ...props }) => { // eslint-disable-line
   Component.displayName = type; // eslint-disable-line
+
   return (
     <Theme.Consumer>
-      {theme => (
-        <Component
-          {...(theme['*'] || {})}
-          {...((theme.platform[Platform.OS] && theme.platform[Platform.OS]['*']) || {})}
-          {...(theme[type] || {})}
-          {...((theme.platform[Platform.OS] && theme.platform[Platform.OS][type]) || {})}
-          {...props}
-          style={[theme[type] && theme[type].style, style]}
-          theme={theme}
-          themeTextStyle={theme.colors[theme.colors.text]}
-          themePrimaryStyle={theme.colors[theme.colors.primary]}
-          themeInputStyle={getInputStyle(theme, props)}
-        />
-      )}
+      {(theme) => {
+        const currentProps = Object.assign(
+          {},
+          theme['*'] || {},
+          (theme.platform[Platform.OS] && theme.platform[Platform.OS]['*']) || {},
+          theme[type] || {},
+          (theme.platform[Platform.OS] && theme.platform[Platform.OS][type]) || {},
+        );
+
+        const { Component: Replacement } = currentProps;
+        const Renderer = Replacement || Component;
+
+        return (
+          <Renderer
+            {...currentProps}
+            {...props}
+            style={[theme[type] && theme[type].style, style]}
+            theme={theme}
+            themeTextStyle={theme.colors[theme.colors.text]}
+            themePrimaryStyle={theme.colors[theme.colors.primary]}
+            themeInputStyle={getInputStyle(theme, props)}
+          />
+        );
+      }}
     </Theme.Consumer>
   );
 };
