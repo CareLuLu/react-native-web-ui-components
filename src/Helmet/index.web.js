@@ -16,6 +16,8 @@ const parseTags = (children, tags) => {
     if (tag !== null && tag !== undefined) {
       if (isArray(tag)) {
         parseTags(tag, tags);
+      } else if (tag.type === React.Fragment) {
+        parseTags(tag.props.children, tags);
       } else {
         switch (tag.type) {
           case 'title':
