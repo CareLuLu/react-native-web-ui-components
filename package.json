@@ -37,7 +37,7 @@
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-react": "7.19.0",
     "eslint-plugin-react-hooks": "3.0.0",
-    "jest": "25.2.6",
+    "jest": "25.2.7",
     "metro-react-native-babel-preset": "0.59.0",
     "react": "16.13.1",
     "react-art": "16.13.1",
