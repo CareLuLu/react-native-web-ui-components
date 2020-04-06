@@ -70,7 +70,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-  icon: 'alignJustify',
+  icon: 'align-justify',
   data: [],
   onChange: () => {},
   onModalOpen: () => {},

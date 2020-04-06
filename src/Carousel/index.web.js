@@ -16,11 +16,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
+  iconContainer: {
+    justifyContent: 'center',
+  },
   icon: {
     color: 'white',
     fontSize: 30,
     textAlign: 'center',
-    width: '100%',
     textShadowColor: 'rgba(0, 0, 0, 0.6)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 1,
@@ -220,14 +222,18 @@ class Carousel extends React.Component {
               className="Carousel__controlLeft"
               style={[styles.control, styles.leftControl]}
             >
-              <Icon name="chevron-left" style={styles.icon} />
+              <Row style={styles.iconContainer}>
+                <Icon name="chevron-left" style={styles.icon} />
+              </Row>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.tryNext}
               className="Carousel__controlRight"
               style={[styles.control, styles.rightControl]}
             >
-              <Icon name="chevron-right" style={styles.icon} />
+              <Row style={styles.iconContainer}>
+                <Icon name="chevron-right" style={styles.icon} />
+              </Row>
             </TouchableOpacity>
           </React.Fragment>
         ) : null}

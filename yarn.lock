@@ -3079,10 +3079,10 @@
     string-width "^2.0.0"
     strip-ansi "^3"
 
-"@ptomasroos/react-native-multi-slider@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@ptomasroos/react-native-multi-slider/-/react-native-multi-slider-1.0.0.tgz#a4ea27b1320b93a1db9f696c24789695df6c9f30"
-  integrity sha512-NpX22rQLArg9widwMzGf7XsInTDf6mfY/D1XaDVjglNkVphj3NSN37+nF6MofArCxC++1P+jHv0SGWbmJQwy4g==
+"@ptomasroos/react-native-multi-slider@^2.0.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@ptomasroos/react-native-multi-slider/-/react-native-multi-slider-2.1.0.tgz#5bd02d2763e666c53a01eb6be59db9b4bed158f1"
+  integrity sha512-5TJzI5/HU2WdLYjgwAqBMXDxSCG67izoneNJReABxceQCx+sTTdaN8cJ9qCre31Tc8/maCZTeLBffNkcQ1G1dQ==
 
 "@reach/router@^1.2.1":
   version "1.2.1"

@@ -4,9 +4,7 @@ import { StyleSheet, Image as NativeImage } from 'react-native';
 import View from '../View';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
-import { isSSR } from '../utils';
-
-const SSR_MODE = isSSR();
+import { useAmp } from '../Amp';
 
 const renderImage = ({
   alt,
@@ -86,6 +84,8 @@ renderImageAmp.propTypes = {
 };
 
 const Image = (props) => {
+  const amp = useAmp();
+
   const { style, fixed } = props;
   const css = StyleSheet.flatten(style || {});
   if (!css.width || !css.height) {
@@ -101,14 +101,14 @@ const Image = (props) => {
     return (
       <div data-class="image-outer-wrapper" style={{ width: css.width, height: css.height }}>
         <View className="image-wrapper" style={dynamicStyles.fixedImage}>
-          {SSR_MODE ? renderImageAmp(props, css) : renderImage(props, css)}
+          {amp ? renderImageAmp(props, css) : renderImage(props, css)}
         </View>
       </div>
     );
   }
   return (
     <div data-class="image-outer-wrapper">
-      {SSR_MODE ? renderImageAmp(props, css) : renderImage(props, css)}
+      {amp ? renderImageAmp(props, css) : renderImage(props, css)}
     </div>
   );
 };

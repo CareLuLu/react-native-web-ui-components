@@ -35,6 +35,38 @@ const styles = StyleSheet.create({
   },
 });
 
+const Item = ({
+  index,
+  style,
+  leftStyle,
+  rightStyle,
+  iconName,
+}) => (
+  <View
+    className={`Rating__group Rating__group-${index}`}
+    style={style}
+  >
+    <Icon
+      name={iconName}
+      className={`Rating Rating__${(2 * index) + 1}`}
+      style={leftStyle}
+    />
+    <Icon
+      name={iconName}
+      className={`Rating Rating__${2 * index}`}
+      style={rightStyle}
+    />
+  </View>
+);
+
+Item.propTypes = {
+  index: PropTypes.number.isRequired,
+  style: StylePropType.isRequired,
+  leftStyle: StylePropType.isRequired,
+  rightStyle: StylePropType.isRequired,
+  iconName: PropTypes.string.isRequired,
+};
+
 const Rating = ({
   style,
   emptyStyle,
@@ -57,66 +89,46 @@ const Rating = ({
     width += 0.5;
     size += 1;
   }
+
+  const subContainerStyle = [styles.half, { width: size, height: size }];
+  const iconFullLeftStyle = [styles.full, styles.halfLeft, fullStyle];
+  const iconFullRightStyle = [styles.full, styles.halfRight, fullStyle, { width }];
+  const iconHalfEmptyStyle = [styles.empty, styles.halfLeft, emptyStyle, halfRightStyle];
+  const iconHalfFullStyle = [styles.full, styles.halfRight, fullStyle, halfRightStyle, { width }];
+  const iconEmptyLeftStyle = [styles.empty, styles.halfLeft, emptyStyle];
+  const iconEmptyRightStyle = [styles.empty, styles.halfRight, emptyStyle, { width }];
+
   return (
     <View {...props} style={[styles.container, style]}>
       {Array(full).fill(0).map((v, i) => (
-        <View
-          className={`Rating__group Rating__group-${i}`}
-          key={`full-${i}`}
-          style={[styles.half, { width: size, height: size }]}
-        >
-          <Icon
-            name={iconName}
-            className={`Rating Rating__${(2 * i) + 1}`}
-            style={[styles.full, styles.halfLeft, fullStyle]}
-          />
-          <Icon
-            name={iconName}
-            className={`Rating Rating__${2 * i}`}
-            style={[styles.full, styles.halfRight, fullStyle, { width }]}
-          />
-        </View>
+        <Item
+          key={`star-${i}`}
+          index={i}
+          style={subContainerStyle}
+          leftStyle={iconFullLeftStyle}
+          rightStyle={iconFullRightStyle}
+          iconName={iconName}
+        />
       ))}
       {half > 0 ? (
-        <View
-          className={`Rating__group Rating__group-${full}`}
-          style={[styles.half, { width: size, height: size }]}
-        >
-          {Array(half).fill(0).map((v, i) => (
-            <Icon
-              key={`halfFull-${i}`}
-              name={iconName}
-              className={`Rating Rating__${(2 * full) + 1}`}
-              style={[styles.empty, styles.halfLeft, emptyStyle, halfRightStyle]}
-            />
-          ))}
-          {Array(half).fill(0).map((v, i) => (
-            <Icon
-              key={`halfEmpty-${i}`}
-              name={iconName}
-              className={`Rating Rating__${2 * full}`}
-              style={[styles.full, styles.halfRight, fullStyle, halfRightStyle, { width }]}
-            />
-          ))}
-        </View>
+        <Item
+          key={`star-${full}`}
+          index={full}
+          style={subContainerStyle}
+          leftStyle={iconHalfEmptyStyle}
+          rightStyle={iconHalfFullStyle}
+          iconName={iconName}
+        />
       ) : null}
       {Array(empty).fill(0).map((v, i) => (
-        <View
-          className={`Rating__group Rating__group-${full + half + i}`}
-          key={`empty-${i}`}
-          style={[styles.half, { width: size, height: size }]}
-        >
-          <Icon
-            name={iconName}
-            className={`Rating Rating__${(2 * (i + full + half)) + 1}`}
-            style={[styles.empty, styles.halfLeft, emptyStyle]}
-          />
-          <Icon
-            name={iconName}
-            className={`Rating Rating__${2 * (i + full + half)}`}
-            style={[styles.empty, styles.halfRight, emptyStyle, { width }]}
-          />
-        </View>
+        <Item
+          key={`star-${full + half + i}`}
+          index={full + half + i}
+          style={subContainerStyle}
+          leftStyle={iconEmptyLeftStyle}
+          rightStyle={iconEmptyRightStyle}
+          iconName={iconName}
+        />
       ))}
     </View>
   );
