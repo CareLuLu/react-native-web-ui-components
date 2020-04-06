@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import StylePropType from '../StylePropType';
-import { toDescription, isSSR } from '../utils';
+import { toDescription } from '../utils';
 import { withTheme } from '../Theme';
 import Text from '../Text';
 import ReadMoreLessLink from '../ReadMoreLessLink';
+import { useAmp } from '../Amp';
 
 const HideShowText = ({
   visible,
@@ -17,10 +18,12 @@ const HideShowText = ({
   auto,
   ...props
 }) => {
+  const amp = useAmp();
+
   const [isVisible, setVisible] = useState(visible);
   const toggle = () => setVisible(!isVisible);
 
-  if (isSSR()) {
+  if (amp) {
     return <Text {...props}>{children}</Text>;
   }
   const visibleText = toDescription(children, threshold, ending);
