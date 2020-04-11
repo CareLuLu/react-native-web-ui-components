@@ -1,48 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Image as NativeImage } from 'react-native';
+import { StyleSheet } from 'react-native';
 import View from '../View';
 import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
 import { useAmp } from '../Amp';
 
-const renderImage = ({
+const Img = ({
   alt,
   fixed,
   source,
-  style,
   className,
-}, css) => (
-  <NativeImage
-    accessibilityLabel={alt}
-    data-class={`${className} image-${fixed ? 'fixed' : 'responsive'}`}
-    source={source}
-    style={fixed ? style : {
-      maxWidth: '100%',
-      maxHeight: '100%',
-      width: css.width,
-      height: css.height,
-    }}
-  />
-);
+  srcSet,
+  sizes,
+  css,
+}) => {
+  const imgStyle = fixed ? css : {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    width: css.width,
+    height: css.height,
+  };
+  return (
+    <img
+      alt={alt}
+      data-class={`${className} image-${fixed ? 'fixed' : 'responsive'}`}
+      src={source.uri}
+      style={imgStyle}
+      srcSet={srcSet}
+      sizes={sizes}
+    />
+  );
+};
 
-renderImage.propTypes = {
-  style: StylePropType.isRequired,
+Img.propTypes = {
+  css: PropTypes.shape().isRequired,
   source: PropTypes.shape({
     uri: PropTypes.string.isRequired,
   }).isRequired,
   fixed: PropTypes.bool.isRequired,
   className: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
+  srcSet: PropTypes.string,
+  sizes: PropTypes.string,
 };
 
-const renderImageAmp = ({
+Img.defaultProps = {
+  srcSet: undefined,
+  sizes: undefined,
+};
+
+const AmpImg = ({
   alt,
   className,
   fixed,
   cover,
   source,
-}, css) => {
+  srcSet,
+  sizes,
+  css,
+}) => {
   let layout;
   if (fixed) {
     layout = 'fixed';
@@ -59,6 +76,8 @@ const renderImageAmp = ({
       height={`${css.height}`}
       src={source.uri}
       layout={layout}
+      srcset={srcSet}
+      sizes={sizes}
     >
       <noscript>
         <img
@@ -73,7 +92,8 @@ const renderImageAmp = ({
   );
 };
 
-renderImageAmp.propTypes = {
+AmpImg.propTypes = {
+  css: PropTypes.shape().isRequired,
   source: PropTypes.shape({
     uri: PropTypes.string.isRequired,
   }).isRequired,
@@ -81,6 +101,13 @@ renderImageAmp.propTypes = {
   cover: PropTypes.bool.isRequired,
   className: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
+  srcSet: PropTypes.string,
+  sizes: PropTypes.string,
+};
+
+AmpImg.defaultProps = {
+  srcSet: undefined,
+  sizes: undefined,
 };
 
 const Image = (props) => {
@@ -101,14 +128,14 @@ const Image = (props) => {
     return (
       <div data-class="image-outer-wrapper" style={{ width: css.width, height: css.height }}>
         <View className="image-wrapper" style={dynamicStyles.fixedImage}>
-          {amp ? renderImageAmp(props, css) : renderImage(props, css)}
+          {amp ? <AmpImg {...props} css={css} /> : <Img {...props} css={css} />}
         </View>
       </div>
     );
   }
   return (
     <div data-class="image-outer-wrapper">
-      {amp ? renderImageAmp(props, css) : renderImage(props, css)}
+      {amp ? <AmpImg {...props} css={css} /> : <Img {...props} css={css} />}
     </div>
   );
 };
