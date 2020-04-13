@@ -48,6 +48,9 @@ const NativeText = ({
   } else if (!css.fontFamily) {
     font.fontFamily = fontFamily.regular;
   }
+  if (font.fontFamily === 'system font') {
+    delete font.fontFamily;
+  }
   const classNames = [className];
   for (let i = 0; i < screenSizes.length; i += 1) {
     const screenSize = screenSizes[i];

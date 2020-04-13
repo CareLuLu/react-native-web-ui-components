@@ -128,7 +128,7 @@ const Datepicker = ({
     dateText: [
       styles.text,
       themeInputStyle.text,
-      { fontFamily: fontFamily.regular },
+      fontFamily.regular !== 'system font' ? { fontFamily: fontFamily.regular } : {},
       customStyles.text,
     ],
     placeholderText: [

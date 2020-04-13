@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   font: {
     lineHeight: 30,
     height: 30,
-    fontFamily: 'Lucida Sans',
   },
   gray: {
     borderColor: '#545454',
@@ -97,7 +96,10 @@ const ModalPicker = ({
   } else {
     outer = styles.fitOuterRowLeft;
   }
-  const font = [styles.font, { fontFamily: fontFamily.regular }];
+  const font = [styles.font];
+  if (fontFamily.regular !== 'system font') {
+    font.push({ fontFamily: fontFamily.regular });
+  }
   return (
     <Row xs={12} style={outer}>
       <ModalSelector

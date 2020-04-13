@@ -84,6 +84,9 @@ const Link = ({
   } else {
     classNameProp.className = `${className} ${type}`;
   }
+  if (font.fontFamily === 'system font') {
+    delete font.fontFamily;
+  }
 
   return (
     <Wrapper

@@ -20,8 +20,8 @@ const defaults = {
   omit: props => omit(props, themeProps),
   '*': {
     fontFamily: {
-      regular: 'Lucida Sans',
-      bold: 'Lucida Sans Bold',
+      regular: 'system font',
+      bold: 'system font',
     },
   },
   Link: {
