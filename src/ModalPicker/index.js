@@ -14,9 +14,7 @@ const labelExtractor = item => item.label;
 
 const styles = StyleSheet.create({
   empty: {},
-  outerRow: {
-    alignItems: 'center',
-  },
+  outerRow: {},
   fitOuterRowRight: {
     width: '100%',
     justifyContent: 'flex-end',
@@ -130,7 +128,7 @@ ModalPicker.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
-  value: PropTypes.string,
+  value: PropTypes.any, // eslint-disable-line
   placeholder: PropTypes.node,
   type: PropTypes.string,
   arrow: PropTypes.bool,
