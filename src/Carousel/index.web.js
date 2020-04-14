@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import map from 'lodash/map';
-import murmurhash from 'murmurhash';
+import murmur from 'murmurhash-js';
 import { Helmet, style, script } from '../Helmet';
 import { withAmp } from '../Amp';
 import { withTheme } from '../Theme';
@@ -69,7 +69,7 @@ class Carousel extends React.Component {
     this.tryNext = this.next.bind(this);
     this.tryPrev = this.prev.bind(this);
     this.state = { index: 0, length: props.children.length };
-    this.id = `carousel-${murmurhash.v3(`${props.controls}-${props.autoplay}-${props.delay}-${props.loop}-${props.height}-${props.children.length}`)}`;
+    this.id = `carousel-${murmur.murmur3(`${props.controls}-${props.autoplay}-${props.delay}-${props.loop}-${props.height}-${props.children.length}`)}`;
   }
 
   componentDidMount() {

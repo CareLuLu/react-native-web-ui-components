@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import murmurhash from 'murmurhash';
+import murmur from 'murmurhash-js';
 import { pick } from '../utils';
 import stylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
@@ -37,7 +37,7 @@ const Banner = ({
   const uriXs = theme.resource(xs, { maxHeight, maxWidth: 767 });
 
   const currentStyle = props.style; // eslint-disable-line
-  const className = `banner-${murmurhash.v3(`${height}-${fit}-${maxHeight}-${uriLg}-${uriMd}-${uriSm}-${uriXs}`)}`;
+  const className = `banner-${murmur.murmur3(`${height}-${fit}-${maxHeight}-${uriLg}-${uriMd}-${uriSm}-${uriXs}`)}`;
 
   return (
     <Column
