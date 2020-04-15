@@ -92,5 +92,14 @@
     "not dead",
     "not ie < 11",
     "not op_mini all"
+  ],
+  "keywords": [
+    "expo",
+    "react",
+    "react native",
+    "react native web",
+    "react-component",
+    "ui components",
+    "material ui"
   ]
 }
