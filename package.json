@@ -1,6 +1,6 @@
 {
   "name": "react-native-web-ui-components",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.4",
-    "@ptomasroos/react-native-multi-slider": "^2.0.0",
+    "@ptomasroos/react-native-multi-slider": "https://github.com/CareLuLu-Gabriel/react-native-multi-slider",
     "@tippy.js/react": "^3.0.0",
     "expo-blur": "^8.0.0",
     "expo-document-picker": "^8.0.0",
