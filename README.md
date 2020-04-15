@@ -501,7 +501,7 @@ Displays a sidebar. This library uses [React Sidebar](https://github.com/balloob
 
 ### Slider
 
-Displays a slider. This library uses [React Slider](https://github.com/mpowaga/react-slider#readme) and [React Native Multi Slider](https://github.com/ptomasroos/react-native-multi-slider) to render sidebars for web and mobile respectively.
+Displays a slider. This library uses [React Native Multi Slider](https://github.com/ptomasroos/react-native-multi-slider) to render sidebars for web and mobile.
 
 ![Slider Component Example](https://divin2sy6ce0b.cloudfront.net/docs/slider.gif)
 
