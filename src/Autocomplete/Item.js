@@ -8,6 +8,7 @@ import { withTheme } from '../Theme';
 import { isEmpty, escapeRegExp } from '../utils';
 import createDomStyle from '../createDomStyle';
 import { Helmet, style } from '../Helmet';
+import TouchableOpacity from '../TouchableOpacity';
 
 const styles = StyleSheet.create({
   defaults: {
@@ -74,15 +75,16 @@ const Item = ({
           `}
         </style>
       </Helmet>
-      <Text
-        className={`Autocomplete__Item Autocomplete__Item-${index} ${active ? 'Autocomplete__Item-active' : ''}`}
-        onPress={onItemPress}
-        style={textStyle}
-        numberOfLines={numberOfLines}
-        ellipsizeMode="tail"
-      >
-        {components}
-      </Text>
+      <TouchableOpacity onPress={onItemPress}>
+        <Text
+          className={`Autocomplete__Item Autocomplete__Item-${index} ${active ? 'Autocomplete__Item-active' : ''}`}
+          style={textStyle}
+          numberOfLines={numberOfLines}
+          ellipsizeMode="tail"
+        >
+          {components}
+        </Text>
+      </TouchableOpacity>
     </>
   );
 };
