@@ -25,8 +25,10 @@ const Dropzone = ({
   onDrop,
   multiple,
   disabled,
+  onRef,
 }) => (
   <RNDropzone
+    ref={ref => onRef(ref)}
     onDrop={onDrop}
     accept={accept[0] === '*/*' ? null : accept}
     multiple={multiple}
@@ -58,6 +60,7 @@ Dropzone.propTypes = {
   children: PropTypes.node,
   multiple: PropTypes.bool,
   disabled: PropTypes.bool,
+  onRef: PropTypes.func,
 };
 
 Dropzone.defaultProps = {
@@ -67,6 +70,7 @@ Dropzone.defaultProps = {
   children: null,
   multiple: true,
   disabled: false,
+  onRef: noop,
 };
 
 export default withTheme('Dropzone')(Dropzone);

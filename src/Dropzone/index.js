@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Modal,
@@ -146,161 +146,191 @@ CancelOption.propTypes = {
   onPress: PropTypes.func.isRequired,
 };
 
-const Dropzone = (props) => {
-  const {
-    theme,
-    style,
-    accept,
-    onDrop,
-    disabled,
-    fileText,
-    albumText,
-    cameraText,
-    cancelText,
-    children,
-  } = props;
-
-  const acceptsImageVideo = !!hasMimeType(accept, imageVideoRegex);
-
-  const [step, setStep] = useState('dropzone');
-  const [handlers] = useState({});
-
-  const hasPicker = () => !!handlers.onDismiss;
-
-  const onDismiss = () => (handlers.onDismiss && handlers.onDismiss());
-
-  const pickDocument = () => {
-    setStep('dropzone');
-    handlers.onDismiss = async () => {
-      handlers.onDismiss = null;
-      const result = await DocumentPicker.getDocumentAsync({ type: accept.join(',') });
-      if (result.type === 'success') {
-        onDrop([toFile({ ...result, type: '' })]);
-      }
-    };
+class Dropzone extends React.Component {
+  static propTypes = {
+    theme: PropTypes.shape().isRequired,
+    accept: PropTypes.arrayOf(PropTypes.string),
+    onDrop: PropTypes.func,
+    style: StylePropType,
+    cameraText: PropTypes.string,
+    albumText: PropTypes.string,
+    fileText: PropTypes.string,
+    cancelText: PropTypes.string,
+    disabled: PropTypes.bool,
+    children: PropTypes.node,
+    onRef: PropTypes.func,
   };
 
-  const pickImage = () => {
-    setStep('dropzone');
-    handlers.onDismiss = async () => {
-      handlers.onDismiss = null;
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status === 'granted') {
-        const { cancelled, ...result } = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: getMediaTypes(accept),
-        });
-        if (!cancelled) {
-          onDrop([toFile({ ...result })]);
-        }
-      }
-    };
+  static defaultProps = {
+    accept: ['*/*'],
+    onDrop: noop,
+    style: null,
+    cameraText: 'Camera',
+    albumText: 'Photo & Video Library',
+    fileText: 'File',
+    cancelText: 'Cancel',
+    disabled: false,
+    children: null,
+    onRef: noop,
   };
 
-  const pickPhoto = () => {
-    setStep('dropzone');
-    handlers.onDismiss = async () => {
-      handlers.onDismiss = null;
-      const { status } = await Permissions.askAsync(
-        Permissions.CAMERA_ROLL,
-        Permissions.CAMERA,
-      );
-      if (status === 'granted') {
-        const { cancelled, ...result } = await ImagePicker.launchCameraAsync({});
-        if (!cancelled) {
-          const mediaTypes = getMediaTypes(accept);
-          if (
-            mediaTypes === 'All'
-            || (mediaTypes === 'Image' && imageExtensionRegex.test(result.uri))
-            || (mediaTypes === 'Video' && videoExtensionRegex.test(result.uri))
-          ) {
-            onDrop([toFile({ ...result })]);
-          }
-        }
-      }
-    };
-  };
+  constructor(props) {
+    super(props);
 
-  const selectMime = () => {
+    const { onRef } = this.props;
+    onRef(this);
+
+    this.onDismiss = null;
+    this.state = {
+      step: '',
+    };
+  }
+
+  hasPicker = () => !!this.onDismiss;
+
+  selectMime = () => {
+    const { disabled, accept } = this.props;
+
+    const acceptsImageVideo = !!hasMimeType(accept, imageVideoRegex);
+
     if (!disabled) {
       if (acceptsImageVideo) {
-        setStep('mime');
+        this.setState({ step: 'mime' });
       } else {
-        pickDocument();
+        this.pickDocument();
       }
     }
   };
 
-  const cancelMimeSelection = () => setStep('dropzone');
+  cancelMimeSelection = () => this.setState({ step: 'dropzone' });
 
-  const selectionOptions = acceptsImageVideo ? [
-    [cameraText, pickPhoto],
-    [albumText, pickImage],
-    [fileText, pickDocument],
-  ] : [
-    [fileText, pickDocument],
-  ];
+  pickDocument = () => {
+    const { accept, onDrop } = this.props;
 
-  if (Platform.OS !== 'ios' && hasPicker()) {
-    setTimeout(() => onDismiss(), 1000);
-  }
-  const currentStyle = [styles.container];
-  if (disabled) {
-    currentStyle.push(theme.input.disabled.opacity);
-  }
-  return (
-    <TouchableWithoutFeedback onPress={selectMime}>
-      <View style={[currentStyle, style]}>
-        <Modal
-          transparent
-          visible={step === 'mime'}
-          onRequestClose={cancelMimeSelection}
-          animationType="slide"
-          onDismiss={onDismiss}
-        >
-          <TouchableWithoutFeedback onPress={cancelMimeSelection}>
-            <View style={styles.overlay}>
-              <View style={styles.optionContainer}>
-                {selectionOptions.map(([text, onPress], index) => (
-                  <SelectionOption key={text} index={index} text={text} onPress={onPress} />
-                ))}
+    this.onDismiss = async () => {
+      this.onDismiss = null;
+      this.setState({ step: '' }, async () => {
+        const result = await DocumentPicker.getDocumentAsync({ type: accept.join(',') });
+        if (result.type === 'success') {
+          onDrop([toFile({ ...result, type: '' })]);
+        }
+      });
+    };
+    this.setState({ step: 'dropzone' });
+  };
+
+  pickImage = () => {
+    const { accept, onDrop } = this.props;
+
+    this.onDismiss = async () => {
+      this.onDismiss = null;
+      this.setState({ step: '' }, async () => {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status === 'granted') {
+          const { cancelled, ...result } = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: getMediaTypes(accept),
+          });
+          if (!cancelled) {
+            onDrop([toFile({ ...result })]);
+          }
+        }
+      });
+    };
+    this.setState({ step: 'dropzone' });
+  };
+
+  pickPhoto = () => {
+    const { accept, onDrop } = this.props;
+
+    this.onDismiss = async () => {
+      this.onDismiss = null;
+      this.setState({ step: '' }, async () => {
+        const { status } = await Permissions.askAsync(
+          Permissions.CAMERA_ROLL,
+          Permissions.CAMERA,
+        );
+        if (status === 'granted') {
+          const { cancelled, ...result } = await ImagePicker.launchCameraAsync({});
+          if (!cancelled) {
+            const mediaTypes = getMediaTypes(accept);
+            if (
+              mediaTypes === 'All'
+              || (mediaTypes === 'Image' && imageExtensionRegex.test(result.uri))
+              || (mediaTypes === 'Video' && videoExtensionRegex.test(result.uri))
+            ) {
+              onDrop([toFile({ ...result })]);
+            }
+          }
+        }
+      });
+    };
+    this.setState({ step: 'dropzone' });
+  };
+
+  open = () => this.selectMime();
+
+  render() {
+    const {
+      theme,
+      style,
+      accept,
+      disabled,
+      fileText,
+      albumText,
+      cameraText,
+      cancelText,
+      children,
+    } = this.props;
+
+    const { step } = this.state;
+
+    const acceptsImageVideo = !!hasMimeType(accept, imageVideoRegex);
+
+    const selectionOptions = acceptsImageVideo ? [
+      [cameraText, this.pickPhoto],
+      [albumText, this.pickImage],
+      [fileText, this.pickDocument],
+    ] : [
+      [fileText, this.pickDocument],
+    ];
+
+    if (Platform.OS !== 'ios' && this.hasPicker()) {
+      setTimeout(() => (this.onDismiss && this.onDismiss()), 1000);
+    }
+    const currentStyle = [styles.container];
+    if (disabled) {
+      currentStyle.push(theme.input.disabled.opacity);
+    }
+    return (
+      <TouchableWithoutFeedback onPress={this.selectMime}>
+        <View style={[currentStyle, style]}>
+          <Modal
+            transparent
+            visible={step === 'mime'}
+            onRequestClose={this.cancelMimeSelection}
+            animationType="slide"
+            onDismiss={this.onDismiss || noop}
+          >
+            <TouchableWithoutFeedback onPress={this.cancelMimeSelection}>
+              <View style={styles.overlay}>
+                <View style={styles.optionContainer}>
+                  {selectionOptions.map(([text, onPress], index) => (
+                    <SelectionOption key={text} index={index} text={text} onPress={onPress} />
+                  ))}
+                </View>
+                <View style={styles.cancelContainer}>
+                  <CancelOption text={cancelText} onPress={this.cancelMimeSelection} />
+                </View>
               </View>
-              <View style={styles.cancelContainer}>
-                <CancelOption text={cancelText} onPress={cancelMimeSelection} />
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-        <View style={styles.inner}>
-          {children}
+            </TouchableWithoutFeedback>
+          </Modal>
+          <View style={styles.inner}>
+            {children}
+          </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
-  );
-};
-
-Dropzone.propTypes = {
-  theme: PropTypes.shape().isRequired,
-  accept: PropTypes.arrayOf(PropTypes.string),
-  onDrop: PropTypes.func,
-  style: StylePropType,
-  cameraText: PropTypes.string,
-  albumText: PropTypes.string,
-  fileText: PropTypes.string,
-  cancelText: PropTypes.string,
-  disabled: PropTypes.bool,
-  children: PropTypes.node,
-};
-
-Dropzone.defaultProps = {
-  accept: ['*/*'],
-  onDrop: noop,
-  style: null,
-  cameraText: 'Camera',
-  albumText: 'Photo & Video Library',
-  fileText: 'File',
-  cancelText: 'Cancel',
-  disabled: false,
-  children: null,
-};
+      </TouchableWithoutFeedback>
+    );
+  }
+}
 
 export default withTheme('Dropzone')(Dropzone);
