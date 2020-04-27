@@ -105,7 +105,7 @@ const TextInput = (props) => {
     if (params.onFocus) {
       return params.onFocus(...args);
     }
-    return null;
+    return true;
   };
 
   const wrappedOnBlur = (...args) => {
@@ -115,18 +115,70 @@ const TextInput = (props) => {
     if (params.onBlur) {
       return params.onBlur(...args);
     }
-    return null;
+    return true;
+  };
+
+  if (!multiline) {
+    return (
+      <RNTextInput
+        {...androidProps}
+        {...pick(theme.omit(params), allowedAttributes)}
+        ref={onRef}
+        data-class={`TextInput ${className}`}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        style={[
+          styles.defaults,
+          themeInputStyle.border,
+          themeInputStyle.background,
+          themeInputStyle.opacity,
+          themeInputStyle.text,
+          multiline ? { height: 40 * numberOfLines } : null,
+          style,
+        ]}
+        onFocus={wrappedOnFocus}
+        onBlur={wrappedOnBlur}
+        editable={editable && !(disabled || readonly)}
+        placeholderTextColor={StyleSheet.flatten(themeInputStyle.placeholder).color}
+      />
+    );
+  }
+
+  const onTextareaChange = (e) => {
+    const { onChange, onChangeText } = params;
+    e.nativeEvent.text = e.target.value;
+    const { text } = e.nativeEvent;
+    if (onChange) {
+      onChange(e);
+    }
+    if (onChangeText) {
+      onChangeText(text);
+    }
   };
 
   return (
-    <RNTextInput
-      {...androidProps}
-      {...pick(theme.omit(params), allowedAttributes)}
+    <textarea
+      autoCapitalize={params.autoCapitalize || 'sentences'}
+      autoComplete={params.autoComplete || params.autoCompleteType || 'on'}
+      autoCorrect={params.autoCorrect || params.autoCorrect === undefined ? 'on' : 'off'}
+      autoFocus={params.autoFocus} // eslint-disable-line
+      defaultValue={params.defaultValue}
+      dir="auto"
+      disabled={disabled}
+      enterkeyhint={params.returnKeyType}
+      maxLength={params.maxLength}
+      onKeyPress={params.onKeyPress}
+      onSelect={params.onSelect}
+      placeholder={params.placeholder}
+      readOnly={!editable || readonly}
+      spellCheck={
+        params.spellCheck !== null
+          ? params.spellCheck
+          : (params.autoCorrect || params.autoCorrect === undefined)
+      }
       ref={onRef}
       data-class={`TextInput ${className}`}
-      multiline={multiline}
-      numberOfLines={numberOfLines}
-      style={[
+      style={StyleSheet.flatten([
         styles.defaults,
         themeInputStyle.border,
         themeInputStyle.background,
@@ -134,11 +186,12 @@ const TextInput = (props) => {
         themeInputStyle.text,
         multiline ? { height: 40 * numberOfLines } : null,
         style,
-      ]}
+      ])}
       onFocus={wrappedOnFocus}
       onBlur={wrappedOnBlur}
-      editable={editable && !(disabled || readonly)}
-      placeholderTextColor={StyleSheet.flatten(themeInputStyle.placeholder).color}
+      onChange={onTextareaChange}
+      rows={numberOfLines}
+      value={params.value}
     />
   );
 };
