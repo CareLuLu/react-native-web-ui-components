@@ -43,9 +43,9 @@
     "react-art": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "react-native-web": "0.12.2",
-    "react-router": "5.1.2",
-    "react-router-dom": "5.1.2",
-    "react-router-native": "5.1.2",
+    "react-router": "5.2.0",
+    "react-router-dom": "5.2.0",
+    "react-router-native": "5.2.0",
     "react-test-renderer": "16.13.1"
   },
   "dependencies": {
