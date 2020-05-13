@@ -75,12 +75,14 @@ function getScrollElement() {
       scrollTop: () => element.scrollTop,
       scrollTo: (x, y) => element.scrollTo(x, y),
       addEventListener: handler => element.addEventListener('scroll', handler),
+      removeEventListener: handler => element.removeEventListener('scroll', handler),
     };
   }
   return {
     scrollTop: () => (document.documentElement || document.body).scrollTop,
     scrollTo: (x, y) => (document.documentElement || document.body).scrollTo(x, y),
     addEventListener: handler => window.addEventListener('scroll', handler),
+    removeEventListener: handler => window.removeEventListener('scroll', handler),
   };
 }
 

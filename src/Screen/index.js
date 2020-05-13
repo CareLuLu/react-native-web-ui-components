@@ -74,6 +74,7 @@ function getScrollElement() {
     scrollTop: () => 0,
     scrollTo: () => {},
     addEventListener: () => {},
+    removeEventListener: () => {},
   };
 }
 
