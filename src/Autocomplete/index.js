@@ -186,7 +186,6 @@ class Autocomplete extends React.Component {
       highlightedIndex,
       menuOpen,
     } = props;
-    this.fy = 0;
     this.state = {
       menuOpen,
       highlightedIndex,
@@ -194,6 +193,7 @@ class Autocomplete extends React.Component {
       open: false,
       loading: isFunction(items),
       keyboardOffset: null,
+      menuStyle: null,
     };
     this.mountSteps = [];
     this.updateItemsThrottled = this.updateItems;
@@ -319,42 +319,36 @@ class Autocomplete extends React.Component {
   };
 
   onRef = (input) => {
-    const self = this;
-    self.input = input;
-    const { onRef } = self.props;
+    this.input = input;
+    const { onRef } = this.props;
     if (isFunction(onRef)) {
       onRef(input);
     }
-    setTimeout(() => {
-      if (self.input) {
-        self.input.measure((fx, fy, width, height) => {
-          self.fy = fy;
-          self.menuStyle = {
-            width,
-            top: height,
-            left: fx,
-            maxHeight: 200,
-          };
-          // if (Platform.OS === 'web') {
-          //   self.menuStyle = {
-          //     width,
-          //     top: height,
-          //     left: fx,
-          //     maxHeight: 200,
-          //   };
-          // } else {
-          //   const maxHeight = Math.max(0, Math.min(200, py));
-          //   self.menuStyle = {
-          //     width,
-          //     maxHeight,
-          //     top: fy - maxHeight,
-          //     left: fx,
-          //   };
-          // }
-        });
-      }
-    });
   };
+
+  onLayout = () => {
+    const self = this;
+    if (self.input) {
+      self.input.measure((fx, fy, width, height) => {
+        const { menuStyle } = self.state;
+        if (
+          !menuStyle
+          || menuStyle.width !== width
+          || menuStyle.top !== height
+          || menuStyle.left !== fx
+        ) {
+          self.onMount(() => self.setState({
+            menuStyle: {
+              width,
+              top: height,
+              left: fx,
+              maxHeight: 200,
+            },
+          }));
+        }
+      });
+    }
+  }
 
   getParams() {
     return { ...this.props, ...this.state };
@@ -421,6 +415,7 @@ class Autocomplete extends React.Component {
       open,
       items,
       loading,
+      menuStyle: calculatedMenuStyle,
       // keyboardOffset,
     } = this.state;
     const {
@@ -448,7 +443,7 @@ class Autocomplete extends React.Component {
       props.autoCompleteType = 'off';
     }
     const { minWidth, maxWidth, width } = StyleSheet.flatten([style]);
-    const { maxHeight } = StyleSheet.flatten([this.menuStyle, menuStyle]);
+    const { maxHeight } = StyleSheet.flatten([calculatedMenuStyle, menuStyle]);
 
     const height = (
       2
@@ -456,17 +451,6 @@ class Autocomplete extends React.Component {
       + (loading ? spinnerHeight : 0)
       + (!items.length && !loading ? emptyResultHeight : 0)
     );
-
-    // let mobileMenuStyle = null;
-    // if (Platform.OS !== 'web') {
-    //   mobileMenuStyle = { top: this.fy - height + (keyboardOffset || 0) };
-    //   if (keyboard > 0 && keyboardOffset === null) {
-    //     setTimeout(this.onKeyboardOpen);
-    //   }
-    //   if (keyboard === 0 && keyboardOffset !== null) {
-    //     setTimeout(this.onKeyboardClose);
-    //   }
-    // }
 
     let showMenu = false;
     if (menuOpen !== null) {
@@ -490,6 +474,7 @@ class Autocomplete extends React.Component {
           {...inputProps}
           value={blankOr(text)}
           onRef={this.onRef}
+          onLayout={this.onLayout}
           onKeyPress={this.onKeyPress}
           onChangeText={this.onChangeText}
           onSubmitEditing={this.onSubmitEditing}
@@ -500,7 +485,7 @@ class Autocomplete extends React.Component {
             {...this.state}
             getItemLabel={getItemLabel === undefined ? getItemValue : getItemLabel}
             style={[
-              this.menuStyle,
+              calculatedMenuStyle,
               { height },
               // mobileMenuStyle,
               menuStyle,
