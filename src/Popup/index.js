@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderBottomWidth: 1,
     height: 53,
+    minWidth: '100%',
   },
   boxItem: {
     borderTopWidth: 0,

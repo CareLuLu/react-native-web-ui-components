@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
 import pick from 'lodash/pick';
 import { TextInput as RNTextInput, StyleSheet, Platform } from 'react-native';
+import { Helmet, style } from '../Helmet';
 import { useTheme } from '../Theme';
 import StylePropType from '../StylePropType';
 
@@ -84,7 +85,6 @@ const TextInput = (props) => {
     // Make sure we don't send hasError to RNTextInput
     // since it's not a valid prop for <input>.
     hasError,
-    style,
     multiline,
     numberOfLines,
     disabled,
@@ -95,8 +95,11 @@ const TextInput = (props) => {
     themeInputStyle,
     onRef,
     scroller,
+    style: styleProp,
     ...params
   } = useTheme('TextInput', props);
+
+  const id = useRef(Math.random().toString(36).substr(2, 9));
 
   const wrappedOnFocus = (...args) => {
     if (multiline && scroller) {
@@ -118,6 +121,8 @@ const TextInput = (props) => {
     return true;
   };
 
+  const placeholderTextColor = StyleSheet.flatten(themeInputStyle.placeholder).color;
+
   if (!multiline) {
     return (
       <RNTextInput
@@ -134,12 +139,12 @@ const TextInput = (props) => {
           themeInputStyle.opacity,
           themeInputStyle.text,
           multiline ? { height: 40 * numberOfLines } : null,
-          style,
+          styleProp,
         ]}
         onFocus={wrappedOnFocus}
         onBlur={wrappedOnBlur}
         editable={editable && !(disabled || readonly)}
-        placeholderTextColor={StyleSheet.flatten(themeInputStyle.placeholder).color}
+        placeholderTextColor={placeholderTextColor}
       />
     );
   }
@@ -157,42 +162,60 @@ const TextInput = (props) => {
   };
 
   return (
-    <textarea
-      autoCapitalize={params.autoCapitalize || 'sentences'}
-      autoComplete={params.autoComplete || params.autoCompleteType || 'on'}
-      autoCorrect={params.autoCorrect || params.autoCorrect === undefined ? 'on' : 'off'}
-      autoFocus={params.autoFocus} // eslint-disable-line
-      defaultValue={params.defaultValue}
-      dir="auto"
-      disabled={disabled}
-      enterkeyhint={params.returnKeyType}
-      maxLength={params.maxLength}
-      onKeyPress={params.onKeyPress}
-      onSelect={params.onSelect}
-      placeholder={params.placeholder}
-      readOnly={!editable || readonly}
-      spellCheck={
-        params.spellCheck !== null
-          ? params.spellCheck
-          : (params.autoCorrect || params.autoCorrect === undefined)
-      }
-      ref={onRef}
-      data-class={`TextInput ${className}`}
-      style={StyleSheet.flatten([
-        styles.defaults,
-        themeInputStyle.border,
-        themeInputStyle.background,
-        themeInputStyle.opacity,
-        themeInputStyle.text,
-        multiline ? { height: 40 * numberOfLines } : null,
-        style,
-      ])}
-      onFocus={wrappedOnFocus}
-      onBlur={wrappedOnBlur}
-      onChange={onTextareaChange}
-      rows={numberOfLines}
-      value={params.value}
-    />
+    <>
+      <Helmet>
+        <style>
+          {`
+            [data-class~="TextInput__textarea__${id.current}"]::placeholder {
+              color: ${placeholderTextColor};
+              opacity: 1;
+            }
+            [data-class~="TextInput__textarea__${id.current}"]:-ms-input-placeholder {
+              color: ${placeholderTextColor};
+            }
+            [data-class~="TextInput__textarea__${id.current}"]::-ms-input-placeholder {
+              color: ${placeholderTextColor};
+            }
+          `}
+        </style>
+      </Helmet>
+      <textarea
+        autoCapitalize={params.autoCapitalize || 'sentences'}
+        autoComplete={params.autoComplete || params.autoCompleteType || 'on'}
+        autoCorrect={params.autoCorrect || params.autoCorrect === undefined ? 'on' : 'off'}
+        autoFocus={params.autoFocus} // eslint-disable-line
+        defaultValue={params.defaultValue}
+        dir="auto"
+        disabled={disabled}
+        enterkeyhint={params.returnKeyType}
+        maxLength={params.maxLength}
+        onKeyPress={params.onKeyPress}
+        onSelect={params.onSelect}
+        placeholder={params.placeholder}
+        readOnly={!editable || readonly}
+        spellCheck={
+          params.spellCheck !== null
+            ? params.spellCheck
+            : (params.autoCorrect || params.autoCorrect === undefined)
+        }
+        ref={onRef}
+        data-class={`TextInput TextInput__textarea__${id.current} ${className}`}
+        style={StyleSheet.flatten([
+          styles.defaults,
+          themeInputStyle.border,
+          themeInputStyle.background,
+          themeInputStyle.opacity,
+          themeInputStyle.text,
+          multiline ? { height: 40 * numberOfLines } : null,
+          styleProp,
+        ])}
+        onFocus={wrappedOnFocus}
+        onBlur={wrappedOnBlur}
+        onChange={onTextareaChange}
+        rows={numberOfLines}
+        value={params.value}
+      />
+    </>
   );
 };
 
