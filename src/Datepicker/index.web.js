@@ -203,6 +203,7 @@ const Datepicker = (props) => {
     className,
     is24Hour,
     timeIntervals,
+    autoComplete,
   } = props;
 
   let currentFormat = format;
@@ -265,6 +266,7 @@ const Datepicker = (props) => {
         onBlur={onBlur}
         style={currentStyle}
         strictParsing
+        autoComplete={autoComplete}
       />
     </View>
   );
@@ -288,6 +290,7 @@ Datepicker.propTypes = {
   format: PropTypes.string,
   is24Hour: PropTypes.bool,
   timeIntervals: PropTypes.number,
+  autoComplete: PropTypes.string,
 };
 
 Datepicker.defaultProps = {
@@ -308,6 +311,7 @@ Datepicker.defaultProps = {
   format: null,
   is24Hour: false,
   timeIntervals: 15,
+  autoComplete: 'off',
 };
 
 export default withTheme('Datepicker')(Datepicker);
