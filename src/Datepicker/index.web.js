@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import noop from 'lodash/noop';
@@ -203,7 +203,6 @@ const Datepicker = (props) => {
     className,
     is24Hour,
     timeIntervals,
-    autoComplete,
   } = props;
 
   let currentFormat = format;
@@ -221,6 +220,8 @@ const Datepicker = (props) => {
     formats,
     format: currentFormat,
   };
+
+  const [autoComplete] = useState(`date-field-${Math.random().toString(36).substring(2, 9)}`);
 
   const [
     onRef,
@@ -290,7 +291,6 @@ Datepicker.propTypes = {
   format: PropTypes.string,
   is24Hour: PropTypes.bool,
   timeIntervals: PropTypes.number,
-  autoComplete: PropTypes.string,
 };
 
 Datepicker.defaultProps = {
@@ -311,7 +311,6 @@ Datepicker.defaultProps = {
   format: null,
   is24Hour: false,
   timeIntervals: 15,
-  autoComplete: 'off',
 };
 
 export default withTheme('Datepicker')(Datepicker);
