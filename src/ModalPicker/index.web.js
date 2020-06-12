@@ -254,9 +254,14 @@ const ModalPicker = ({
   activeStyle,
   ...props
 }) => {
+  const { disabled } = props;
   const [open, setOpen] = useState(false);
 
-  const onPress = () => setOpen(!open);
+  const onPress = () => {
+    if (!disabled) {
+      setOpen(!open);
+    }
+  };
   const onSelect = (__, item) => {
     setOpen(false);
     onChange(item);
@@ -322,6 +327,7 @@ ModalPicker.propTypes = {
   itemActiveStyle: StylePropType,
   activeStyle: StylePropType,
   arrow: PropTypes.bool,
+  disabled: PropTypes.bool,
   value: PropTypes.any, // eslint-disable-line
 };
 
@@ -333,6 +339,7 @@ ModalPicker.defaultProps = {
   itemActiveStyle: styles.empty,
   activeStyle: styles.empty,
   arrow: true,
+  disabled: false,
   value: undefined,
 };
 

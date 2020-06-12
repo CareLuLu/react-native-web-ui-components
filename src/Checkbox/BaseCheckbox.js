@@ -55,7 +55,7 @@ const BaseCheckbox = ({
   };
 
   const className = `${type} ${!checked ? `${type}__unchecked` : ''}`;
-  const viewStyle = [styles.container, props.style]; // eslint-disable-line
+  const viewStyle = [styles.container, themeInputStyle.opacity, props.style]; // eslint-disable-line
   const iconName = checked ? iconChecked : iconUnchecked;
   const iconStyle = [
     styles.icon,
