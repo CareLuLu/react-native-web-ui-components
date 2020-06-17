@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
+    alignItems: 'center',
   },
 });
 
