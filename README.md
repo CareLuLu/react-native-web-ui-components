@@ -1,7 +1,7 @@
 # React Native Web UI Components
 
 [![Dependencies](https://img.shields.io/badge/dependencies-renovate-brightgreen.svg)](https://github.com/CareLuLu/react-native-web-ui-components/issues/12)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8663803b71b246eebe54c048a38a7a1f)](https://www.codacy.com/manual/CareLuLu/react-native-web-ui-components?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CareLuLu/react-native-web-ui-components&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://img.shields.io/codacy/grade/8663803b71b246eebe54c048a38a7a1f/master)](https://www.codacy.com/manual/CareLuLu/react-native-web-ui-components?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CareLuLu/react-native-web-ui-components&amp;utm_campaign=Badge_Grade)
 [![NPM](https://img.shields.io/npm/v/react-native-web-ui-components.svg)](https://www.npmjs.com/package/react-native-web-ui-components)
 
 React Native Web UI Components is a library of customized [React Native](https://facebook.github.io/react-native/)/[React Native Web](https://github.com/necolas/react-native-web) components for mobile and web UI. This library is used by [React Native Web Jsonschema Form](https://github.com/CareLuLu/react-native-web-jsonschema-form).
