@@ -54,9 +54,9 @@
     "@tippy.js/react": "^3.0.0",
     "expo-blur": "^8.0.0",
     "expo-document-picker": "^8.0.0",
-    "expo-file-system": "^8.0.0",
+    "expo-file-system": "^9.0.0",
     "expo-image-picker": "^8.0.0",
-    "expo-permissions": "^8.0.0",
+    "expo-permissions": "^9.0.0",
     "fast-deep-equal": "^3.0.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
@@ -78,7 +78,7 @@
     "throttle-debounce": "^2.1.0"
   },
   "peerDependencies": {
-    "expo": "^33.0.0 || ^34.0.0 || ^35.0.0 || ^36.0.0 || ^37.0.0",
+    "expo": "^33.0.0 || ^34.0.0 || ^35.0.0 || ^36.0.0 || ^37.0.0 || ^38.0.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-native": "*",
