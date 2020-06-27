@@ -119,9 +119,7 @@ There should have an onRef referencing to a Function. 1`] = `
                 ],
               ],
             ],
-            Object {
-              "fontFamily": "Lucida Sans",
-            },
+            Object {},
           ]
         }
       >
@@ -228,9 +226,7 @@ There should have an onRef referencing to a Function. 1`] = `
                 ],
               ],
             ],
-            Object {
-              "fontFamily": "Lucida Sans",
-            },
+            Object {},
           ]
         }
       >
