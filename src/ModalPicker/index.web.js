@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Autocomplete from '../Autocomplete';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 import View from '../View';
 import StylePropType from '../StylePropType';
 import TextInput from '../TextInput';
@@ -173,6 +174,8 @@ const Input = ({
               pointer-events: none;
               user-select: none;
               text-shadow: 0 0 0 ${color};
+            }
+            [data-class~="${id}__touchable"]:hover {
               cursor: pointer;
             }
             [data-class~="${id}"]::placeholder {
@@ -187,7 +190,7 @@ const Input = ({
         </style>
       </Helmet>
       <TouchableWithoutFeedback onPress={wrappedOnPress}>
-        <View onRef={onRef} style={outer}>
+        <View onRef={onRef} className={`${id}__touchable`} style={outer}>
           <TextInput
             {...props}
             value={value}

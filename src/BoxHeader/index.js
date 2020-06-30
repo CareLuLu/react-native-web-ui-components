@@ -9,8 +9,6 @@ const styles = StyleSheet.create({
   defaults: {
     backgroundColor: '#D4D4D4',
     height: 40,
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
     alignItems: 'center',
   },
 });
