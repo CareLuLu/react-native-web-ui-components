@@ -1,5 +1,6 @@
 # React Native Web UI Components
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6dbbb2a3bf4f486c9b3c6e60d2588961)](https://app.codacy.com/gh/CareLuLu/react-native-web-ui-components?utm_source=github.com&utm_medium=referral&utm_content=CareLuLu/react-native-web-ui-components&utm_campaign=Badge_Grade_Settings)
 [![Dependencies](https://img.shields.io/badge/dependencies-renovate-brightgreen.svg)](https://github.com/CareLuLu/react-native-web-ui-components/issues/12)
 [![Codacy Badge](https://img.shields.io/codacy/grade/8663803b71b246eebe54c048a38a7a1f/master)](https://www.codacy.com/manual/CareLuLu/react-native-web-ui-components?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CareLuLu/react-native-web-ui-components&amp;utm_campaign=Badge_Grade)
 [![NPM](https://img.shields.io/npm/v/react-native-web-ui-components.svg)](https://www.npmjs.com/package/react-native-web-ui-components)
