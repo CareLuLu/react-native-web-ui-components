@@ -116,6 +116,9 @@ const Input = ({
 
   const inputOnRef = (ref) => {
     input.current = ref;
+    if (onRef) {
+      onRef(ref);
+    }
   };
 
   const wrappedOnPress = () => {
@@ -190,7 +193,7 @@ const Input = ({
         </style>
       </Helmet>
       <TouchableWithoutFeedback onPress={wrappedOnPress}>
-        <View onRef={onRef} className={`${id}__touchable`} style={outer}>
+        <View className={`${id}__touchable`} style={outer}>
           <TextInput
             {...props}
             value={value}

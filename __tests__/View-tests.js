@@ -26,7 +26,7 @@ test(testDescription, () => {
     <ThemeProvider>
       <View class="Test__class" onref={(component) => { view = component; }}>
         <Button type="navy" onPress={() => { view.setNativeProps({ style: { backgroundColor: '#20B2AA' } }); }}>
-            Change Background Color
+          Change Background Color
         </Button>
       </View>
     </ThemeProvider>,
@@ -42,7 +42,7 @@ test(testDescription, () => {
     <ThemeProvider>
       <View onref={(component) => { view = component; }}>
         <Button type="navy" onPress={() => { view.setNativeProps({ style: { backgroundColor: '#20B2AA' } }); }}>
-            Change Background Color
+          Change Background Color
         </Button>
       </View>
     </ThemeProvider>,

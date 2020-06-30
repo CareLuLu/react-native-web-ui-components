@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
-import noop from 'lodash/noop';
 import { withTheme } from '../Theme';
 
 const TouchableOpacity = ({
@@ -9,14 +8,18 @@ const TouchableOpacity = ({
   onRef,
   className,
   ...props
-}) => (
-  <RNTouchableOpacity
-    {...theme.omit(props)}
-    ref={onRef}
-    dataSet={{ class: className }}
-    data-class={className}
-  />
-);
+}) => {
+  const params = {
+    ...theme.omit(props),
+    dataSet: { class: className },
+    'data-class': className,
+    ref: undefined,
+  };
+  if (onRef) {
+    params.ref = onRef;
+  }
+  return <RNTouchableOpacity {...params} />;
+};
 
 TouchableOpacity.propTypes = {
   theme: PropTypes.shape().isRequired,
@@ -26,7 +29,10 @@ TouchableOpacity.propTypes = {
 
 TouchableOpacity.defaultProps = {
   className: '',
-  onRef: noop,
+  onRef: null,
 };
 
-export default withTheme('TouchableOpacity')(TouchableOpacity);
+const TouchableOpacityWithTheme = withTheme('TouchableOpacity')(TouchableOpacity);
+
+// eslint-disable-next-line
+export default React.forwardRef((props, ref) => <TouchableOpacityWithTheme {...props} />);

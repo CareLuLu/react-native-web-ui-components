@@ -101,13 +101,14 @@ const useEvents = ({
     setTimeout(() => onDateChange(nextDate));
   };
 
-  const onChangeRaw = (e) => {
-    const inputNode = e.target;
-    const nodeValue = inputNode.value;
-    const mask = format.replace(DATE_FORMAT, '9');
-    const formattedValue = formatMask(nodeValue, mask);
-    if (nodeValue !== formattedValue) {
-      inputNode.value = formattedValue;
+  const onChangeRaw = () => {
+    if (input.current) {
+      const nodeValue = input.current.value;
+      const mask = format.replace(DATE_FORMAT, '9');
+      const formattedValue = formatMask(nodeValue, mask);
+      if (nodeValue !== formattedValue) {
+        input.current.value = formattedValue;
+      }
     }
   };
 

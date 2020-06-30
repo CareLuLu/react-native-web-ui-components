@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View as RNView } from 'react-native';
-import noop from 'lodash/noop';
 import { withTheme } from '../Theme';
 
 const View = ({
@@ -9,14 +8,18 @@ const View = ({
   onRef,
   className,
   ...props
-}) => (
-  <RNView
-    {...theme.omit(props)}
-    ref={onRef}
-    dataSet={{ class: className }}
-    data-class={className}
-  />
-);
+}) => {
+  const params = {
+    ...theme.omit(props),
+    dataSet: { class: className },
+    'data-class': className,
+    ref: undefined,
+  };
+  if (onRef) {
+    params.ref = onRef;
+  }
+  return <RNView {...params} />;
+};
 
 View.propTypes = {
   theme: PropTypes.shape().isRequired,
@@ -26,7 +29,10 @@ View.propTypes = {
 
 View.defaultProps = {
   className: '',
-  onRef: noop,
+  onRef: null,
 };
 
-export default withTheme('View')(View);
+const ViewWithTheme = withTheme('View')(View);
+
+// eslint-disable-next-line
+export default React.forwardRef((props, ref) => <ViewWithTheme {...props} />);

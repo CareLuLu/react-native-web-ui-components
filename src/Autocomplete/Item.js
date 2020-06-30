@@ -26,12 +26,12 @@ const Item = ({
   value,
   active,
   autocompleteId,
-  style: currentStyle,
   activeStyle,
   themeTextStyle,
   themeInputStyle,
   numberOfLines,
   highlightMatches,
+  style: currentStyle,
 }) => {
   const onItemPress = () => onPress(item, index);
 
