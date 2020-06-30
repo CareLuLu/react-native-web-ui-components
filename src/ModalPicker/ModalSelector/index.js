@@ -1,16 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  View,
-  Modal,
-  Text,
-  ViewPropTypes as RNViewPropTypes,
-} from 'react-native';
+import { View, Modal, Text } from 'react-native';
 import styles from './style';
 import Icon from '../../Icon';
 import ScrollView from '../../ScrollView';
 import TouchableOpacity from '../../TouchableOpacity';
 import TouchableWithoutFeedback from '../../TouchableWithoutFeedback';
+import StylePropType from '../../StylePropType';
 
 /* Code copied from react-native-modal-selector and adapted for our needs */
 
@@ -18,8 +14,6 @@ import TouchableWithoutFeedback from '../../TouchableWithoutFeedback';
 /* eslint react/no-did-update-set-state: 0 */
 /* eslint react/forbid-foreign-prop-types: 0 */
 /* eslint react/destructuring-assignment: 0 */
-
-const ViewPropTypes = RNViewPropTypes || View.propTypes;
 
 let componentIndex = 0;
 
@@ -41,21 +35,21 @@ const propTypes = {
   visible: PropTypes.bool,
   initValue: PropTypes.node,
   animationType: PropTypes.string,
-  style: ViewPropTypes.style,
-  selectStyle: ViewPropTypes.style,
+  style: StylePropType,
+  selectStyle: StylePropType,
   selectTextStyle: Text.propTypes.style,
-  optionStyle: ViewPropTypes.style,
+  optionStyle: StylePropType,
   optionTextStyle: Text.propTypes.style,
-  optionContainerStyle: ViewPropTypes.style,
-  sectionStyle: ViewPropTypes.style,
-  childrenContainerStyle: ViewPropTypes.style,
-  touchableStyle: ViewPropTypes.style,
+  optionContainerStyle: StylePropType,
+  sectionStyle: StylePropType,
+  childrenContainerStyle: StylePropType,
+  touchableStyle: StylePropType,
   touchableActiveOpacity: PropTypes.number,
   sectionTextStyle: Text.propTypes.style,
-  cancelContainerStyle: ViewPropTypes.style,
-  cancelStyle: ViewPropTypes.style,
+  cancelContainerStyle: StylePropType,
+  cancelStyle: StylePropType,
   cancelTextStyle: Text.propTypes.style,
-  overlayStyle: ViewPropTypes.style,
+  overlayStyle: StylePropType,
   cancelText: PropTypes.string,
   disabled: PropTypes.bool,
   supportedOrientations: PropTypes.arrayOf(PropTypes.string),

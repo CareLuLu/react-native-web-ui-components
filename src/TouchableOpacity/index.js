@@ -10,7 +10,12 @@ const TouchableOpacity = ({
   className,
   ...props
 }) => (
-  <RNTouchableOpacity ref={onRef} {...theme.omit(props)} data-class={className} />
+  <RNTouchableOpacity
+    {...theme.omit(props)}
+    ref={onRef}
+    dataSet={{ class: className }}
+    data-class={className}
+  />
 );
 
 TouchableOpacity.propTypes = {

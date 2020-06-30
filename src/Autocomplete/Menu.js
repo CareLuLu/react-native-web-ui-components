@@ -97,12 +97,15 @@ class Menu extends React.PureComponent {
     const fy = itemHeight * highlightedIndex;
     const currentHeight = Math.max(0, Math.min(maxHeight, height));
 
-    const { scrollView } = this;
-    if (this.scrollView) {
+    const self = this;
+    if (self.scrollView) {
       if (fy < this.y) {
-        setTimeout(() => scrollView.scrollTo({ x: 0, y: fy }));
+        setTimeout(() => (self.scrollView && self.scrollView.scrollTo({ x: 0, y: fy })));
       } else if (fy + itemHeight > this.y + currentHeight) {
-        setTimeout(() => scrollView.scrollTo({ x: 0, y: fy + itemHeight - currentHeight }));
+        setTimeout(() => (
+          self.scrollView
+          && self.scrollView.scrollTo({ x: 0, y: fy + itemHeight - currentHeight })
+        ));
       }
     }
     return (

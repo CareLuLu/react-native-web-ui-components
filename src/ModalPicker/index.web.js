@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import Autocomplete from '../Autocomplete';
 import View from '../View';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 import StylePropType from '../StylePropType';
 import TextInput from '../TextInput';
 import { withTheme } from '../Theme';
@@ -174,6 +173,7 @@ const Input = ({
               pointer-events: none;
               user-select: none;
               text-shadow: 0 0 0 ${color};
+              cursor: pointer;
             }
             [data-class~="${id}"]::placeholder {
               color: ${color};

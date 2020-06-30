@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, ViewPropTypes } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { withTheme } from '../Theme';
 import BoxItem from '../BoxItem';
+import StylePropType from '../StylePropType';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -15,7 +16,7 @@ const BoxButtonRow = ({ style, ...props }) => (
 );
 
 BoxButtonRow.propTypes = {
-  style: ViewPropTypes.style,
+  style: StylePropType,
 };
 
 BoxButtonRow.defaultProps = {

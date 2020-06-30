@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  StyleSheet,
-  View,
-  ViewPropTypes,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useScreen } from '../Screen';
 import { withTheme } from '../Theme';
 import { pick } from '../utils';
+import StylePropType from '../StylePropType';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -72,7 +69,7 @@ const Column = ({
 
 Column.propTypes = {
   children: PropTypes.node,
-  style: ViewPropTypes.style,
+  style: StylePropType,
   xs: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   sm: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   md: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

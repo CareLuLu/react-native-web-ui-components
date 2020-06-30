@@ -65,8 +65,9 @@ const NativeText = ({
   return (
     <TextRN
       {...omit(theme.omit(props), 'hideXs', 'hideSm', 'hideMd', 'hideLg')}
-      data-class={classNames.join(' ')}
       style={[currentStyle, font]}
+      dataSet={{ class: classNames.join(' ') }}
+      data-class={classNames.join(' ')}
     />
   );
 };

@@ -24,7 +24,11 @@ const Icon = ({
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       />
     </Helmet>
-    <Text data-class={className} style={[styles.defaults, style]}>
+    <Text
+      style={[styles.defaults, style]}
+      dataSet={{ class: className }}
+      data-class={className}
+    >
       <WebFontAwesome name={name} />
     </Text>
   </React.Fragment>

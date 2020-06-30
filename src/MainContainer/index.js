@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Platform, ViewPropTypes } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import Screen from '../Screen';
 import { withTheme } from '../Theme';
 import Row from '../Row';
+import StylePropType from '../StylePropType';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -19,7 +20,7 @@ const MainContainer = ({ className, style, ...props }) => (
 );
 
 MainContainer.propTypes = {
-  style: ViewPropTypes.style,
+  style: StylePropType,
   className: PropTypes.string,
 };
 

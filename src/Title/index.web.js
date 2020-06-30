@@ -23,6 +23,7 @@ const Title = ({
   sm,
   md,
   lg,
+  className,
   ...props
 }) => {
   let defaultFontSize;
@@ -33,29 +34,32 @@ const Title = ({
     case 4: defaultFontSize = 16; break;
     default: defaultFontSize = 13;
   }
+
+  const classNames = [className, id];
+
   return (
     <React.Fragment>
       <Helmet>
         <style>
           {`
-            #${id} {
+            [data-class~="${id}"] {
               font-size: ${pick(xs, defaultFontSize)}px;
               line-height: ${parseFloat(pick(xs, defaultFontSize)) * 1.1}px;
             }
             @media (min-width: 768px) {
-              #${id} {
+              [data-class~="${id}"] {
                 font-size: ${pick(sm, xs, defaultFontSize)}px;
                 line-height: ${parseFloat(pick(sm, xs, defaultFontSize)) * 1.1}px;
               }
             }
             @media (min-width: 992px) {
-              #${id} {
+              [data-class~="${id}"] {
                 font-size: ${pick(md, sm, xs, defaultFontSize)}px;
                 line-height: ${parseFloat(pick(md, sm, xs, defaultFontSize)) * 1.1}px;
               }
             }
             @media (min-width: 1200px) {
-              #${id} {
+              [data-class~="${id}"] {
                 font-size: ${pick(lg, md, sm, xs, defaultFontSize)}px;
                 line-height: ${parseFloat(pick(lg, md, sm, xs, defaultFontSize)) * 1.1}px;
               }
@@ -63,7 +67,13 @@ const Title = ({
           `}
         </style>
       </Helmet>
-      <Text {...props} id={id} accessibilityRole="heading" aria-level={level} style={[styles.defaults, props.style]} />
+      <Text
+        {...props}
+        className={classNames.join(' ')}
+        accessibilityRole="heading"
+        aria-level={level}
+        style={[styles.defaults, props.style]}
+      />
     </React.Fragment>
   );
 };
@@ -76,6 +86,7 @@ Title.propTypes = {
   sm: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   md: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   lg: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  className: PropTypes.string,
 };
 
 Title.defaultProps = {
@@ -85,6 +96,7 @@ Title.defaultProps = {
   sm: null,
   md: null,
   lg: null,
+  className: '',
 };
 
 export default withTheme('Title')(Title);

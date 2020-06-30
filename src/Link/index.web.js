@@ -75,6 +75,7 @@ const Link = ({
   const classNameProp = {};
   if (Wrapper === Text) {
     classNameProp['data-class'] = `${className} ${type}`;
+    classNameProp.dataSet = { class: `${className} ${type}` };
     const css = StyleSheet.flatten(currentStyle);
     if (css.fontWeight === 'bold' && (!css.fontFamily || css.fontFamily === fontFamily.regular)) {
       font.fontFamily = fontFamily.bold;
@@ -124,7 +125,7 @@ Link.propTypes = {
   to: PropTypes.string,
   onPress: PropTypes.func,
   replace: PropTypes.bool,
-  wrapper: PropTypes.func,
+  wrapper: PropTypes.any, // eslint-disable-line
   basepath: PropTypes.string,
 };
 

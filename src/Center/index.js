@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, ViewPropTypes } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { withTheme } from '../Theme';
 import Row from '../Row';
+import StylePropType from '../StylePropType';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
 const Center = ({ style, ...props }) => <Row style={[styles.defaults, style]} {...props} />;
 
 Center.propTypes = {
-  style: ViewPropTypes.style,
+  style: StylePropType,
   xs: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 

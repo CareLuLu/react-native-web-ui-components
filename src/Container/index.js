@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, ViewPropTypes } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { withTheme } from '../Theme';
 import { useScreen } from '../Screen';
 import View from '../View';
+import StylePropType from '../StylePropType';
 
 const rowStyle = {
   width: '100%',
@@ -56,7 +57,7 @@ const Container = (props) => {
 Container.propTypes = {
   type: PropTypes.oneOf(['limited', 'full']),
   children: PropTypes.node,
-  style: ViewPropTypes.style,
+  style: StylePropType,
 };
 
 Container.defaultProps = {

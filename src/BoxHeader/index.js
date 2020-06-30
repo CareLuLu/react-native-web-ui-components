@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, ViewPropTypes } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { withTheme } from '../Theme';
 import Row from '../Row';
+import StylePropType from '../StylePropType';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
 const BoxHeader = ({ style, ...props }) => <Row {...props} style={[styles.defaults, style]} />;
 
 BoxHeader.propTypes = {
-  style: ViewPropTypes.style,
+  style: StylePropType,
 };
 
 BoxHeader.defaultProps = {

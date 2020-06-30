@@ -1,16 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  View as RNView,
-  StyleSheet,
-  ViewPropTypes,
-} from 'react-native';
+import { View as RNView, StyleSheet } from 'react-native';
 import noop from 'lodash/noop';
 import * as Animatable from 'react-native-animatable';
 import Screen, { withKeyboard } from '../Screen';
 import { withTheme } from '../Theme';
 import View from '../View';
 import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
+import StylePropType from '../StylePropType';
 
 /* eslint react/no-unused-state: 0 */
 /* eslint react/no-unused-prop-types: 0 */
@@ -52,7 +49,7 @@ class Modal extends React.PureComponent {
     followKeyboard: PropTypes.bool,
     visible: PropTypes.bool,
     children: PropTypes.node,
-    overlayStyle: ViewPropTypes.style,
+    overlayStyle: StylePropType,
     shouldCloseOnEsc: PropTypes.bool,
     onRequestClose: PropTypes.func,
   };

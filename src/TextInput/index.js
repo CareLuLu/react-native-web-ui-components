@@ -123,7 +123,6 @@ const TextInput = (props) => {
       {...androidProps}
       {...pick(theme.omit(params), allowedAttributes)}
       ref={onRef}
-      data-class={`TextInput ${className}`}
       multiline={multiline}
       numberOfLines={numberOfLines}
       style={[
