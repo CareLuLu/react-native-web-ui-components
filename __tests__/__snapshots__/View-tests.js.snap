@@ -5,6 +5,11 @@ Inner View should render with class="Test__child".
  1`] = `
 <View
   data-class="Test__parent"
+  dataSet={
+    Object {
+      "class": "Test__parent",
+    }
+  }
   style={
     Array [
       undefined,
@@ -14,6 +19,11 @@ Inner View should render with class="Test__child".
 >
   <View
     data-class="Test__child"
+    dataSet={
+      Object {
+        "class": "Test__child",
+      }
+    }
     style={
       Array [
         undefined,
@@ -28,6 +38,11 @@ exports[`View should render with class="".
 There should have an onRef referencing to a Function. 1`] = `
 <View
   data-class=""
+  dataSet={
+    Object {
+      "class": "",
+    }
+  }
   onref={[Function]}
   style={
     Array [
@@ -54,6 +69,11 @@ There should have an onRef referencing to a Function. 1`] = `
   >
     <View
       data-class="button button-navy"
+      dataSet={
+        Object {
+          "class": "button button-navy",
+        }
+      }
       style={
         Array [
           undefined,
@@ -85,6 +105,11 @@ There should have an onRef referencing to a Function. 1`] = `
     >
       <Text
         data-class=""
+        dataSet={
+          Object {
+            "class": "",
+          }
+        }
         style={
           Array [
             Array [
@@ -135,6 +160,11 @@ There should have an onRef referencing to a Function. 1`] = `
 <View
   class="Test__class"
   data-class=""
+  dataSet={
+    Object {
+      "class": "",
+    }
+  }
   onref={[Function]}
   style={
     Array [
@@ -161,6 +191,11 @@ There should have an onRef referencing to a Function. 1`] = `
   >
     <View
       data-class="button button-navy"
+      dataSet={
+        Object {
+          "class": "button button-navy",
+        }
+      }
       style={
         Array [
           undefined,
@@ -192,6 +227,11 @@ There should have an onRef referencing to a Function. 1`] = `
     >
       <Text
         data-class=""
+        dataSet={
+          Object {
+            "class": "",
+          }
+        }
         style={
           Array [
             Array [
