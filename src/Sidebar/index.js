@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import NativeSidebar from 'react-native-side-menu';
+import NativeSidebar from 'react-native-side-menu-updated';
 import { withTheme } from '../Theme';
 import { useScreen } from '../Screen';
 
