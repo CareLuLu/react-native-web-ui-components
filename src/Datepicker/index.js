@@ -1,52 +1,57 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Alert, StyleSheet } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Alert,
+  Image,
+  Modal,
+} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import noop from 'lodash/noop';
 import moment from 'moment';
-import RNDatepicker from 'react-native-datepicker';
-import StylePropType from '../StylePropType';
 import { withTheme } from '../Theme';
+import Link from '../Link';
+import View from '../View';
+import Row from '../Row';
+import Column from '../Column';
+import TextInput from '../TextInput';
+import TouchableOpacity from '../TouchableOpacity';
+import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 const styles = StyleSheet.create({
-  datepicker: {
-    padding: 0,
-    margin: 0,
-    height: undefined,
-  },
-  input: {
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 12,
-    paddingRight: 12,
+  defaults: {
+    minWidth: 100,
     height: 40,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+  },
+  fullWidth: {
+    width: '100%',
   },
   icon: {
     position: 'absolute',
     top: 12,
-    right: 5,
+    right: 10,
     width: 16,
     height: 16,
   },
-  text: {
-    position: 'absolute',
-    left: 12,
-    top: 10,
-    fontSize: 13,
-    textAlign: 'left',
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(100, 100, 100, 0.7)',
   },
-  placeholder: {
-    position: 'absolute',
-    left: 10,
-    top: 10,
-    fontSize: 13,
-    textAlign: 'left',
+  datepicker: {
+    backgroundColor: '#FFFFFF',
   },
-  confirmText: {},
-  fullWidth: {
-    width: '100%',
+  cancelColumn: {
+    paddingLeft: 15,
+  },
+  confirmColumn: {
+    paddingRight: 15,
+    alignItems: 'flex-end',
+  },
+  link: {
+    fontSize: 16,
+    paddingTop: 10,
   },
 });
 
@@ -68,40 +73,7 @@ const FORMAT = [
 
 const icon = { uri: 'https://divin2sy6ce0b.cloudfront.net/images/calendar-icon.png' };
 
-const useOnChange = ({ format, onDateChange, excludeDates }) => {
-  const onChange = (dateString) => {
-    if (excludeDates) {
-      const date = moment(dateString, format).format(DATE_FORMAT);
-      const notValid = excludeDates.filter(d => (moment(d).format(DATE_FORMAT) === date)).length;
-      if (notValid) {
-        setTimeout(() => Alert.alert('This date cannot be selected. Please choose another one.'), 500);
-        return onDateChange('');
-      }
-    }
-    return onDateChange(dateString);
-  };
-
-  return onChange;
-};
-
-const Datepicker = ({
-  mode,
-  fontFamily,
-  themeTextStyle,
-  themeInputStyle,
-  style,
-  auto,
-  customStyles,
-  placeholder,
-  minDate,
-  maxDate,
-  disabled,
-  readonly,
-  onDateChange,
-  excludeDates,
-  format,
-  ...props
-}) => {
+const getFormat = (format, mode) => {
   let currentFormat = format;
   if (!currentFormat) {
     switch (mode) {
@@ -110,90 +82,233 @@ const Datepicker = ({
       default: currentFormat = 'MM/DD/YYYY';
     }
   }
+  return currentFormat;
+};
 
-  const onChange = useOnChange({
+const parseDate = (value, format) => {
+  if (!value) {
+    return null;
+  }
+  if (typeof value === 'string') {
+    return moment(value, FORMAT.concat([format])).toDate();
+  }
+  return value;
+};
+
+const toString = (date, format) => {
+  if (!date) {
+    return '';
+  }
+  return moment(date).format(format);
+};
+
+const isSame = (date1, date2, format) => {
+  if (!date1 && !date2) {
+    return true;
+  }
+  return moment(date1).format(format) === moment(date2).format(format);
+};
+
+const useSetDate = ({ format, onDateChange, excludeDates }) => {
+  const setDate = (newValue) => {
+    if (!newValue) {
+      return onDateChange('');
+    }
+    const value = moment(newValue);
+    if (excludeDates) {
+      const date = value.format(DATE_FORMAT);
+
+      const notValid = excludeDates
+        .filter(d => (moment(parseDate(d, format)).format(DATE_FORMAT) === date))
+        .length;
+
+      if (notValid) {
+        setTimeout(() => Alert.alert('This date cannot be selected. Please choose another one.'), 500);
+        return onDateChange('');
+      }
+    }
+    return onDateChange(value.format(format));
+  };
+
+  return setDate;
+};
+
+const Datepicker = ({
+  date: value,
+  onDateChange,
+  mode,
+  is24Hour,
+  format,
+  minDate,
+  maxDate,
+  excludeDates,
+  animationType,
+  supportedOrientations,
+  ...props
+}) => {
+  const { auto } = props;
+
+  const currentFormat = getFormat(format, mode);
+  const parsedValue = parseDate(value, currentFormat);
+
+  const valueProp = useRef(parsedValue);
+  const date = useRef(parsedValue || new Date());
+  const modal = useRef();
+
+  const [step, setStep] = useState(null);
+
+  const setDate = useSetDate({
     onDateChange,
     excludeDates,
     format: currentFormat,
   });
-  const mergedStyles = {
-    dateInput: [
-      styles.input,
-      themeInputStyle.background,
-      themeInputStyle.border,
-      themeInputStyle.opacity,
-      customStyles.input,
-    ],
-    dateIcon: [styles.icon, customStyles.icon],
-    dateText: [
-      styles.text,
-      themeInputStyle.text,
-      fontFamily.regular !== 'system font' ? { fontFamily: fontFamily.regular } : {},
-      customStyles.text,
-    ],
-    placeholderText: [
-      styles.placeholder,
-      themeInputStyle.placeholder,
-      customStyles.placeholder,
-    ],
-    dateTouch: [styles.datepicker, customStyles.datepicker],
-    dateTouchBody: [styles.datepicker, customStyles.datepicker],
-    btnTextConfirm: [styles.confirmText, themeTextStyle.text, customStyles.confirmText],
+
+  const cancel = () => setStep(null);
+  const clear = () => {
+    setStep(null);
+    setDate('');
   };
-  const datepickerProps = {
-    ...props,
-    format: currentFormat,
-    disabled: disabled || readonly,
-    onDateChange: onChange,
-    confirmBtnText: 'Confirm',
-    cancelBtnText: 'Cancel',
-    placeholder: placeholder === '' ? ' ' : placeholder,
-    iconSource: icon,
-    customStyles: mergedStyles,
-    style: [styles.datepicker, auto ? null : styles.fullWidth, style],
+  const done = () => {
+    setStep(null);
+    setDate(date.current);
   };
+
+  const onPress = () => {
+    if (step) {
+      done();
+    } else {
+      setStep('date');
+    }
+  };
+
+  const onChange = (event, selected) => {
+    date.current = selected || null;
+    if (Platform.OS === 'android') {
+      if (mode === 'datetime' && step === 'date') {
+        setStep('transition');
+      } else {
+        done();
+      }
+    }
+  };
+
+  const onModalRef = (ref) => {
+    modal.current = ref;
+  };
+
+  const params = {};
   if (minDate) {
-    datepickerProps.minDate = moment(minDate, FORMAT.concat([currentFormat])).toDate();
+    params.minimumDate = moment(minDate, FORMAT.concat([currentFormat])).toDate();
   }
   if (maxDate) {
-    datepickerProps.maxDate = moment(maxDate, FORMAT.concat([currentFormat])).toDate();
+    params.maximumDate = moment(maxDate, FORMAT.concat([currentFormat])).toDate();
   }
-  return <RNDatepicker {...datepickerProps} />;
+
+  useEffect(() => {
+    if (!isSame(valueProp.current, parsedValue, currentFormat)) {
+      date.current = parsedValue || new Date();
+      valueProp.current = parsedValue;
+      setTimeout(() => setStep(null));
+    } else if (step === 'transition') {
+      setTimeout(() => setStep('time'));
+    }
+  });
+
+  return (
+    <>
+      <TouchableOpacity onPress={onPress} style={auto ? null : styles.fullWidth}>
+        <View style={auto ? null : styles.fullWidth}>
+          <TextInput
+            {...props}
+            editable={false}
+            value={toString(parsedValue, format)}
+            onPress={onPress}
+            pointerEvents="none"
+          />
+          <Image source={icon} style={styles.icon} />
+        </View>
+      </TouchableOpacity>
+      {Platform.OS !== 'android' ? (
+        <Modal
+          transparent
+          ref={onModalRef}
+          supportedOrientations={supportedOrientations}
+          visible={step !== null && step !== 'transition'}
+          onRequestClose={cancel}
+          animationType={animationType}
+        >
+          <TouchableWithoutFeedback onPress={cancel}>
+            <View style={styles.overlay}>
+              <Row style={styles.datepicker}>
+                <Row>
+                  <Column xs={6} style={styles.cancelColumn}>
+                    <Link auto onPress={clear} style={styles.link}>
+                      Clear
+                    </Link>
+                  </Column>
+                  <Column xs={6} style={styles.confirmColumn}>
+                    <Link auto onPress={done} style={styles.link}>
+                      Confirm
+                    </Link>
+                  </Column>
+                </Row>
+                <DateTimePicker
+                  {...params}
+                  style={styles.fullWidth}
+                  value={date.current}
+                  is24Hour={is24Hour}
+                  mode={mode !== 'datetime' || Platform.OS !== 'android' ? mode : step}
+                  onChange={onChange}
+                  neutralButtonLabel="Clear"
+                />
+              </Row>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      ) : null}
+      {Platform.OS === 'android' && step && step !== 'transition' ? (
+        <DateTimePicker
+          {...params}
+          style={styles.fullWidth}
+          value={date.current}
+          is24Hour={is24Hour}
+          mode={mode !== 'datetime' || Platform.OS !== 'android' ? mode : step}
+          onChange={onChange}
+        />
+      ) : null}
+    </>
+  );
 };
 
 Datepicker.propTypes = {
-  fontFamily: PropTypes.shape().isRequired,
-  themeTextStyle: PropTypes.shape().isRequired,
-  themeInputStyle: PropTypes.shape().isRequired,
   auto: PropTypes.bool,
-  disabled: PropTypes.bool,
-  readonly: PropTypes.bool,
-  style: StylePropType,
-  customStyles: StylePropType,
-  placeholder: PropTypes.string,
+  date: PropTypes.any, // eslint-disable-line
   onDateChange: PropTypes.func,
+  mode: PropTypes.oneOf(['date', 'datetime', 'time']),
+  is24Hour: PropTypes.bool,
+  format: PropTypes.string,
   minDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   maxDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-  excludeDates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-  mode: PropTypes.oneOf(['date', 'datetime', 'time']),
-  format: PropTypes.string,
-  is24Hour: PropTypes.bool,
+  excludeDates: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date),
+  ])),
+  animationType: PropTypes.string,
+  supportedOrientations: PropTypes.arrayOf(PropTypes.string),
 };
 
 Datepicker.defaultProps = {
   auto: false,
-  disabled: false,
-  readonly: false,
-  style: null,
-  customStyles: {},
-  placeholder: ' ',
+  date: undefined,
   onDateChange: noop,
-  excludeDates: [],
+  mode: 'date',
+  is24Hour: false,
+  format: null,
   minDate: null,
   maxDate: null,
-  mode: 'date',
-  format: null,
-  is24Hour: false,
+  excludeDates: [],
+  animationType: 'slide',
+  supportedOrientations: ['portrait', 'landscape'],
 };
 
 export default withTheme('Datepicker')(Datepicker);

@@ -72,6 +72,7 @@ const allowedAttributes = [
   'textBreakStrategy',
   'underlineColorAndroid',
   'value',
+  'pointerEvents',
 ];
 
 const androidProps = {};
