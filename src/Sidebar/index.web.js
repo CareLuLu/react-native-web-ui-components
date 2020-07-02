@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
 import { withRouter } from 'react-router';
-import DomSidebar from 'react-sidebar';
+import NativeSidebar from './NativeSidebar';
 import { withTheme } from '../Theme';
 import { useScreen } from '../Screen';
 import { useDerivedState, isSSR } from '../utils';
@@ -43,7 +43,7 @@ const Sidebar = ({
     };
     if (leftComponent && rightComponent) {
       return (
-        <DomSidebar
+        <NativeSidebar
           styles={styles}
           open={leftOpen}
           bounceBackOnOverdraw={false}
@@ -52,7 +52,7 @@ const Sidebar = ({
           touchHandleWidth={edgeHitWidth}
           touch={!(disabled || rightOpen)}
         >
-          <DomSidebar
+          <NativeSidebar
             styles={styles}
             open={rightOpen}
             bounceBackOnOverdraw={false}
@@ -63,13 +63,13 @@ const Sidebar = ({
             touch={!disabled}
           >
             {children}
-          </DomSidebar>
-        </DomSidebar>
+          </NativeSidebar>
+        </NativeSidebar>
       );
     }
     if (leftComponent) {
       return (
-        <DomSidebar
+        <NativeSidebar
           styles={styles}
           open={leftOpen}
           bounceBackOnOverdraw={false}
@@ -79,12 +79,12 @@ const Sidebar = ({
           touch={!disabled}
         >
           {children}
-        </DomSidebar>
+        </NativeSidebar>
       );
     }
     if (rightComponent) {
       return (
-        <DomSidebar
+        <NativeSidebar
           open={rightOpen}
           bounceBackOnOverdraw={false}
           sidebar={rightComponent}
@@ -94,7 +94,7 @@ const Sidebar = ({
           touch={!disabled}
         >
           {children}
-        </DomSidebar>
+        </NativeSidebar>
       );
     }
   }

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import NativeSidebar from 'react-native-side-menu-updated';
 import { withTheme } from '../Theme';
 import { useScreen } from '../Screen';
+import NativeSidebar from './NativeSidebar';
 
 const Sidebar = ({
   leftOpen,
@@ -80,7 +80,7 @@ const Sidebar = ({
       </NativeSidebar>
     );
   }
-  return { children };
+  return children;
 };
 
 Sidebar.propTypes = {

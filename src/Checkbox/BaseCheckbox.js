@@ -19,11 +19,20 @@ const styles = StyleSheet.create({
     fontSize: 23,
     lineHeight: 23,
   },
+  iconContainer: {
+    minWidth: 23,
+    flexShrink: 1,
+  },
   text: {
     fontSize: 13,
     lineHeight: 23,
-    paddingLeft: 10,
     textAlignVertical: 'center',
+  },
+  textContainer: {
+    flexShrink: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    paddingLeft: 10,
   },
 });
 
@@ -93,11 +102,15 @@ const BaseCheckbox = ({
         onBlur={onBlur}
       >
         <View style={viewStyle}>
-          <Icon name={iconName} style={iconStyle} />
+          <View style={styles.iconContainer}>
+            <Icon name={iconName} style={iconStyle} />
+          </View>
           {text !== null ? (
-            <Text auto style={textStyle}>
-              {text}
-            </Text>
+            <View style={styles.textContainer}>
+              <Text auto style={textStyle}>
+                {text}
+              </Text>
+            </View>
           ) : null}
         </View>
       </TouchableWithoutFeedback>

@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     color: '#545454',
     lineHeight: 20,
     fontSize: 13,
+    flexWrap: 'wrap',
   },
   fullWidth: {
     width: '100%',
