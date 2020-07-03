@@ -49,7 +49,10 @@ class Draggable extends Component {
         Animated.event([null, {
           dx: this.state.pan.x,
           dy: this.state.pan.y,
-        }]),
+
+        }], {
+          useNativeDriver: true,
+        }),
       onPanResponderRelease: (e, gestureState) => {
         if (this.props.scroller) {
           this.props.scroller.setNativeProps({ scrollEnabled: true });
