@@ -115,6 +115,7 @@ There should have an onRef referencing to a Function. 1`] = `
             Array [
               Object {
                 "color": "#545454",
+                "flexWrap": "wrap",
                 "fontSize": 13,
                 "lineHeight": 20,
               },
@@ -237,6 +238,7 @@ There should have an onRef referencing to a Function. 1`] = `
             Array [
               Object {
                 "color": "#545454",
+                "flexWrap": "wrap",
                 "fontSize": 13,
                 "lineHeight": 20,
               },
