@@ -216,22 +216,6 @@ React Native Web UI Components was developed with file size in mind and therefor
 import Autocomplete from 'react-native-web-ui-components/Autocomplete';
 ```
 
-Or using [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash). This can be done by updating lodash config in `.babelrc`.
-
-```json
-{
-  "plugins": [
-    ["lodash", { "id": ["lodash", "react-native-web-ui-components"] }]
-  ]
-}
-```
-
-After that, you can do imports like below without actually include the entire library content.
-
-```javascript
-import { Autocomplete } from 'react-native-web-ui-components';
-```
-
 ## Class Names
 
 While mobile components are indiferent to the `className` property, that is very useful for the web. [React Native Web](https://github.com/necolas/react-native-web) components no longer accept class names but for convenience, this library accepts the `className` property for all exported components. Please note that class names are converted into `data-class` attribute.
