@@ -1,4 +1,7 @@
 export default `
+  * {
+    box-sizing: border-box;
+  }
   [data-class~="hidden"] {
     display: none;
   }
