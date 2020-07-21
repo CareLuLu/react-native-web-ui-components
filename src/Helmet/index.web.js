@@ -4,7 +4,7 @@ import pick from 'lodash/pick';
 import omit from 'lodash/omit';
 import isArray from 'lodash/isArray';
 import { Helmet as ReactHelmet } from 'react-helmet';
-import { withRouter } from 'react-router';
+import { useHistory } from '../History';
 
 /* eslint no-script-url: 0 */
 /* eslint no-param-reassign: 0 */
@@ -49,7 +49,13 @@ const parseTags = (children, tags) => {
   });
 };
 
-export const Helmet = withRouter(({ children, history }) => {
+export const Helmet = ({ children }) => {
+  const history = useHistory();
+
+  const key = typeof history.location.pathname === 'function'
+    ? history.location.pathname()
+    : history.location.pathname;
+
   const tags = {
     title: undefined,
     link: [],
@@ -66,10 +72,10 @@ export const Helmet = withRouter(({ children, history }) => {
   return (
     <ReactHelmet
       {...tags}
-      key={history.location.pathname}
+      key={key}
     />
   );
-});
+};
 
 Helmet.propTypes = {
   children: PropTypes.node,

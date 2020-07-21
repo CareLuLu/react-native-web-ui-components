@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import Autocomplete from '../Autocomplete';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 import View from '../View';
 import StylePropType from '../StylePropType';
 import TextInput from '../TextInput';

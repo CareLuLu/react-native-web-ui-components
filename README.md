@@ -6,7 +6,8 @@
 
 React Native Web UI Components is a library of customized [React Native](https://facebook.github.io/react-native/)/[React Native Web](https://github.com/necolas/react-native-web) components for mobile and web UI. This library is used by [React Native Web Jsonschema Form](https://github.com/CareLuLu/react-native-web-jsonschema-form).
 
-See this library in production at https://www.carelulu.com
+- See this library in production at https://www.carelulu.com.
+- See a skeleton project example at https://www.carelulu.com/react-native-web-example.
 
 ## Table of Contents
 
@@ -15,7 +16,8 @@ See this library in production at https://www.carelulu.com
   * [Requirements](#requirements)
   * [Installation](#installation)
   * [Mobile](#mobile)
-  * [Web](#web)
+  * [Web: Client-side Rendering (CSR)](#client-side-rendering)
+  * [Web: Server-side Rendering (SSR)](#server-side-rendering)
 * [Usage](#usage)
 * [Class Names](#class-names)
 * [Components](#components)
@@ -81,17 +83,17 @@ Coming soon!
 
 ## Setup
 
-React Native Web UI Components was created to facilitate the development of `write once, run anywhere` web and mobile apps. In order to accomplish that, this library heavily based on React Native, React Native Web and [Expo](https://expo.io/).
+React Native Web UI Components was created to facilitate the development of `write once, run anywhere` web and mobile apps. In order to accomplish that, this library is heavily based on React Native and React Native Web.
 
 ### Requirements
 
 First you need to install react ^16.8.3 (this library uses react-hooks).
 
 ```sh
-yarn add react react-dom react-router react-router-dom react-router-native expo
+yarn add react react-dom 
 ```
 
-Expo uses a custom version of react-native and therefore you need to check what is the React Native repository for the Expo version you're using. For Expo v33.x.x you'd run:
+If you're using [Expo](https://expo.io/), they use a custom version of react-native and therefore you need to check what is the React Native repository for the Expo version you're using. For Expo v33.x.x you'd run:
 
 ```sh
 yarn add https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz
@@ -105,7 +107,7 @@ yarn add react-native-web
 
 ### Installation
 
-First, install the library.
+Install the library using `yarn` or `npm`.
 
 ```sh
 yarn add react-native-web-ui-components
@@ -113,16 +115,14 @@ yarn add react-native-web-ui-components
 
 ### Mobile
 
-1. You need to import the fonts. First, [download](https://github.com/CareLuLu/react-native-web-ui-components/raw/master/assets/fonts.zip) the font files and add them to `src/assets/fonts` in your project. Then, make sure you import the font at `App.js`.
-2. Wrap your entry screen with `UIProvider`. Note that `UIProvider` must be within `Router`.
+- Example using `react-router`:
 
 ```javascript
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { UIProvider, Router, Switch } from 'react-native-web-ui-components';
-import { createMemoryHistory } from 'history';
-
-const history = createMemoryHistory();
+import { useHistory } from 'react-router';
+import { Router, Switch } from 'react-router-native';
+import { UIProvider } from 'react-native-web-ui-components';
 
 const theme = {
   input: {
@@ -134,78 +134,223 @@ const theme = {
   },
 };
 
-class App extends React.Component {
-  state = {
-    fontLoaded: false,
-  };
-
-  async componentDidMount() {
-    await Font.loadAsync({
-      'Lucida Sans': require('./src/assets/fonts/Lucida-Sans.ttf'),
-      'Lucida Sans Bold': require('./src/assets/fonts/Lucida-Sans-Bold.ttf'),
-    });
-    this.setState({ fontLoaded: true });
-  }
-
-  render() {
-    const { fontLoaded } = this.state;
-    if (fontLoaded) {
-      return (
-        <Router history={history}>
-          <Switch history={history}>
-            <UIProvider theme={theme} amp={false}>
-              <AMPProvider 
-              <EntryScreen {...props} />
-            </UIProvider>
-          </Switch>
-        </Router>
-      );
-    }
-    return null;
-  }
-}
-
-export default App;
-
-```
-
-### Web
-
-This library was built with Google's new standard [Accelerated Mobile Page](https://amp.dev/) in mind. Although most components exported by this library are AMP compatible by default, some components will have different implementations for AMP and non-AMP pages. This usually happens when the usabability would be degraded by complying with AMP requirements. If you're using server-side rendering (SSR), set `amp` to `true` for AMP pages.
-
-1. Wrap your entry screen with `UIProvider`. Note that `UIProvider` must be within `Router`.
-
-```javascript
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { UIProvider, Router, Switch } from 'react-native-web-ui-components';
-import { createMemoryHistory } from 'history';
-
-const history = createMemoryHistory();
-
-const theme = {
-  input: {
-    focused: StyleSheet.create({
-      border: {
-        borderColor: 'yellow',
-      },
-    }),
-  },
+const Theme = (props) => {
+  const history = useHistory();
+  return (
+    <UIProvider theme={theme} history={history}>
+      <EntryScreen {...props} />
+    </UIProvider>
+  );
 };
 
-const App = props => (
-  <Router history={history}>
-    <Switch history={history}>
-      <UIProvider theme={theme} amp={false}>
-        <AMPProvider 
-        <EntryScreen {...props} />
-      </UIProvider>
+const App = props = (
+  <Router>
+    <Switch>
+      <Theme {...props} />
     </Switch>
   </Router>
 );
 
 export default App;
+```
 
+- Example using `react-navigation`:
+```javascript
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { UIProvider } from 'react-native-web-ui-components';
+
+const theme = {
+  input: {
+    focused: StyleSheet.create({
+      border: {
+        borderColor: 'yellow',
+      },
+    }),
+  },
+};
+
+const Stack = createStackNavigator();
+
+const Theme = (props) => {
+  const navigation = useNavigation();
+
+  const history = {
+    location: {
+      pathname: () => navigation.state.routeName,
+    },
+    push: routeName => navigation.navigate(routeName),
+    replace: routeName => navigation.dispatch(
+      StackActions.replace(routeName),
+    ),
+  };
+
+  return (
+    <UIProvider theme={theme} history={history}>
+      <EntryScreen {...props} />
+    </UIProvider>
+  );
+};
+
+const App = props = (
+  <NavigationContainer>
+    <Stack.Navigator>
+      <Theme {...props} />
+    </Stack.Navigator>
+  </NavigationContainer>
+);
+
+export default App;
+```
+
+### Client Side Rendering
+```javascript
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { useHistory } from 'react-router';
+import { Router, Switch } from 'react-router-dom';
+import { UIProvider } from 'react-native-web-ui-components';
+
+const theme = {
+  input: {
+    focused: StyleSheet.create({
+      border: {
+        borderColor: 'yellow',
+      },
+    }),
+  },
+};
+
+const Theme = (props) => {
+  const history = useHistory();
+  return (
+    <UIProvider theme={theme} history={history}>
+      <EntryScreen {...props} />
+    </UIProvider>
+  );
+};
+
+const App = props = (
+  <Router>
+    <Switch>
+      <Theme {...props} />
+    </Switch>
+  </Router>
+);
+
+export default App;
+```
+
+### Server Side Rendering
+
+This library was built with Google's new standard [Accelerated Mobile Page](https://amp.dev/) in mind. Although most components exported are AMP compatible by default, some components will have different implementations for AMP and non-AMP pages. This usually happens when the usabability would be degraded by complying with AMP requirements. If you're using server-side rendering (SSR), set `amp` to `true` for AMP pages.
+
+```javascript
+// App.js
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { useHistory } from 'react-router';
+import { StaticRouter, Switch } from 'react-router-dom';
+import { UIProvider } from 'react-native-web-ui-components';
+
+const theme = {
+  input: {
+    focused: StyleSheet.create({
+      border: {
+        borderColor: 'yellow',
+      },
+    }),
+  },
+};
+
+const Theme = (props) => {
+  const history = useHistory();
+
+  const { amp } = props;
+  return (
+    <UIProvider theme={theme} history={history} amp={amp}>
+      <EntryScreen {...props} />
+    </UIProvider>
+  );
+};
+
+const App = (props) = {
+  const { pathname, context } = props;
+  return (
+    <StaticRouter location={pathname} context={context}>
+      <Switch>
+        <Theme {...props} />
+      </Switch>
+    </StaticRouter>
+  );
+};
+
+export default App;
+
+// index.js
+import Koa from 'koa';
+import ReactDOMServer from 'react-dom/server';
+import { AppRegistry } from 'react-native';
+import { Helmet } from 'react-helmet';
+import App from './App';
+
+const app = new Koa();
+
+AppRegistry.registerComponent('App', () => App);
+
+const renderer = async (ctx) => {
+  const context = {};
+  const pathname = ctx.request.path;
+  const amp = /^\/amp/.test(pathname);
+
+  const initialProps = { pathname, context, amp };
+
+  const { element, getStyleElement } = AppRegistry.getApplication(
+    'App',
+    { initialProps },
+  );
+
+  let body;
+  try {
+    body = await ReactDOMServer.renderToString(App);
+  } catch (err) {
+    ctx.status = 500;
+    return ctx.redirect('/500');
+  }
+
+  if (context.url) {
+    if (/^\/404/.test(context.url)) {
+      ctx.status = 404;
+    }
+    return ctx.redirect(context.url);
+  }
+
+  const helmet = Helmet.renderStatic();
+  const markup = ReactDOMServer.renderToStaticMarkup(getStyleElement());
+
+  ctx.body = `
+    <!DOCTYPE html>
+    <html ${helmet.htmlAttributes.toString()}>
+      <head>
+          ${helmet.title.toString()}
+          ${helmet.meta.toString()}
+          ${helmet.link.toString()}
+          ${markup}
+          ${helmet.style.toString()}
+      </head>
+      <body ${helmet.bodyAttributes.toString()}>
+        <div id="root">
+          ${body}
+        </div>
+      </body>
+    </html>
+  `;
+};
+
+app.use(renderer);
+app.listen(3000);
 ```
 
 ## Usage
@@ -485,7 +630,7 @@ Displays a sidebar. This library uses [React Sidebar](https://github.com/balloob
 
 ### Slider
 
-Displays a slider. This library uses [React Native Multi Slider](https://github.com/ptomasroos/react-native-multi-slider) to render sidebars for web and mobile.
+Displays a slider. This library uses [React Native Slider](https://github.com/react-native-community/react-native-slider) to render sliders for web and mobile.
 
 ![Slider Component Example](https://divin2sy6ce0b.cloudfront.net/docs/slider.gif)
 

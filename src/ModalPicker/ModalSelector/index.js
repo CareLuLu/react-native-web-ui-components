@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Modal, Text } from 'react-native';
+import {
+  View,
+  Modal,
+  Text,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import styles from './style';
 import Icon from '../../Icon';
 import ScrollView from '../../ScrollView';
 import TouchableOpacity from '../../TouchableOpacity';
-import TouchableWithoutFeedback from '../../TouchableWithoutFeedback';
 import StylePropType from '../../StylePropType';
 
 /* Code copied from react-native-modal-selector and adapted for our needs */

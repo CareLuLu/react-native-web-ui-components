@@ -1,6 +1,6 @@
 {
   "name": "react-native-web-ui-components",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.4",
-    "@ptomasroos/react-native-multi-slider": "https://github.com/CareLuLu-Gabriel/react-native-multi-slider",
+    "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-community/datetimepicker": "^2.4.0",
     "@tippy.js/react": "^3.0.0",
     "expo-blur": "^8.0.0",
@@ -86,10 +86,7 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-native": "*",
-    "react-native-web": "*",
-    "react-router": "*",
-    "react-router-dom": "*",
-    "react-router-native": "*"
+    "react-native-web": "*"
   },
   "browserslist": [
     ">0.2%",

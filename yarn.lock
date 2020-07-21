@@ -3220,9 +3220,10 @@
     string-width "^2.0.0"
     strip-ansi "^3"
 
-"@ptomasroos/react-native-multi-slider@https://github.com/CareLuLu-Gabriel/react-native-multi-slider":
+"@ptomasroos/react-native-multi-slider@^2.2.2":
   version "2.2.2"
-  resolved "https://github.com/CareLuLu-Gabriel/react-native-multi-slider#e84f8d708fa63fb553f838681282e4f83ac073e7"
+  resolved "https://registry.yarnpkg.com/@ptomasroos/react-native-multi-slider/-/react-native-multi-slider-2.2.2.tgz#35a97fb8c355627c6a2ded010b360ac5728b44ad"
+  integrity sha512-HWyCnRD3Z3SbHK2FLWYmBBqd1B4iXipeKv1+AK0FoY/CElEDTEixHE8hN60TsqxalPrznn798LE2Q4tHuCiyaA==
 
 "@reach/router@^1.2.1":
   version "1.2.1"

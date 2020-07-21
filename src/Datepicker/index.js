@@ -6,6 +6,7 @@ import {
   Alert,
   Image,
   Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import noop from 'lodash/noop';
@@ -17,7 +18,6 @@ import Row from '../Row';
 import Column from '../Column';
 import TextInput from '../TextInput';
 import TouchableOpacity from '../TouchableOpacity';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 const styles = StyleSheet.create({
   defaults: {

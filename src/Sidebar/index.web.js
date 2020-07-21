@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import { withRouter } from 'react-router';
 import NativeSidebar from './NativeSidebar';
 import { withTheme } from '../Theme';
 import { useScreen } from '../Screen';
+import { useHistory } from '../History';
 import { useDerivedState, isSSR } from '../utils';
 import Row from '../Row';
 
 const Sidebar = ({
-  location,
   leftOpen,
   rightOpen,
   leftOnChange,
@@ -20,6 +19,8 @@ const Sidebar = ({
   disabled,
   children,
 }) => {
+  const { location } = useHistory();
+
   const screen = useScreen();
 
   useDerivedState(location.pathname, () => {
@@ -102,7 +103,6 @@ const Sidebar = ({
 };
 
 Sidebar.propTypes = {
-  location: PropTypes.shape().isRequired,
   leftOpen: PropTypes.bool,
   leftOnChange: PropTypes.func,
   leftComponent: PropTypes.oneOfType([
@@ -132,4 +132,4 @@ Sidebar.defaultProps = {
   disabled: false,
 };
 
-export default withTheme('Sidebar')(withRouter(Sidebar));
+export default withTheme('Sidebar')(Sidebar);

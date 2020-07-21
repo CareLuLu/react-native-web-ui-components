@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
 import Icon from '../Icon';
 import Text from '../Text';
 import View from '../View';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 const styles = StyleSheet.create({
   empty: {},
@@ -96,12 +95,11 @@ const BaseCheckbox = ({
         </style>
       </Helmet>
       <TouchableWithoutFeedback
-        className={className}
         onPress={press}
         onFocus={onFocus}
         onBlur={onBlur}
       >
-        <View style={viewStyle}>
+        <View className={className} style={viewStyle}>
           <View style={styles.iconContainer}>
             <Icon name={iconName} style={iconStyle} />
           </View>

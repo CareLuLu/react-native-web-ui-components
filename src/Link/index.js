@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
 import noop from 'lodash/noop';
 import { StyleSheet, Linking } from 'react-native';
 import { withTheme } from '../Theme';
 import StylePropType from '../StylePropType';
 import Text from '../Text/NativeText';
 import TouchableOpacity from '../TouchableOpacity';
+import { useHistory } from '../History';
 
 const MAIL_REGEX = /^mailto:/i;
 const PHONE_REGEX = /^tel:/i;
@@ -21,7 +21,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const go = (basepath, to, history, external, replace) => () => {
+const go = ({
+  to,
+  basepath,
+  history,
+  external,
+  replace,
+}) => () => {
   let href = to;
   if (external && !PROTOCOL_REGEX.test(to)) {
     href = `${basepath}${to}`;
@@ -41,9 +47,10 @@ const Link = ({
   onPress,
   basepath,
   external,
-  history,
   replace,
 }) => {
+  const history = useHistory();
+
   const [opacity, setOpacity] = useState(1);
 
   const setOpacity50 = () => setOpacity(0.5);
@@ -55,7 +62,13 @@ const Link = ({
     if (opacity === 0.25) {
       setTimeout(() => {
         setOpacity(1);
-        setTimeout(onPress || go(basepath, to, history, external, replace));
+        setTimeout(onPress || go({
+          to,
+          basepath,
+          history,
+          external,
+          replace,
+        }));
       }, 100);
     }
   }, [opacity]); // eslint-disable-line
@@ -87,10 +100,6 @@ const Link = ({
 };
 
 Link.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-    replace: PropTypes.func.isRequired,
-  }).isRequired,
   external: PropTypes.bool,
   auto: PropTypes.bool,
   type: PropTypes.string,
@@ -114,4 +123,4 @@ Link.defaultProps = {
   basepath: 'localhost',
 };
 
-export default withTheme('Link')(withRouter(Link));
+export default withTheme('Link')(Link);

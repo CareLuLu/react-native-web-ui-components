@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import StylePropType from '../StylePropType';
 import { useAmp } from '../Amp';
 import { withTheme } from '../Theme';
+import { useHistory } from '../History';
 
 const PROTOCOL_REGEX = /^[a-zA-Z\-_]+:\/\//;
 
@@ -22,7 +22,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const go = (basepath, to, history, external, replace) => (e) => {
+const go = ({
+  to,
+  history,
+  external,
+  replace,
+}) => (e) => {
   let href = to;
   if (!external) {
     e.nativeEvent.preventDefault();
@@ -43,13 +48,13 @@ const Link = ({
   style,
   children,
   onPress,
-  location,
-  history,
   replace,
   wrapper,
-  basepath,
   fontFamily,
 }) => {
+  const history = useHistory();
+  const { location } = history;
+
   const amp = useAmp();
 
   if (onPress === null && to === null) {
@@ -89,12 +94,21 @@ const Link = ({
     delete font.fontFamily;
   }
 
+  const wrappedOnPress = amp || blank
+    ? undefined
+    : (onPress || go({
+      to,
+      history,
+      external,
+      replace,
+    }));
+
   return (
     <Wrapper
       {...classNameProp}
       target={blank ? '_blank' : undefined}
       href={href}
-      onPress={amp || blank ? undefined : (onPress || go(basepath, to, history, external, replace))}
+      onPress={wrappedOnPress}
       style={[currentStyle, font]}
       accessibilityRole="link"
     >
@@ -106,15 +120,6 @@ const Link = ({
 Link.propTypes = {
   theme: PropTypes.shape().isRequired,
   fontFamily: PropTypes.shape().isRequired,
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-    search: PropTypes.string.isRequired,
-    hash: PropTypes.string.isRequired,
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-    replace: PropTypes.func.isRequired,
-  }).isRequired,
   external: PropTypes.bool,
   auto: PropTypes.bool,
   type: PropTypes.string,
@@ -126,7 +131,6 @@ Link.propTypes = {
   onPress: PropTypes.func,
   replace: PropTypes.bool,
   wrapper: PropTypes.any, // eslint-disable-line
-  basepath: PropTypes.string,
 };
 
 Link.defaultProps = {
@@ -141,7 +145,6 @@ Link.defaultProps = {
   onPress: null,
   replace: false,
   wrapper: Text,
-  basepath: 'localhost',
 };
 
-export default withTheme('Link')(withRouter(Link));
+export default withTheme('Link')(Link);

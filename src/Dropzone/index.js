@@ -4,6 +4,7 @@ import {
   Modal,
   StyleSheet,
   Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
@@ -15,7 +16,6 @@ import { withTheme } from '../Theme';
 import View from '../View';
 import Text from '../Text';
 import TouchableOpacity from '../TouchableOpacity';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 
 const styles = StyleSheet.create({
   container: {
