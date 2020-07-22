@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View as RNView, StyleSheet } from 'react-native';
+import { View as RNView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import noop from 'lodash/noop';
 import * as Animatable from 'react-native-animatable';
 import Screen, { withKeyboard } from '../Screen';
 import { withTheme } from '../Theme';
 import View from '../View';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 import StylePropType from '../StylePropType';
 
 /* eslint react/no-unused-state: 0 */

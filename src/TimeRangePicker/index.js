@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, TouchableWithoutFeedback } from 'react-native';
 import times from 'lodash/times';
 import without from 'lodash/without';
 import uniq from 'lodash/uniq';
@@ -11,7 +11,6 @@ import Row from '../Row';
 import View from '../View';
 import Text from '../Text';
 import TouchableOpacity from '../TouchableOpacity';
-import TouchableWithoutFeedback from '../TouchableWithoutFeedback';
 import StylePropType from '../StylePropType';
 import { Helmet, style } from '../Helmet';
 

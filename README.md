@@ -90,7 +90,7 @@ React Native Web UI Components was created to facilitate the development of `wri
 First you need to install react ^16.8.3 (this library uses react-hooks).
 
 ```sh
-yarn add react react-dom 
+yarn add react
 ```
 
 If you're using [Expo](https://expo.io/), they use a custom version of react-native and therefore you need to check what is the React Native repository for the Expo version you're using. For Expo v33.x.x you'd run:
@@ -102,7 +102,7 @@ yarn add https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz
 If your project is also being used for web, please install React Native Web. Make sure your babel/webpack build replace all `react-native` imports with `react-native-web` ([details here](https://github.com/necolas/react-native-web/blob/master/docs/guides/getting-started.md)). If you used [React Create App](https://github.com/facebook/create-react-app), aliasing is already taken care off for you.
 
 ```sh
-yarn add react-native-web 
+yarn add react-dom react-native-web 
 ```
 
 ### Installation
