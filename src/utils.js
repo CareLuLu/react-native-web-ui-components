@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import each from 'lodash/each';
 
 const maskOptions = {
@@ -190,4 +190,33 @@ export const useDerivedState = (prop) => {
     });
   }
   return [value, setValue];
+};
+
+export const useSafeSetState = (initialValue) => {
+  const queue = useRef([]);
+  const mounted = useRef(false);
+
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    mounted.current = true;
+    while (queue.current.length) {
+      setValue(queue.current.shift());
+    }
+
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  const setValueIfMounted = (nextValue) => {
+    if (!mounted.current) {
+      queue.current.push(nextValue);
+      return false;
+    }
+    setValue(nextValue);
+    return true;
+  };
+
+  return [value, setValueIfMounted];
 };

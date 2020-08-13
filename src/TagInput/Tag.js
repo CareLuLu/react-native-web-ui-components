@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     lineHeight: 34,
     paddingLeft: 5,
     paddingRight: 5,
+    zIndex: 11,
   },
   first: {
     marginLeft: -9,

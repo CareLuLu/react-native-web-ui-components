@@ -1,17 +1,33 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import noop from 'lodash/noop';
 import omit from 'lodash/omit';
-import reduce from 'lodash/reduce';
-import isEqual from 'fast-deep-equal';
 import { withTheme } from '../Theme';
+import EventHandler from '../EventHandler';
 import StylePropType from '../StylePropType';
-import View from '../View';
 import DefaultTag from './Tag';
 import DefaultInput from './Input';
 
-const defaultTags = [];
+const styles = StyleSheet.create({
+  container: {
+    paddingLeft: 12,
+    paddingRight: 0,
+    minHeight: 40,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  overlay: {
+    position: 'absolute',
+    zIndex: 10,
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+});
 
 const forbiddenProps = [
   'style',
@@ -24,150 +40,196 @@ const forbiddenProps = [
   'onChange',
 ];
 
-const styles = StyleSheet.create({
-  container: {
-    paddingLeft: 12,
-    paddingRight: 0,
-    minHeight: 40,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-  },
-});
-
-const useEvents = ({
-  text,
-  value,
-  onChange,
-  allowNew,
-  buildNew,
-}) => {
-  const [currentText, setCurrentText] = useState(`${text}`);
-
-  const input = useRef();
-
-  const onRef = (ref) => { input.current = ref; };
-  const focus = () => (input.current && input.current.focus());
-  const isFocused = () => (input.current && input.current.isFocused());
-  const onChangeText = nextText => setCurrentText(nextText);
-
-  const tags = value || defaultTags;
-
-  const onSelect = (__, tag) => {
-    const duplicate = reduce(tags, (r, t) => (r || isEqual(t, tag)), false);
-    if (!duplicate) {
-      onChange(tags.concat(tag));
-    }
-    setCurrentText('');
+class TagInput extends EventHandler {
+  static propTypes = {
+    themeInputStyle: PropTypes.shape().isRequired,
+    allowNew: PropTypes.bool,
+    buildNew: PropTypes.func,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+    getItemValue: PropTypes.func,
+    style: StylePropType,
+    tagStyle: StylePropType,
+    inputStyle: StylePropType,
+    Tag: PropTypes.elementType,
+    Input: PropTypes.elementType,
+    autoFocus: PropTypes.bool,
+    text: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    value: PropTypes.any, // eslint-disable-line
   };
 
-  const onSubmitEditing = () => {
-    if (currentText && allowNew) {
-      onChange(tags.concat(buildNew(currentText)));
-      setCurrentText('');
-    }
+  static defaultProps = {
+    allowNew: true,
+    buildNew: text => text,
+    onChange: noop,
+    onFocus: noop,
+    onBlur: noop,
+    getItemValue: item => item,
+    style: null,
+    tagStyle: null,
+    inputStyle: null,
+    Tag: DefaultTag,
+    Input: DefaultInput,
+    autoFocus: false,
+    text: '',
+    value: undefined,
   };
 
-  const onDelete = index => onChange(tags.filter((tag, i) => (i !== index)));
+  constructor(props) {
+    super(props);
 
-  return {
-    tags,
-    focus,
-    isFocused,
-    onRef,
-    onChangeText,
-    onSelect,
-    onSubmitEditing,
-    onDelete,
-    text: currentText,
-  };
-};
+    const {
+      text,
+      value,
+      autoFocus,
+    } = props;
 
-const TagInput = (props) => {
-  const {
-    tags,
-    text,
-    focus,
-    isFocused,
-    onDelete,
-    ...handlers
-  } = useEvents(props);
+    this.tags = value || [];
 
-  const {
-    Tag,
-    tagStyle,
-    Input,
-    inputStyle,
-    style,
-    autoFocus,
-    getItemValue,
-    themeInputStyle,
-  } = props;
-
-  if (autoFocus && !isFocused()) {
-    setTimeout(focus);
+    this.state = {
+      text: `${text}`,
+      focused: autoFocus,
+    };
   }
 
-  return (
-    <View
-      style={[
-        styles.container,
-        themeInputStyle.border,
-        themeInputStyle.background,
-        themeInputStyle.opacity,
-        style,
-      ]}
-    >
-      {tags.map((tag, index) => (
-        <Tag
-          {...props}
-          onDelete={onDelete}
-          key={getItemValue(tag)}
-          tag={tag}
-          index={index}
-          style={tagStyle}
-        />
-      ))}
-      <Input
-        {...omit(props, forbiddenProps)}
-        {...handlers}
-        value={text}
-        style={inputStyle}
-      />
-    </View>
-  );
-};
+  onInputRef = (ref) => {
+    this.input = ref;
+  };
 
-TagInput.propTypes = {
-  themeInputStyle: PropTypes.shape().isRequired,
-  allowNew: PropTypes.bool,
-  buildNew: PropTypes.func,
-  onChange: PropTypes.func,
-  getItemValue: PropTypes.func,
-  style: StylePropType,
-  tagStyle: StylePropType,
-  inputStyle: StylePropType,
-  Tag: PropTypes.elementType,
-  Input: PropTypes.elementType,
-  autoFocus: PropTypes.bool,
-  text: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  value: PropTypes.any, // eslint-disable-line
-};
+  onInputChangeText = text => this.onMount(() => this.setState({ text }));
 
-TagInput.defaultProps = {
-  allowNew: true,
-  buildNew: text => text,
-  onChange: noop,
-  getItemValue: item => item,
-  style: null,
-  tagStyle: null,
-  inputStyle: null,
-  Tag: DefaultTag,
-  Input: DefaultInput,
-  autoFocus: false,
-  text: '',
-  value: undefined,
-};
+  onInputFocus = () => this.focus();
+
+  onInputBlur = () => {
+    const self = this;
+    setTimeout(() => {
+      if (!self.selectTimestamp || Date.now() - self.selectTimestamp > 800) {
+        this.blur();
+      }
+    }, 100);
+  };
+
+  onInputSelect = (__, item) => {
+    this.selectTimestamp = Date.now();
+    const { onChange } = this.props;
+
+    const { isSameItem, tags } = this;
+    const duplicate = tags.reduce((r, tag) => (r || isSameItem(item, tag)), false);
+
+    if (!duplicate) {
+      onChange(tags.concat(item));
+    }
+
+    this.onMount(() => this.setState({ text: '' }));
+  };
+
+  onInputSubmit = () => {
+    const { text } = this.state;
+    const { allowNew, buildNew, onChange } = this.props;
+
+    if (text && allowNew) {
+      onChange(this.tags.concat(buildNew(text)));
+      this.onMount(() => this.setState({ text: '' }));
+    }
+  };
+
+  onTagDelete = (index) => {
+    const { onChange } = this.props;
+    onChange(this.tags.filter((tag, i) => (i !== index)));
+  };
+
+  focus = () => {
+    const { focused } = this.state;
+
+    if (!focused) {
+      const { onFocus } = this.props;
+      onFocus();
+
+      this.onMount(() => this.setState({
+        focused: true,
+      }));
+    }
+  };
+
+  blur = () => {
+    const { onBlur } = this.props;
+    onBlur();
+
+    this.onMount(() => this.setState({
+      focused: false,
+    }));
+  };
+
+  itemFilter = (item) => {
+    const { isSameItem, tags } = this;
+    return tags.reduce((r, tag) => (r && !isSameItem(item, tag)), true);
+  };
+
+  isSameItem = (item1, item2) => {
+    const { getItemValue } = this.props;
+    return getItemValue(item1) === getItemValue(item2);
+  };
+
+  render() {
+    const {
+      value,
+      Tag,
+      tagStyle,
+      Input,
+      inputStyle,
+      style,
+      getItemValue,
+      themeInputStyle,
+    } = this.props;
+
+    this.tags = value || [];
+
+    const { text, focused } = this.state;
+
+    return (
+      <View
+        style={[
+          styles.container,
+          themeInputStyle.border,
+          themeInputStyle.background,
+          themeInputStyle.opacity,
+          style,
+        ]}
+      >
+        {this.tags.map((tag, index) => (
+          <Tag
+            {...this.props}
+            onDelete={this.onTagDelete}
+            key={getItemValue(tag)}
+            tag={tag}
+            index={index}
+            style={tagStyle}
+          />
+        ))}
+        {focused ? (
+          <Input
+            {...omit(this.props, forbiddenProps)}
+            autoFocus
+            closeMenuOnSelect={false}
+            value={text}
+            style={inputStyle}
+            itemFilter={this.itemFilter}
+            onFocus={this.onInputFocus}
+            onBlur={this.onInputBlur}
+            onRef={this.onInputRef}
+            onChangeText={this.onInputChangeText}
+            onSelect={this.onInputSelect}
+            onSubmitEditing={this.onInputSubmit}
+          />
+        ) : (
+          <TouchableWithoutFeedback onPress={this.focus}>
+            <View style={styles.overlay} />
+          </TouchableWithoutFeedback>
+        )}
+      </View>
+    );
+  }
+}
 
 export default withTheme('TagInput')(TagInput);

@@ -8,10 +8,10 @@ const styles = StyleSheet.create({
   input: {
     borderColor: 'transparent',
     paddingLeft: 0,
-    flex: 1,
+    minWidth: '100%',
   },
   container: {
-    flex: 1,
+    minWidth: '100%',
   },
   menu: {
     width: '100%',
@@ -28,8 +28,8 @@ const Input = ({
     {...props}
     allowEmpty={false}
     style={[styles.input, style]}
-    menuStyle={[styles.menu, menuStyle]}
     containerStyle={[styles.container, containerStyle]}
+    menuStyle={[styles.menu, menuStyle]}
   />
 );
 
