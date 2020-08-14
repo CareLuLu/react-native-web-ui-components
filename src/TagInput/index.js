@@ -11,13 +11,24 @@ import DefaultInput from './Input';
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 12,
     paddingRight: 0,
     minHeight: 40,
     flexWrap: 'wrap',
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+  },
+  tagContainer: {
+    zIndex: 11,
+    paddingLeft: 12,
+    width: '100%',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  input: {
+    paddingLeft: 12,
   },
   overlay: {
     position: 'absolute',
@@ -48,9 +59,11 @@ class TagInput extends EventHandler {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
+    readonly: PropTypes.bool,
     getItemValue: PropTypes.func,
     style: StylePropType,
     tagStyle: StylePropType,
+    tagContainerStyle: StylePropType,
     inputStyle: StylePropType,
     Tag: PropTypes.elementType,
     Input: PropTypes.elementType,
@@ -65,9 +78,11 @@ class TagInput extends EventHandler {
     onChange: noop,
     onFocus: noop,
     onBlur: noop,
+    readonly: false,
     getItemValue: item => item,
     style: null,
     tagStyle: null,
+    tagContainerStyle: null,
     inputStyle: null,
     Tag: DefaultTag,
     Input: DefaultInput,
@@ -176,11 +191,13 @@ class TagInput extends EventHandler {
       value,
       Tag,
       tagStyle,
+      tagContainerStyle,
       Input,
       inputStyle,
       style,
       getItemValue,
       themeInputStyle,
+      readonly,
     } = this.props;
 
     this.tags = value || [];
@@ -197,23 +214,37 @@ class TagInput extends EventHandler {
           style,
         ]}
       >
-        {this.tags.map((tag, index) => (
-          <Tag
-            {...this.props}
-            onDelete={this.onTagDelete}
-            key={getItemValue(tag)}
-            tag={tag}
-            index={index}
-            style={tagStyle}
-          />
-        ))}
+        {this.tags.length ? (
+          <View style={[styles.tagContainer, tagContainerStyle]}>
+            {this.tags.map((tag, index) => (
+              <Tag
+                {...this.props}
+                onDelete={readonly ? noop : this.onTagDelete}
+                key={getItemValue(tag)}
+                tag={tag}
+                index={index}
+                style={tagStyle}
+              />
+            ))}
+            {!focused ? (
+              <TouchableWithoutFeedback onPress={readonly ? noop : this.focus}>
+                <View style={styles.overlay} />
+              </TouchableWithoutFeedback>
+            ) : null}
+          </View>
+        ) : null}
+        {!this.tags.length && !focused ? (
+          <TouchableWithoutFeedback onPress={readonly ? noop : this.focus}>
+            <View style={styles.overlay} />
+          </TouchableWithoutFeedback>
+        ) : null}
         {focused ? (
           <Input
             {...omit(this.props, forbiddenProps)}
             autoFocus
             closeMenuOnSelect={false}
             value={text}
-            style={inputStyle}
+            style={[styles.input, inputStyle]}
             itemFilter={this.itemFilter}
             onFocus={this.onInputFocus}
             onBlur={this.onInputBlur}
@@ -222,11 +253,7 @@ class TagInput extends EventHandler {
             onSelect={this.onInputSelect}
             onSubmitEditing={this.onInputSubmit}
           />
-        ) : (
-          <TouchableWithoutFeedback onPress={this.focus}>
-            <View style={styles.overlay} />
-          </TouchableWithoutFeedback>
-        )}
+        ) : null}
       </View>
     );
   }

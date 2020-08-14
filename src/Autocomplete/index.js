@@ -4,43 +4,15 @@ import { Platform, StyleSheet } from 'react-native';
 import { throttle, debounce } from 'throttle-debounce';
 import noop from 'lodash/noop';
 import omit from 'lodash/omit';
-import filter from 'lodash/filter';
-import isFunction from 'lodash/isFunction';
 import isEqual from 'lodash/isEqual';
+import isFunction from 'lodash/isFunction';
 import { isEmpty, isSSR } from '../utils';
 import { withTheme } from '../Theme';
-import Screen, { withKeyboard } from '../Screen';
-import View from '../View';
+import EventHandler from '../EventHandler';
 import StylePropType from '../StylePropType';
 import DefaultInput from '../TextInput';
 import DefaultMenu from './Menu';
-
-/* eslint react/destructuring-assignment: 0 */
-
-const defaultGetItemValue = item => item;
-
-const defaultIsMatch = (text, item, { getItemValue }) => {
-  if (text === '' || `${getItemValue(item)}`.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
-    return true;
-  }
-  return false;
-};
-
-const blankOr = (str) => {
-  if (str === null || str === undefined) {
-    return '';
-  }
-  return `${str}`;
-};
-
-const isField = (element, classNameRegex) => {
-  for (let node = element; node && node !== document; node = node.parentNode) {
-    if (classNameRegex.test(node.getAttribute('data-class') || '')) {
-      return true;
-    }
-  }
-  return false;
-};
+import View from '../View';
 
 const propNames = [
   'allowEmpty',
@@ -51,7 +23,6 @@ const propNames = [
   'onKeyPress',
   'onFocus',
   'onSelect',
-  'onSubmitEditing',
   'isMatch',
   'Input',
   'inputProps',
@@ -75,15 +46,29 @@ const propNames = [
   'debounceDelay',
   'throttleDebounceThreshold',
   'highlightedIndex',
-  'onMenuClose',
   'className',
   'highlightMatches',
   'valueLabel',
 ];
 
-class Autocomplete extends React.Component {
+const defaultGetItemValue = item => item;
+
+const defaultIsMatch = (text, item, { getItemValue }) => {
+  if (text === '' || `${getItemValue(item)}`.toLowerCase().indexOf(text.toLowerCase()) >= 0) {
+    return true;
+  }
+  return false;
+};
+
+const blankOr = (str) => {
+  if (str === null || str === undefined) {
+    return '';
+  }
+  return `${str}`;
+};
+
+class Autocomplete extends EventHandler {
   static propTypes = {
-    keyboard: PropTypes.number.isRequired,
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
     getItemValue: PropTypes.func,
     getItemLabel: PropTypes.func,
@@ -93,7 +78,6 @@ class Autocomplete extends React.Component {
     onBlur: PropTypes.func,
     onSelect: PropTypes.func,
     onRef: PropTypes.func,
-    onSubmitEditing: PropTypes.func,
     isMatch: PropTypes.func,
     Input: PropTypes.elementType,
     inputProps: PropTypes.shape(),
@@ -116,7 +100,6 @@ class Autocomplete extends React.Component {
     style: StylePropType,
     allowEmpty: PropTypes.bool,
     highlightedIndex: PropTypes.number,
-    onMenuClose: PropTypes.func,
     className: PropTypes.string,
     highlightMatches: PropTypes.bool,
   };
@@ -131,14 +114,13 @@ class Autocomplete extends React.Component {
     onBlur: noop,
     onSelect: noop,
     onRef: noop,
-    onSubmitEditing: noop,
     isMatch: defaultIsMatch,
     Input: DefaultInput,
     inputProps: {},
     Menu: DefaultMenu,
     menuStyle: null,
     menuOpen: null,
-    menuVisibleWhenFocused: true,
+    menuVisibleWhenFocused: null,
     closeMenuOnSelect: true,
     containerStyle: null,
     name: undefined,
@@ -154,7 +136,6 @@ class Autocomplete extends React.Component {
     style: {},
     allowEmpty: true,
     highlightedIndex: 0,
-    onMenuClose: noop,
     className: '',
     highlightMatches: true,
   };
@@ -171,190 +152,45 @@ class Autocomplete extends React.Component {
 
   constructor(props) {
     super(props);
+
     const {
-      items,
-      value,
       name,
+      value,
+      items,
+      menuOpen,
       throttleDelay,
       debounceDelay,
       highlightedIndex,
-      menuOpen,
     } = props;
+
+    this.randomId = Math.random().toString(36).substr(2, 9);
+    this.id = `Autocomplete__${name || this.randomId}`;
+
     this.state = {
       menuOpen,
       highlightedIndex,
-      items: isFunction(items) ? [] : items,
       open: false,
       dirty: false,
-      loading: isFunction(items),
-      keyboardOffset: null,
       menuStyle: null,
+      loading: isFunction(items),
+      items: isFunction(items) ? [] : items,
     };
-    this.mountSteps = [];
+
+    // Setup throttle/debounce.
     this.updateItemsThrottled = this.updateItems;
     this.updateItemsDebounced = this.updateItems;
     if (isFunction(items)) {
       this.updateItemsThrottled = throttle(throttleDelay, this.updateItems);
       this.updateItemsDebounced = debounce(debounceDelay, this.updateItems);
     }
-    this.id = `Autocomplete__${name || Math.random().toString(36).substr(2, 9)}`;
-    this.fieldRegex = new RegExp(`\\b${this.id}\\b`);
 
+    // Filter items that should be displayed using itemFilter.
     const [filteredItems] = this.filterItems(this.state.items);
     this.filteredItems = filteredItems;
 
+    // Calculate items if necessary.
     setTimeout(() => this.updateItems(value));
   }
-
-  componentDidMount() {
-    if (Platform.OS === 'web' && !isSSR()) {
-      window.addEventListener('click', this.clickListener);
-    }
-    this.mounted = true;
-    this.onMount();
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    if (Platform.OS === 'web' && !isSSR()) {
-      window.removeEventListener('click', this.clickListener);
-    }
-  }
-
-  onMount(handler) {
-    if (handler) {
-      this.mountSteps.push(handler);
-    }
-    if (this.mounted) {
-      const fn = this.mountSteps.shift();
-      if (fn) {
-        fn.call(this);
-      }
-    }
-  }
-
-  onChangeText = (text) => {
-    const { allowEmpty, onChangeText, throttleDebounceThreshold } = this.props;
-    onChangeText(text);
-    this.onMount(() => this.setState({
-      open: true,
-      loading: true,
-    }));
-    if (allowEmpty && !text.length) {
-      this.onSelectEmpty();
-    } else if (text.length > throttleDebounceThreshold) {
-      this.updateItemsDebounced(text);
-    } else {
-      this.updateItemsThrottled(text);
-    }
-  };
-
-  onKeyPress = (event) => {
-    const { onKeyPress } = this.props;
-    onKeyPress(event);
-    if (!event.isDefaultPrevented() && Platform.OS === 'web') {
-      const { key } = event.nativeEvent;
-      if (key === 'Escape') {
-        event.preventDefault();
-        this.onMount(() => this.setState({ open: false }));
-      } else if (key === 'ArrowUp' || key === 'ArrowDown') {
-        const { highlightedIndex } = this.state;
-        const increment = key === 'ArrowUp' ? -1 : 1;
-        let nextHighlightedIndex = (highlightedIndex + increment) % this.filteredItems.length;
-        if (nextHighlightedIndex < 0) {
-          nextHighlightedIndex = this.filteredItems.length + nextHighlightedIndex;
-        }
-        event.preventDefault();
-        this.onMount(() => this.setState({ highlightedIndex: nextHighlightedIndex }));
-      }
-    }
-  };
-
-  onKeyboardOpen = () => {
-    const self = this;
-    self.onMount(() => self.setState({ keyboardOffset: 0 }));
-    if (self.input) {
-      self.input.measureInWindow((x, y) => {
-        const { keyboard } = self.props;
-        const keyboardOffset = Screen.getHeight() - keyboard - y;
-        if (keyboard > 0 && keyboardOffset < 0) {
-          self.onMount(() => self.setState({ keyboardOffset }));
-        }
-      });
-    }
-  };
-
-  onKeyboardClose = () => this.onMount(() => this.setState({ keyboardOffset: null }));
-
-  onFocus = () => {
-    const { onFocus, menuVisibleWhenFocused } = this.props;
-    if (
-      menuVisibleWhenFocused
-      && (
-        !this.selectTimestamp
-        || Date.now() - this.selectTimestamp > 800
-      )
-    ) {
-      this.onMount(() => this.setState({ open: true }));
-    }
-    onFocus();
-  };
-
-  onBlur = () => {
-    const { onBlur, onMenuClose } = this.props;
-
-    setTimeout(() => {
-      if (!this.selectTimestamp || Date.now() - this.selectTimestamp > 800) {
-        onMenuClose();
-        this.onMount(() => this.setState({ open: false }));
-        onBlur();
-      }
-    }, 100);
-  };
-
-  onSubmitEditing = (event) => {
-    const { open, highlightedIndex } = this.state;
-    const { onSubmitEditing } = this.props;
-
-    if (Platform.OS === 'web' && open && this.filteredItems.length) {
-      const index = Math.min(this.filteredItems.length - 1, highlightedIndex);
-      this.onSelect(this.filteredItems[index], index);
-      event.preventDefault();
-    } else {
-      onSubmitEditing(event);
-    }
-  };
-
-  onSelect = (item, index) => {
-    const { onSelect, getItemValue, closeMenuOnSelect } = this.props;
-    const { open } = this.state;
-
-    this.selectTimestamp = Date.now();
-
-    onSelect(getItemValue(item), item);
-    this.onMount(() => this.setState({
-      open: closeMenuOnSelect ? false : open,
-      loading: false,
-      highlightedIndex: index,
-    }));
-
-    if (this.input) {
-      this.input.focus();
-    }
-
-    this.updateItems();
-  };
-
-  onSelectEmpty = () => {
-    const { onSelect, closeMenuOnSelect } = this.props;
-    const { open } = this.state;
-    onSelect('', null);
-    this.onMount(() => this.setState({
-      open: closeMenuOnSelect ? false : open,
-      loading: false,
-      highlightedIndex: 0,
-    }));
-  };
 
   onRef = (input) => {
     this.input = input;
@@ -366,6 +202,8 @@ class Autocomplete extends React.Component {
 
   onLayout = () => {
     const self = this;
+
+    // Make sure the menu is properly lined up.
     if (self.input) {
       self.input.measure((fx, fy, width, height) => {
         const { menuStyle } = self.state;
@@ -386,74 +224,176 @@ class Autocomplete extends React.Component {
         }
       });
     }
+  };
+
+  onChangeText = (text) => {
+    const {
+      value,
+      allowEmpty,
+      onChangeText,
+      throttleDebounceThreshold,
+    } = this.props;
+
+    onChangeText(text);
+
+    const nextState = {
+      loading: true,
+    };
+    if (this.isUncontrolled()) {
+      nextState.open = true;
+    }
+
+    this.onMount(() => this.setState(nextState));
+
+    if (allowEmpty && !text.length) {
+      this.onSelectEmpty();
+    } else if (text.length > throttleDebounceThreshold) {
+      this.updateItemsDebounced(text);
+    } else {
+      this.updateItemsThrottled(text);
+    }
+  };
+
+  onKeyPress = (event) => {
+    const { onKeyPress } = this.props;
+    onKeyPress(event);
+
+    // If the event hasn't been prevented.
+    if (!event.isDefaultPrevented() && Platform.OS === 'web') {
+      const { key } = event.nativeEvent;
+
+      // If uncontrolled, close menu on escape.
+      if (key === 'Escape' && this.isUncontrolled()) {
+        event.preventDefault();
+        this.onMount(() => this.setState({ open: false }));
+      }
+
+      // Move highlighted index based on arrows.
+      if (key === 'ArrowUp' || key === 'ArrowDown') {
+        const { highlightedIndex } = this.state;
+        const increment = key === 'ArrowUp' ? -1 : 1;
+        let nextHighlightedIndex = (highlightedIndex + increment) % this.filteredItems.length;
+        if (nextHighlightedIndex < 0) {
+          nextHighlightedIndex = this.filteredItems.length + nextHighlightedIndex;
+        }
+        event.preventDefault();
+        this.onMount(() => this.setState({ highlightedIndex: nextHighlightedIndex }));
+      }
+    }
+  };
+
+  onFocus = (event) => {
+    const { onFocus, menuOpen } = this.props;
+    
+    onFocus(event);
+    if (
+      !event.isDefaultPrevented()
+      && this.isUncontrolled()
+      && this.isMenuVisibleWhenFocused()
+      
+      // Work around to be able to close menu on select.
+      && (
+        !this.selectTimestamp
+        || Date.now() - this.selectTimestamp > 800
+      )
+    ) {
+      this.onMount(() => this.setState({ open: true }));
+    }
+  };
+
+  onBlur = (event) => {
+    const { onBlur } = this.props;
+
+    event.persist();
+
+    // Delay the onBlur event to avoid calling onBlur
+    // after clicking on the menu.
+    setTimeout(() => {
+      if (!this.selectTimestamp || Date.now() - this.selectTimestamp > 800) {
+        onBlur(event);
+
+        if (!event.isDefaultPrevented() && this.isUncontrolled()) {
+          this.onMount(() => this.setState({ open: false }));
+        }
+      }
+    }, 100);
+  };
+
+  onSubmitEditing = () => {
+    const { open, menuOpen, highlightedIndex } = this.state;
+
+    // Select the current highlighted index by pressing Enter.
+    if (Platform.OS === 'web' && this.isMenuOpen() && this.filteredItems.length) {
+      const index = Math.min(this.filteredItems.length - 1, highlightedIndex);
+      this.onSelect(this.filteredItems[index], index);
+    }
+  };
+
+  onSelect = (item, index) => {
+    const { onSelect, getItemValue, closeMenuOnSelect } = this.props;
+
+    this.selectTimestamp = Date.now();
+
+    onSelect(item ? getItemValue(item) : '', item);
+
+    const nextState = {
+      loading: false,
+      highlightedIndex: Math.max(0, index - 1),
+    };
+    if (this.isUncontrolled()) {
+      nextState.open = closeMenuOnSelect ? false : this.isMenuOpen();
+    }
+    this.onMount(() => this.setState(nextState));
+
+    // The trigger may have happened by clicking on the menu.
+    // To make sure the focus is still on the TextInput, we call .focus().
+    if (this.input) {
+      this.input.focus();
+    }
+
+    // Recalculate items in the background.
+    this.updateItems();
+  };
+
+  onSelectEmpty = () => this.onSelect(null, 0);
+
+  isUncontrolled() {
+    const { menuOpen } = this.props;
+    return menuOpen === null;
+  }
+
+  isMenuOpen() {
+    const { menuOpen } = this.props;
+
+    if (menuOpen !== null) {
+      return menuOpen;
+    }
+
+    const { open } = this.state;
+    return open;
+  }
+
+  isMenuVisibleWhenFocused() {
+    const { menuVisibleWhenFocused } = this.props;
+    if (menuVisibleWhenFocused !== null) {
+      return menuVisibleWhenFocused;
+    }
+    if (this.filteredItems.length <= 20) {
+      return true;
+    }
+    return false;
   }
 
   getParams() {
-    return { ...this.props, ...this.state };
-  }
-
-  async getItems(text) {
-    let { items } = this.props;
-    let parsedText = text;
-    if (parsedText === null || parsedText === undefined) {
-      parsedText = '';
-    }
-    const id = Math.random().toString(36).substr(2, 9);
-    this.request = {
-      id,
-      loading: true,
-      items: this.state.items,
+    return {
+      ...this.props,
+      ...this.state,
     };
-    if (items && items.current) {
-      this.request.loading = false;
-      this.request.items = items;
-    } else if (isFunction(items)) {
-      items = await items(parsedText, this.getParams());
-      if (this.request.id === id) {
-        this.request.loading = false;
-        this.request.items = items;
-      } else {
-        return this.request.items;
-      }
-    } else {
-      items = this.findItemMatches(parsedText, items);
-      this.request.loading = false;
-      this.request.items = items;
-    }
-    return items;
   }
-
-  clickListener = (event) => {
-    if (Platform.OS === 'web') {
-      if (!isField(event.target, this.fieldRegex)) {
-        const { onMenuClose } = this.props;
-        onMenuClose();
-        this.onMount(() => this.setState({ open: false }));
-      }
-    }
-  };
-
-  updateItems = async (text) => {
-    this.onMount(() => this.setState({
-      dirty: false,
-    }));
-
-    const items = await this.getItems(text);
-
-    const [nextFilteredItems, nextHighlightedIndex] = this.filterItems(items);
-
-    this.filteredItems = nextFilteredItems;
-
-    this.onMount(() => this.setState({
-      items,
-      highlightedIndex: nextHighlightedIndex,
-      loading: this.request.loading,
-    }));
-  };
 
   findItemMatches(text, items) {
     const { isMatch } = this.props;
-    return filter(items, item => isMatch(text, item, this.getParams()));
+    return (items || []).filter(item => isMatch(text, item, this.getParams()));
   }
 
   filterItems(items) {
@@ -472,7 +412,86 @@ class Autocomplete extends React.Component {
     return [nextFilteredItems, nextHighlightedIndex];
   }
 
+  async getItems(text) {
+    const { items: itemsProp } = this.props;
+    const { items: itemsState } = this.state;
+
+    let query = text;
+    if (query === null || query === undefined) {
+      query = '';
+    }
+
+    // There may be several requests being sent simultaneously,
+    // so we need to know which one was the last one sent.
+    const requestId = Math.random().toString(36).substr(2, 9);
+
+    // This request is now the last request.
+    this.request = {
+      id: requestId,
+      loading: true,
+      items: itemsState,
+    };
+
+    // If items is a ref, use the action ref.
+    if (itemsProp && itemsProp.current) {
+      this.request.loading = false;
+      this.request.items = items;
+    } else if (!isFunction(itemsProp)) {
+      this.request.loading = false;
+      this.request.items = this.findItemMatches(query, itemsProp);
+    }
+
+    // If there is nothing to fetch, return the items.
+    if (!this.request.loading) {
+      return this.request.items;
+    }
+
+    const nextItems = await items(query, this.getParams());
+
+    // If this request is still the latest request.
+    if (this.request.id === requestId) {
+      this.request.loading = false;
+      this.request.items = nextItems;
+    }
+
+    return nextItems;
+  }
+
+  async updateItems(text) {
+    this.onMount(() => this.setState({
+      dirty: false,
+    }));
+
+    const items = await this.getItems(text);
+
+    const [nextFilteredItems, nextHighlightedIndex] = this.filterItems(items);
+    this.filteredItems = nextFilteredItems;
+
+    this.onMount(() => this.setState({
+      items,
+      loading: this.request.loading,
+      highlightedIndex: nextHighlightedIndex,
+    }));
+  };
+
   render() {
+    const {
+      Menu,
+      Input,
+      inputProps,
+      style,
+      itemHeight,
+      spinnerHeight,
+      emptyResultHeight,
+      value,
+      valueLabel,
+      containerStyle,
+      className,
+      getItemValue,
+      getItemLabel,
+      menuStyle,
+    } = this.props;
+
     const {
       open,
       dirty,
@@ -483,25 +502,7 @@ class Autocomplete extends React.Component {
       menuStyle: calculatedMenuStyle,
     } = this.state;
 
-    const {
-      Menu,
-      Input,
-      inputProps,
-      style,
-      itemHeight,
-      spinnerHeight,
-      emptyResultHeight,
-      menuStyle,
-      menuVisibleWhenFocused,
-      value,
-      valueLabel,
-      containerStyle,
-      className,
-      getItemValue,
-      getItemLabel,
-    } = this.props;
-
-    const autoCompleteType = `bad-browsers-${Math.random().toString(36).substr(2, 9)}`;
+    const autoCompleteType = `random_${this.randomId}`;
 
     const props = omit(this.props, propNames);
     if (Platform.OS === 'web') {
@@ -513,7 +514,9 @@ class Autocomplete extends React.Component {
     const { minWidth, maxWidth, width } = StyleSheet.flatten([style]);
     const { maxHeight } = StyleSheet.flatten([calculatedMenuStyle, menuStyle]);
 
+    // Re-filter to make sure we display the latest values.
     const [currentFilteredItems, currentHighlightedIndex] = this.filterItems(items);
+    this.filteredItems = currentFilteredItems;
 
     const height = (
       2
@@ -526,7 +529,7 @@ class Autocomplete extends React.Component {
     if (menuOpen !== null) {
       showMenu = menuOpen;
     } else {
-      showMenu = open && (menuVisibleWhenFocused || !isEmpty(props.value));
+      showMenu = open && (this.isMenuVisibleWhenFocused() || !isEmpty(props.value));
     }
 
     let text = valueLabel;
@@ -547,6 +550,8 @@ class Autocomplete extends React.Component {
           {...props}
           {...inputProps}
           value={blankOr(text)}
+          blurOnSubmit={false}
+          autoComplete={autoCompleteType}
           onRef={this.onRef}
           onLayout={this.onLayout}
           onKeyPress={this.onKeyPress}
@@ -554,8 +559,6 @@ class Autocomplete extends React.Component {
           onSubmitEditing={this.onSubmitEditing}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
-          autoComplete={autoCompleteType}
-          blurOnSubmit={false}
         />
         {showMenu ? (
           <Menu
@@ -565,7 +568,6 @@ class Autocomplete extends React.Component {
             style={[
               calculatedMenuStyle,
               { height },
-              // mobileMenuStyle,
               menuStyle,
             ]}
             items={currentFilteredItems}
@@ -576,6 +578,6 @@ class Autocomplete extends React.Component {
       </View>
     );
   }
-}
+};
 
-export default withTheme('Autocomplete')(withKeyboard()(Autocomplete));
+export default withTheme('Autocomplete')(Autocomplete);

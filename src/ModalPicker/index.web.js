@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import React, { useRef } from 'react';
+import { Platform, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
+import noop from 'lodash/noop';
+import { useSafeState } from '../utils';
 import Autocomplete from '../Autocomplete';
 import View from '../View';
 import StylePropType from '../StylePropType';
@@ -12,6 +14,14 @@ const styles = StyleSheet.create({
   empty: {},
   outerRow: {
     alignItems: 'center',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
   },
   inputDefaults: {
     paddingTop: 8,
@@ -93,7 +103,9 @@ const measureTextWidth = (txt) => {
 };
 
 const Input = ({
-  onPress,
+  focused,
+  onTouchableBlur,
+  onTouchableFocus,
   fitContent,
   center, // legacy
   selectStyle,
@@ -108,23 +120,15 @@ const Input = ({
   ...props
 }) => {
   const input = useRef();
+  const id = useRef(`ModalPicker__Input-${name || Math.random().toString(36).substr(2, 9)}`);
 
   const { name } = props;
-
-  const [id] = useState(`ModalPicker__Input-${name || Math.random().toString(36).substr(2, 9)}`);
 
   const inputOnRef = (ref) => {
     input.current = ref;
     if (onRef) {
       onRef(ref);
     }
-  };
-
-  const wrappedOnPress = () => {
-    if (input.current) {
-      input.current.focus();
-    }
-    onPress();
   };
 
   const currentStyle = [
@@ -170,17 +174,18 @@ const Input = ({
       <Helmet>
         <style>
           {`
-            [data-class~="${id}"] {
+            [data-class~="${id.current}"] {
+              cursor: pointer;
               color: transparent;
               caret-color: transparent;
-              pointer-events: none;
               user-select: none;
+              pointer-events: none;
               text-shadow: 0 0 0 ${color};
             }
-            [data-class~="${id}__touchable"]:hover {
+            [data-class~="${id.current}__touchable"]:hover {
               cursor: pointer;
             }
-            [data-class~="${id}"]::placeholder {
+            [data-class~="${id.current}"]::placeholder {
               color: ${color};
             }
             .ModalPicker__Arrow {
@@ -191,16 +196,21 @@ const Input = ({
           `}
         </style>
       </Helmet>
-      <TouchableWithoutFeedback onPress={wrappedOnPress}>
-        <View className={`${id}__touchable`} style={outer}>
+      <TouchableWithoutFeedback
+        onPress={onTouchableFocus}
+        onFocus={onTouchableFocus}
+        onBlur={onTouchableBlur}
+      >
+        <View className={`${id.current}__touchable`} style={outer}>
           <TextInput
             {...props}
             value={value}
             placeholder={placeholder}
             onRef={inputOnRef}
             style={currentStyle}
+            autoFocus={focused}
             caretHidden
-            className={`ModalPicker__Input ${id}`}
+            className={`ModalPicker__Input ${id.current}`}
           />
           {arrow ? (
             <svg
@@ -221,10 +231,12 @@ const Input = ({
 };
 
 Input.propTypes = {
+  focused: PropTypes.bool.isRequired,
+  onTouchableFocus: PropTypes.func.isRequired,
+  onTouchableBlur: PropTypes.func.isRequired,
   themeInputStyle: PropTypes.shape().isRequired,
   arrow: PropTypes.bool.isRequired,
   onRef: PropTypes.func.isRequired,
-  onPress: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   fitContent: PropTypes.bool,
@@ -249,29 +261,84 @@ Input.defaultProps = {
 const ModalPicker = ({
   options,
   onChange,
+  onFocus,
+  onBlur,
   type,
   arrow,
   themeInputStyle,
   value,
+  activeStyle,
   menuStyle: originalMenuStyle,
   itemStyle: originalItemStyle,
   itemActiveStyle: originalItemActiveStyle,
-  activeStyle,
   ...props
 }) => {
   const { disabled } = props;
-  const [open, setOpen] = useState(false);
+  const input = useRef();
+  const [open, setOpen] = useSafeState(false);
+  const [focused, setFocused] = useSafeState(false);
 
-  const onPress = () => {
-    if (!disabled) {
-      setOpen(!open);
-    }
+  const selectTimestamp = useRef(Date.now() - 1000);
+  const pressTimestamp = useRef(Date.now() - 1000);
+
+  const onRef = (ref) => {
+    input.current = ref;
   };
+
   const onSelect = (__, item) => {
+    selectTimestamp.current = Date.now();
     setOpen(false);
+    setFocused(true);
     onChange(item);
   };
-  const onMenuClose = () => setOpen(false);
+
+  const onKeyPress = (event) => {
+    if (!event.isDefaultPrevented() && Platform.OS === 'web') {
+      const { key } = event.nativeEvent;
+      if (key === 'Escape') {
+        event.preventDefault();
+        setOpen(false);
+      }
+    }
+  };
+
+  const focus = (event) => {
+    selectTimestamp.current = Date.now();
+    setOpen(!open);
+    setFocused(true);
+    onFocus(event);
+    if (Platform.OS === 'web' && input.current) {
+      input.current.focus();
+    }
+  };
+
+  const blur = (event) => {
+    selectTimestamp.current = Date.now();
+    setOpen(false);
+    setFocused(false);
+    onBlur(event);
+    if (Platform.OS === 'web' && input.current) {
+      input.current.blur();
+    }
+  };
+
+  const onTouchableFocus = (event) => {
+    event.persist();
+    setTimeout(() => {
+      if (Date.now() - selectTimestamp.current > 800) {
+        focus();
+      }
+    }, 100);
+  };
+
+  const onTouchableBlur = (event) => {
+    event.persist();
+    setTimeout(() => {
+      if (Date.now() - selectTimestamp.current > 800) {
+        blur();
+      }
+    }, 400);
+  };
 
   const menuStyle = [styles.menu, originalMenuStyle];
   const itemStyle = [styles.item, originalItemStyle];
@@ -283,11 +350,12 @@ const ModalPicker = ({
   }
 
   const inputProps = {
-    open,
     type,
     arrow,
-    onPress,
+    focused,
     themeInputStyle,
+    onTouchableFocus,
+    onTouchableBlur,
   };
 
   let valueLabel = '';
@@ -302,10 +370,12 @@ const ModalPicker = ({
       {...props}
       value={value}
       valueLabel={valueLabel}
-      menuOpen={open}
+      menuOpen={!disabled && open}
       items={options}
       isMatch={isMatch}
+      onRef={onRef}
       onSelect={onSelect}
+      onKeyPress={onKeyPress}
       getItemLabel={getItemLabel}
       getItemValue={getItemValue}
       Input={Input}
@@ -314,7 +384,6 @@ const ModalPicker = ({
       itemStyle={itemStyle}
       itemHeight={35}
       itemActiveStyle={itemActiveStyle}
-      onMenuClose={onMenuClose}
       highlightedIndex={-1}
       highlightMatches={false}
     />
@@ -324,7 +393,9 @@ const ModalPicker = ({
 ModalPicker.propTypes = {
   themeInputStyle: PropTypes.shape().isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func,
   placeholder: PropTypes.string,
   type: PropTypes.string,
   menuStyle: StylePropType,
@@ -337,6 +408,9 @@ ModalPicker.propTypes = {
 };
 
 ModalPicker.defaultProps = {
+  onChange: noop,
+  onFocus: noop,
+  onBlur: noop,
   placeholder: 'Select...',
   type: 'gray',
   menuStyle: styles.empty,

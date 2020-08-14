@@ -192,7 +192,7 @@ export const useDerivedState = (prop) => {
   return [value, setValue];
 };
 
-export const useSafeSetState = (initialValue) => {
+export const useSafeState = (initialValue) => {
   const queue = useRef([]);
   const mounted = useRef(false);
 
