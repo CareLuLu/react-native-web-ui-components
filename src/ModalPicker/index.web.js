@@ -120,9 +120,9 @@ const Input = ({
   ...props
 }) => {
   const input = useRef();
-  const id = useRef(`ModalPicker__Input-${name || Math.random().toString(36).substr(2, 9)}`);
 
   const { name } = props;
+  const id = useRef(`ModalPicker__Input-${name || Math.random().toString(36).substr(2, 9)}`);
 
   const inputOnRef = (ref) => {
     input.current = ref;
@@ -279,7 +279,6 @@ const ModalPicker = ({
   const [focused, setFocused] = useSafeState(false);
 
   const selectTimestamp = useRef(Date.now() - 1000);
-  const pressTimestamp = useRef(Date.now() - 1000);
 
   const onRef = (ref) => {
     input.current = ref;

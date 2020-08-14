@@ -6,7 +6,7 @@ import noop from 'lodash/noop';
 import omit from 'lodash/omit';
 import isEqual from 'lodash/isEqual';
 import isFunction from 'lodash/isFunction';
-import { isEmpty, isSSR } from '../utils';
+import { isEmpty } from '../utils';
 import { withTheme } from '../Theme';
 import EventHandler from '../EventHandler';
 import StylePropType from '../StylePropType';
@@ -227,12 +227,7 @@ class Autocomplete extends EventHandler {
   };
 
   onChangeText = (text) => {
-    const {
-      value,
-      allowEmpty,
-      onChangeText,
-      throttleDebounceThreshold,
-    } = this.props;
+    const { allowEmpty, onChangeText, throttleDebounceThreshold } = this.props;
 
     onChangeText(text);
 
@@ -283,14 +278,14 @@ class Autocomplete extends EventHandler {
   };
 
   onFocus = (event) => {
-    const { onFocus, menuOpen } = this.props;
-    
+    const { onFocus } = this.props;
+
     onFocus(event);
     if (
       !event.isDefaultPrevented()
       && this.isUncontrolled()
       && this.isMenuVisibleWhenFocused()
-      
+
       // Work around to be able to close menu on select.
       && (
         !this.selectTimestamp
@@ -320,7 +315,7 @@ class Autocomplete extends EventHandler {
   };
 
   onSubmitEditing = () => {
-    const { open, menuOpen, highlightedIndex } = this.state;
+    const { highlightedIndex } = this.state;
 
     // Select the current highlighted index by pressing Enter.
     if (Platform.OS === 'web' && this.isMenuOpen() && this.filteredItems.length) {
@@ -435,7 +430,7 @@ class Autocomplete extends EventHandler {
     // If items is a ref, use the action ref.
     if (itemsProp && itemsProp.current) {
       this.request.loading = false;
-      this.request.items = items;
+      this.request.items = itemsProp;
     } else if (!isFunction(itemsProp)) {
       this.request.loading = false;
       this.request.items = this.findItemMatches(query, itemsProp);
@@ -446,7 +441,7 @@ class Autocomplete extends EventHandler {
       return this.request.items;
     }
 
-    const nextItems = await items(query, this.getParams());
+    const nextItems = await itemsProp(query, this.getParams());
 
     // If this request is still the latest request.
     if (this.request.id === requestId) {
@@ -472,7 +467,7 @@ class Autocomplete extends EventHandler {
       loading: this.request.loading,
       highlightedIndex: nextHighlightedIndex,
     }));
-  };
+  }
 
   render() {
     const {
@@ -578,6 +573,6 @@ class Autocomplete extends EventHandler {
       </View>
     );
   }
-};
+}
 
 export default withTheme('Autocomplete')(Autocomplete);
