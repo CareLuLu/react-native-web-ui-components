@@ -325,7 +325,12 @@ class Autocomplete extends EventHandler {
   };
 
   onSelect = (item, index) => {
-    const { onSelect, getItemValue, closeMenuOnSelect } = this.props;
+    const {
+      select,
+      onSelect,
+      getItemValue,
+      closeMenuOnSelect,
+    } = this.props;
 
     this.selectTimestamp = Date.now();
 
@@ -333,7 +338,7 @@ class Autocomplete extends EventHandler {
 
     const nextState = {
       loading: false,
-      highlightedIndex: Math.max(0, index - 1),
+      highlightedIndex: Math.max(0, index - (select ? 0 : 1)),
     };
     if (this.isUncontrolled()) {
       nextState.open = closeMenuOnSelect ? false : this.isMenuOpen();

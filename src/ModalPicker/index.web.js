@@ -367,6 +367,7 @@ const ModalPicker = ({
   return (
     <Autocomplete
       {...props}
+      select
       value={value}
       valueLabel={valueLabel}
       menuOpen={!disabled && open}
