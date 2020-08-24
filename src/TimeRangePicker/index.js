@@ -74,11 +74,8 @@ const TimeCell = ({
 }) => {
   const press = () => onPress(value);
 
-  const reverse = pressed === value;
-  let active = values.indexOf(value) >= 0;
-  if (reverse) {
-    active = !active;
-  }
+  const active = values.indexOf(value) >= 0;
+
   let className = `${hover}`;
   if (pressed === value) {
     className += ` ${id}__pressed`;
@@ -199,18 +196,24 @@ const TimeRangePicker = (props) => {
   } = getParams(props);
 
   const [pressed, setPressed] = useState(null);
+  const [reverse, setReverse] = useState(false);
 
   const onStart = (start) => {
     if (!disabled && !readonly && filterTime(start)) {
       onFocus();
+      const isReverse = values.indexOf(start) >= 0;
+      const range = [start];
+      const newValues = reverse
+        ? without(values, ...range) : uniq(values.concat(range)).sort(sorter);
+      onChange(encoder(newValues));
       setPressed(start);
+      setReverse(isReverse);
     }
   };
 
   const onEnd = (end) => {
     if (!disabled && !readonly) {
       onBlur();
-      const reverse = values.indexOf(pressed) >= 0;
       const range = [];
       for (let i = pressed; i <= end; i += interval) {
         range.push(i);
@@ -222,7 +225,7 @@ const TimeRangePicker = (props) => {
     }
   };
 
-  const hover = pressed && (values.indexOf(pressed) < 0 ? `${id}__enable` : `${id}__disable`);
+  const hover = pressed && (!reverse ? `${id}__enable` : `${id}__disable`);
 
   const renderCell = index => (
     <TimeCell
