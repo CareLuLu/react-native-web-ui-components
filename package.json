@@ -46,7 +46,7 @@
     "react": "16.13.1",
     "react-art": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
-    "react-native-web": "0.13.9",
+    "react-native-web": "0.13.11",
     "react-test-renderer": "16.13.1"
   },
   "dependencies": {
