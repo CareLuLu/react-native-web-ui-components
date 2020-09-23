@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import pick from 'lodash/pick';
 import omit from 'lodash/omit';
+import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import { Helmet as ReactHelmet } from 'react-helmet';
 import { useHistory } from '../History';
@@ -37,7 +38,10 @@ const parseTags = (children, tags) => {
             break;
           case 'script':
             script = omit(tag.props, 'children');
-            if (tag.props.type === 'application/ld+json') {
+            if (
+              tag.props.type === 'application/ld+json'
+              || (isString(tags.props.children) && tags.props.children)
+            ) {
               script.innerHTML = tag.props.children;
             }
             tags.script.push(script);
