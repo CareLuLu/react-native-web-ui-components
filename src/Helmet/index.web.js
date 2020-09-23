@@ -40,7 +40,7 @@ const parseTags = (children, tags) => {
             script = omit(tag.props, 'children');
             if (
               tag.props.type === 'application/ld+json'
-              || (isString(tags.props.children) && tags.props.children)
+              || (isString(tag.props.children) && tag.props.children)
             ) {
               script.innerHTML = tag.props.children;
             }
