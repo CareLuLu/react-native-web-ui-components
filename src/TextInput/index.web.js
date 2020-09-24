@@ -374,6 +374,11 @@ class TextInput extends React.Component {
         <Helmet>
           <style>
             {`
+              [data-class~="TextInput__${this.id}"] {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+              }
               [data-class~="TextInput__${this.id}"]::placeholder {
                 color: ${placeholderTextColor};
                 opacity: 1;

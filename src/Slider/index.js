@@ -48,6 +48,7 @@ const Slider = ({
   sliderLength,
   disabled,
   readonly,
+  touchDimensions,
 }) => {
   const selectedStyle = StyleSheet.flatten(themeInputStyle.selected);
   const unselectedStyle = StyleSheet.flatten(themeInputStyle.unselected);
@@ -77,6 +78,7 @@ const Slider = ({
         styles.selected,
         { backgroundColor: selectedStyle.color },
       ]}
+      touchDimensions={touchDimensions}
       sliderLength={sliderLength}
       onValuesChange={onValuesChange}
       onValuesChangeStart={onValuesChangeStart}
@@ -100,6 +102,7 @@ Slider.propTypes = {
   sliderLength: PropTypes.number.isRequired,
   disabled: PropTypes.bool,
   readonly: PropTypes.bool,
+  touchDimensions: PropTypes.shape(),
 };
 
 Slider.defaultProps = {
@@ -112,6 +115,12 @@ Slider.defaultProps = {
   style: null,
   disabled: false,
   readonly: false,
+  touchDimensions: {
+    height: 50,
+    width: 50,
+    borderRadius: 15,
+    slipDisplacement: 200,
+  },
 };
 
 export default withTheme('Slider')(Slider);
