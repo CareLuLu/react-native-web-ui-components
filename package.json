@@ -39,7 +39,7 @@
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-json": "2.1.2",
     "eslint-plugin-jsx-a11y": "6.3.1",
-    "eslint-plugin-react": "7.21.1",
+    "eslint-plugin-react": "7.21.2",
     "eslint-plugin-react-hooks": "4.1.2",
     "jest": "26.4.2",
     "metro-react-native-babel-preset": "0.63.0",
