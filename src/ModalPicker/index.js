@@ -23,14 +23,22 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
   },
+  defaults: {
+    height: 40,
+    borderWidth: 0,
+    padding: 0,
+  },
   select: {
-    height: 32,
+    height: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   font: {
     lineHeight: 30,
     height: 30,
+  },
+  selectText: {
+    fontSize: 13,
   },
   gray: {
     borderColor: '#545454',
@@ -60,16 +68,12 @@ const styles = StyleSheet.create({
   pinkText: {
     color: '#FFFFFF',
   },
-  white: {
-    borderColor: '#D3D6D6',
-    backgroundColor: '#FFFFFF',
-  },
-  whiteText: {
-    color: '#545454',
-  },
+  white: {},
+  whiteText: {},
 });
 
 const ModalPicker = ({
+  themeInputStyle,
   fitContent,
   align,
   type,
@@ -99,13 +103,35 @@ const ModalPicker = ({
   if (fontFamily.regular !== 'system font') {
     font.push({ fontFamily: fontFamily.regular });
   }
+
+  const currentStyle = [
+    styles.defaults,
+    style,
+  ];
+
+  const currentSelectStyle = [
+    styles.select,
+    themeInputStyle.border,
+    themeInputStyle.background,
+    themeInputStyle.opacity,
+    styles[type],
+    selectStyle,
+  ];
+
+  const currentSelectTextStyle = [
+    styles.selectText,
+    themeInputStyle.text,
+    styles[`${type}Text`],
+    selectTextStyle,
+  ];
+
   return (
     <Row xs={12} style={outer}>
       <ModalSelector
         icon={icon}
-        style={style}
-        selectStyle={[styles.select, styles[type], selectStyle]}
-        selectTextStyle={[font, styles[`${type}Text`], selectTextStyle]}
+        style={currentStyle}
+        selectStyle={currentSelectStyle}
+        selectTextStyle={currentSelectTextStyle}
         sectionTextStyle={font}
         optionTextStyle={font}
         cancelTextStyle={font}
@@ -124,6 +150,7 @@ const ModalPicker = ({
 };
 
 ModalPicker.propTypes = {
+  themeInputStyle: PropTypes.shape().isRequired,
   fontFamily: PropTypes.shape().isRequired,
   theme: PropTypes.shape().isRequired,
   name: PropTypes.string.isRequired,
