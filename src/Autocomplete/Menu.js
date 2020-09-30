@@ -108,6 +108,7 @@ class Menu extends React.PureComponent {
         ));
       }
     }
+
     return (
       <View className="Autocomplete__Menu" style={containerStyle}>
         <ScrollView

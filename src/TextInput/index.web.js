@@ -98,6 +98,7 @@ class TextInput extends React.Component {
     onFocus: PropTypes.func,
     onKeyPress: PropTypes.func,
     onSubmitEditing: PropTypes.func,
+    onClick: PropTypes.func, // web-only
     returnKeyType: PropTypes.string,
     secureTextEntry: PropTypes.bool,
     spellCheck: PropTypes.bool,
@@ -131,6 +132,7 @@ class TextInput extends React.Component {
     onFocus: noop,
     onKeyPress: noop,
     onSubmitEditing: noop,
+    onClick: noop, // web-only
     returnKeyType: undefined,
     secureTextEntry: false,
     spellCheck: undefined,
@@ -296,6 +298,7 @@ class TextInput extends React.Component {
       disabled,
       readonly,
       maxLength,
+      onClick,
       style: styleProp,
     } = this.props;
 
@@ -336,6 +339,7 @@ class TextInput extends React.Component {
       dir,
       disabled,
       maxLength,
+      onClick,
       autoComplete: autoComplete || autoCompleteType || 'on',
       autoCorrect: autoCorrect || autoCorrect === undefined ? 'on' : 'off',
       enterkeyhint: returnKeyType,

@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
-import { Platform, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import noop from 'lodash/noop';
-import { useSafeState } from '../utils';
 import Autocomplete from '../Autocomplete';
 import View from '../View';
 import StylePropType from '../StylePropType';
@@ -15,21 +14,6 @@ const styles = StyleSheet.create({
   outerRow: {
     alignItems: 'center',
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
-  },
-  inputDefaults: {
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 12,
-    paddingRight: 12,
-    height: 40,
-  },
   fitOuterRowRight: {
     width: '100%',
     flexDirection: 'row',
@@ -40,7 +24,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
-  select: {},
   menu: {
     marginTop: 5,
     maxHeight: 280,
@@ -81,13 +64,8 @@ const styles = StyleSheet.create({
   pinkText: {
     color: '#FFFFFF',
   },
-  white: {
-    borderColor: '#D3D6D6',
-    backgroundColor: '#FFFFFF',
-  },
-  whiteText: {
-    color: '#545454',
-  },
+  white: {},
+  whiteText: {},
   active: {
     opacity: 0.7,
   },
@@ -103,71 +81,43 @@ const measureTextWidth = (txt) => {
 };
 
 const Input = ({
-  focused,
-  onTouchableBlur,
-  onTouchableFocus,
   fitContent,
-  center, // legacy
   selectStyle,
   selectTextStyle,
   align,
   type,
-  onRef,
   value,
   placeholder,
   arrow,
-  themeInputStyle,
   ...props
 }) => {
-  const input = useRef();
-
   const { name } = props;
   const id = useRef(`ModalPicker__Input-${name || Math.random().toString(36).substr(2, 9)}`);
 
-  const inputOnRef = (ref) => {
-    input.current = ref;
-    if (onRef) {
-      onRef(ref);
-    }
-  };
-
   const currentStyle = [
-    styles.inputDefaults,
-    themeInputStyle.border,
-    themeInputStyle.background,
-    themeInputStyle.opacity,
-    themeInputStyle.text,
     styles[type],
     styles[`${type}Text`],
     selectStyle,
     selectTextStyle,
   ];
-  const { color, ...otherStyles } = StyleSheet.flatten(currentStyle);
+  const { color = '#545454' } = StyleSheet.flatten(currentStyle);
+
+  currentStyle.push({ color: 'transparent' });
 
   if (fitContent) {
     currentStyle.push({ width: measureTextWidth(`${value || placeholder || 'aaa'}`) + 30 });
   } else {
     currentStyle.push({ width: '100%' });
   }
-  if (type !== 'white') {
-    const padding = otherStyles.padding || 0;
-    const paddingTop = otherStyles.paddingTop || padding;
-    const paddingBottom = otherStyles.paddingBottom || padding;
-    if (paddingBottom && paddingBottom === paddingTop) {
-      currentStyle.push({ paddingTop: paddingTop - 2 });
-    }
-  }
 
-  let outer;
+  let containerStyle;
   if (!fitContent) {
-    outer = styles.outerRow;
+    containerStyle = styles.outerRow;
   } else if (align === 'right') {
-    outer = styles.fitOuterRowRight;
+    containerStyle = styles.fitOuterRowRight;
   } else {
-    outer = styles.fitOuterRowLeft;
+    containerStyle = styles.fitOuterRowLeft;
   }
-
-  outer = [props.style, outer]; // eslint-disable-line
 
   return (
     <>
@@ -179,68 +129,54 @@ const Input = ({
               color: transparent;
               caret-color: transparent;
               user-select: none;
-              pointer-events: none;
               text-shadow: 0 0 0 ${color};
             }
-            [data-class~="${id.current}__touchable"]:hover {
+            [data-class~="${id.current}__container"]:hover {
               cursor: pointer;
             }
             [data-class~="${id.current}"]::placeholder {
               color: ${color};
+              text-shadow: none;
             }
             .ModalPicker__Arrow {
               position: absolute;
-              top: calc(50% - 10px);
+              top: calc(50% - 15px);
               right: 5px;
             }
           `}
         </style>
       </Helmet>
-      <TouchableWithoutFeedback
-        onPress={onTouchableFocus}
-        onFocus={onTouchableFocus}
-        onBlur={onTouchableBlur}
-      >
-        <View className={`${id.current}__touchable`} style={outer}>
-          <TextInput
-            {...props}
-            value={value}
-            placeholder={placeholder}
-            onRef={inputOnRef}
-            style={currentStyle}
-            autoFocus={focused}
-            caretHidden
-            className={`ModalPicker__Input ${id.current}`}
-          />
-          {arrow ? (
-            <svg
-              className="ModalPicker__Arrow"
-              fill={color}
-              height="20"
-              width="20"
-              viewBox="0 0 20 20"
-              focusable={false}
-            >
-              <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z" />
-            </svg>
-          ) : null}
-        </View>
-      </TouchableWithoutFeedback>
+      <View className={`${id.current}__container`} style={containerStyle}>
+        <TextInput
+          {...props}
+          caretHidden
+          value={value}
+          placeholder={placeholder}
+          style={currentStyle}
+          className={`ModalPicker__Input ${id.current}`}
+        />
+        {arrow ? (
+          <svg
+            className="ModalPicker__Arrow"
+            fill={color}
+            height="20"
+            width="20"
+            viewBox="0 0 20 20"
+            focusable={false}
+          >
+            <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z" />
+          </svg>
+        ) : null}
+      </View>
     </>
   );
 };
 
 Input.propTypes = {
-  focused: PropTypes.bool.isRequired,
-  onTouchableFocus: PropTypes.func.isRequired,
-  onTouchableBlur: PropTypes.func.isRequired,
-  themeInputStyle: PropTypes.shape().isRequired,
   arrow: PropTypes.bool.isRequired,
-  onRef: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   fitContent: PropTypes.bool,
-  center: PropTypes.bool,
   align: PropTypes.string,
   selectStyle: StylePropType,
   selectTextStyle: StylePropType,
@@ -250,7 +186,6 @@ Input.propTypes = {
 
 Input.defaultProps = {
   fitContent: true,
-  center: false,
   align: 'left',
   selectStyle: styles.empty,
   selectTextStyle: styles.empty,
@@ -261,82 +196,18 @@ Input.defaultProps = {
 const ModalPicker = ({
   options,
   onChange,
-  onFocus,
-  onBlur,
   type,
   arrow,
-  themeInputStyle,
   value,
+  containerStyle,
   activeStyle,
   menuStyle: originalMenuStyle,
   itemStyle: originalItemStyle,
   itemActiveStyle: originalItemActiveStyle,
   ...props
 }) => {
-  const { disabled } = props;
-  const input = useRef();
-  const [open, setOpen] = useSafeState(false);
-  const [focused, setFocused] = useSafeState(false);
-
-  const selectTimestamp = useRef(Date.now() - 1000);
-
-  const onRef = (ref) => {
-    input.current = ref;
-  };
-
   const onSelect = (__, item) => {
-    selectTimestamp.current = Date.now();
-    setOpen(false);
-    setFocused(true);
     onChange(item);
-  };
-
-  const onKeyPress = (event) => {
-    if (!event.isDefaultPrevented() && Platform.OS === 'web') {
-      const { key } = event.nativeEvent;
-      if (key === 'Escape') {
-        event.preventDefault();
-        setOpen(false);
-      }
-    }
-  };
-
-  const focus = (event) => {
-    selectTimestamp.current = Date.now();
-    setOpen(!open);
-    setFocused(true);
-    onFocus(event);
-    if (Platform.OS === 'web' && input.current) {
-      input.current.focus();
-    }
-  };
-
-  const blur = (event) => {
-    selectTimestamp.current = Date.now();
-    setOpen(false);
-    setFocused(false);
-    onBlur(event);
-    if (Platform.OS === 'web' && input.current) {
-      input.current.blur();
-    }
-  };
-
-  const onTouchableFocus = (event) => {
-    event.persist();
-    setTimeout(() => {
-      if (Date.now() - selectTimestamp.current > 800) {
-        focus();
-      }
-    }, 100);
-  };
-
-  const onTouchableBlur = (event) => {
-    event.persist();
-    setTimeout(() => {
-      if (Date.now() - selectTimestamp.current > 800) {
-        blur();
-      }
-    }, 400);
   };
 
   const menuStyle = [styles.menu, originalMenuStyle];
@@ -348,18 +219,13 @@ const ModalPicker = ({
     itemActiveStyle.push([styles[type], styles[`${type}Text`], styles.active]);
   }
 
-  const inputProps = {
-    type,
-    arrow,
-    focused,
-    themeInputStyle,
-    onTouchableFocus,
-    onTouchableBlur,
-  };
+  const inputProps = { type, arrow };
 
   let valueLabel = '';
-  options.forEach((option) => {
+  let highlightedIndex = -1;
+  options.forEach((option, i) => {
     if (option.value === value) {
+      highlightedIndex = i;
       valueLabel = option.label;
     }
   });
@@ -368,14 +234,13 @@ const ModalPicker = ({
     <Autocomplete
       {...props}
       select
+      closeMenuOnSelect
+      menuVisibleWhenFocused
       value={value}
       valueLabel={valueLabel}
-      menuOpen={!disabled && open}
       items={options}
       isMatch={isMatch}
-      onRef={onRef}
       onSelect={onSelect}
-      onKeyPress={onKeyPress}
       getItemLabel={getItemLabel}
       getItemValue={getItemValue}
       Input={Input}
@@ -384,41 +249,36 @@ const ModalPicker = ({
       itemStyle={itemStyle}
       itemHeight={35}
       itemActiveStyle={itemActiveStyle}
-      highlightedIndex={-1}
       highlightMatches={false}
+      highlightedIndex={highlightedIndex}
     />
   );
 };
 
 ModalPicker.propTypes = {
-  themeInputStyle: PropTypes.shape().isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func,
   placeholder: PropTypes.string,
   type: PropTypes.string,
+  containerStyle: StylePropType,
   menuStyle: StylePropType,
   itemStyle: StylePropType,
   itemActiveStyle: StylePropType,
   activeStyle: StylePropType,
   arrow: PropTypes.bool,
-  disabled: PropTypes.bool,
   value: PropTypes.any, // eslint-disable-line
 };
 
 ModalPicker.defaultProps = {
   onChange: noop,
-  onFocus: noop,
-  onBlur: noop,
   placeholder: 'Select...',
   type: 'gray',
+  containerStyle: styles.empty,
   menuStyle: styles.empty,
   itemStyle: styles.empty,
   itemActiveStyle: styles.empty,
   activeStyle: styles.empty,
   arrow: true,
-  disabled: false,
   value: undefined,
 };
 

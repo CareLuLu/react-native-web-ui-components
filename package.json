@@ -1,10 +1,10 @@
 {
   "name": "react-native-web-ui-components",
-  "version": "4.0.10",
+  "version": "4.1.0",
   "private": false,
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist && babel src -d dist && cp package.json dist/package.json && cp README.md dist/README.md",
+    "build": "rm -rf dist && babel src -d dist && cp package.json dist/package.json && cp README.md dist/README.md && rm -rf ../../app/node_modules/react-native-web-ui-components && cp -r dist ../../app/node_modules/react-native-web-ui-components",
     "build:windows": "rmdir /s /q dist && babel src -d dist && copy package.json dist\\package.json && copy README.md dist\\README.md",
     "lint": "eslint ./src -c ./.eslintrc --ext .js",
     "test": "jest",
@@ -39,7 +39,7 @@
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-json": "2.1.2",
     "eslint-plugin-jsx-a11y": "6.3.1",
-    "eslint-plugin-react": "7.21.1",
+    "eslint-plugin-react": "7.21.2",
     "eslint-plugin-react-hooks": "4.1.2",
     "jest": "26.4.2",
     "metro-react-native-babel-preset": "0.63.0",

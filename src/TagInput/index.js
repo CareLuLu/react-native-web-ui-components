@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import noop from 'lodash/noop';
 import omit from 'lodash/omit';
 import { withTheme } from '../Theme';
@@ -50,6 +55,13 @@ const forbiddenProps = [
   'buildNew',
   'onChange',
 ];
+
+const getEventValidationTime = () => {
+  if (Platform.OS === 'web') {
+    return 0;
+  }
+  return 400;
+};
 
 class TagInput extends EventHandler {
   static propTypes = {
@@ -116,13 +128,12 @@ class TagInput extends EventHandler {
 
   onInputFocus = () => this.focus();
 
-  onInputBlur = () => {
-    const self = this;
+  onInputBlur = (event) => {
     setTimeout(() => {
-      if (!self.selectTimestamp || Date.now() - self.selectTimestamp > 800) {
+      if (this.isValidEvent(event)) {
         this.blur();
       }
-    }, 100);
+    }, getEventValidationTime());
   };
 
   onInputSelect = (__, item) => {
@@ -180,6 +191,25 @@ class TagInput extends EventHandler {
     const { isSameItem, tags } = this;
     return tags.reduce((r, tag) => (r && !isSameItem(item, tag)), true);
   };
+
+  isValidEvent = (event) => {
+    if (Platform.OS === 'web') {
+      const { relatedTarget } = event.nativeEvent;
+      if (!relatedTarget) {
+        return true;
+      }
+
+      const parent = document.querySelector(`[data-class~="${this.id}"]`);
+      if (!parent) {
+        return true;
+      }
+      return !parent.contains(relatedTarget);
+    }
+    return (
+      !this.selectTimestamp
+      || Date.now() - this.selectTimestamp > 800
+    );
+  }
 
   isSameItem = (item1, item2) => {
     const { getItemValue } = this.props;

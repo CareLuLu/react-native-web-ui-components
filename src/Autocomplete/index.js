@@ -31,6 +31,7 @@ const propNames = [
   'menuOpen',
   'menuVisibleWhenFocused',
   'closeMenuOnSelect',
+  'blurOnSelect',
   'Item',
   'itemStyle',
   'itemActiveStyle',
@@ -67,6 +68,15 @@ const blankOr = (str) => {
   return `${str}`;
 };
 
+const getEventValidationTime = () => {
+  if (Platform.OS === 'web') {
+    return 0;
+  }
+  return 400;
+};
+
+const wait = delay => new Promise(resolve => setTimeout(resolve, delay));
+
 class Autocomplete extends EventHandler {
   static propTypes = {
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
@@ -79,6 +89,7 @@ class Autocomplete extends EventHandler {
     onSelect: PropTypes.func,
     onRef: PropTypes.func,
     isMatch: PropTypes.func,
+    maxMatches: PropTypes.number,
     Input: PropTypes.elementType,
     inputProps: PropTypes.shape(),
     Menu: PropTypes.elementType,
@@ -102,6 +113,8 @@ class Autocomplete extends EventHandler {
     highlightedIndex: PropTypes.number,
     className: PropTypes.string,
     highlightMatches: PropTypes.bool,
+    disabled: PropTypes.bool,
+    readonly: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -115,6 +128,7 @@ class Autocomplete extends EventHandler {
     onSelect: noop,
     onRef: noop,
     isMatch: defaultIsMatch,
+    maxMatches: null,
     Input: DefaultInput,
     inputProps: {},
     Menu: DefaultMenu,
@@ -135,9 +149,11 @@ class Autocomplete extends EventHandler {
     throttleDebounceThreshold: 3,
     style: {},
     allowEmpty: true,
-    highlightedIndex: 0,
+    highlightedIndex: null,
     className: '',
     highlightMatches: true,
+    disabled: false,
+    readonly: false,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -157,6 +173,7 @@ class Autocomplete extends EventHandler {
       name,
       value,
       items,
+      select,
       menuOpen,
       throttleDelay,
       debounceDelay,
@@ -168,7 +185,7 @@ class Autocomplete extends EventHandler {
 
     this.state = {
       menuOpen,
-      highlightedIndex,
+      highlightedIndex: highlightedIndex || 0,
       open: false,
       dirty: false,
       menuStyle: null,
@@ -179,7 +196,7 @@ class Autocomplete extends EventHandler {
     // Setup throttle/debounce.
     this.updateItemsThrottled = this.updateItems;
     this.updateItemsDebounced = this.updateItems;
-    if (isFunction(items)) {
+    if (!select) {
       this.updateItemsThrottled = throttle(throttleDelay, this.updateItems);
       this.updateItemsDebounced = debounce(debounceDelay, this.updateItems);
     }
@@ -287,10 +304,7 @@ class Autocomplete extends EventHandler {
       && this.isMenuVisibleWhenFocused()
 
       // Work around to be able to close menu on select.
-      && (
-        !this.selectTimestamp
-        || Date.now() - this.selectTimestamp > 800
-      )
+      && this.isValidEvent(event)
     ) {
       this.onMount(() => this.setState({ open: true }));
     }
@@ -304,14 +318,14 @@ class Autocomplete extends EventHandler {
     // Delay the onBlur event to avoid calling onBlur
     // after clicking on the menu.
     setTimeout(() => {
-      if (!this.selectTimestamp || Date.now() - this.selectTimestamp > 800) {
+      if (this.isValidEvent(event)) {
         onBlur(event);
 
         if (!event.isDefaultPrevented() && this.isUncontrolled()) {
           this.onMount(() => this.setState({ open: false }));
         }
       }
-    }, 100);
+    }, getEventValidationTime());
   };
 
   onSubmitEditing = () => {
@@ -319,7 +333,7 @@ class Autocomplete extends EventHandler {
 
     // Select the current highlighted index by pressing Enter.
     if (Platform.OS === 'web' && this.isMenuOpen() && this.filteredItems.length) {
-      const index = Math.min(this.filteredItems.length - 1, highlightedIndex);
+      const index = Math.max(0, Math.min(this.filteredItems.length - 1, highlightedIndex));
       this.onSelect(this.filteredItems[index], index);
     }
   };
@@ -345,9 +359,9 @@ class Autocomplete extends EventHandler {
     }
     this.onMount(() => this.setState(nextState));
 
-    // The trigger may have happened by clicking on the menu.
-    // To make sure the focus is still on the TextInput, we call .focus().
     if (this.input) {
+      // The trigger may have happened by clicking on the menu.
+      // To make sure the focus is still on the TextInput, we call .focus().
       this.input.focus();
     }
 
@@ -357,13 +371,36 @@ class Autocomplete extends EventHandler {
 
   onSelectEmpty = () => this.onSelect(null, 0);
 
+  isValidEvent(event) {
+    if (Platform.OS === 'web') {
+      const { relatedTarget } = event.nativeEvent;
+      if (!relatedTarget) {
+        return true;
+      }
+
+      const parent = document.querySelector(`[data-class~="${this.id}"]`);
+      if (!parent) {
+        return true;
+      }
+      return !parent.contains(relatedTarget);
+    }
+    return (
+      !this.selectTimestamp
+      || Date.now() - this.selectTimestamp > 800
+    );
+  }
+
   isUncontrolled() {
     const { menuOpen } = this.props;
     return menuOpen === null;
   }
 
   isMenuOpen() {
-    const { menuOpen } = this.props;
+    const { menuOpen, disabled, readonly } = this.props;
+
+    if (disabled || readonly) {
+      return false;
+    }
 
     if (menuOpen !== null) {
       return menuOpen;
@@ -391,9 +428,29 @@ class Autocomplete extends EventHandler {
     };
   }
 
-  findItemMatches(text, items) {
-    const { isMatch } = this.props;
-    return (items || []).filter(item => isMatch(text, item, this.getParams()));
+  async findItemMatches(text, items) {
+    const { isMatch, maxMatches } = this.props;
+    const list = items || [];
+
+    const limit = maxMatches || 30;
+
+    const requestId = this.request.id;
+    const matches = [];
+    const params = this.getParams();
+    for (
+      let i = 0;
+      i < list.length && matches.length <= limit && this.request.id === requestId;
+      i += 1
+    ) {
+      if (i > 0 && i % 30 === 0) {
+        await wait(100); // eslint-disable-line
+      }
+      const item = list[i];
+      if (isMatch(text, item, params)) {
+        matches.push(item);
+      }
+    }
+    return matches;
   }
 
   filterItems(items) {
@@ -436,17 +493,15 @@ class Autocomplete extends EventHandler {
     if (itemsProp && itemsProp.current) {
       this.request.loading = false;
       this.request.items = itemsProp;
-    } else if (!isFunction(itemsProp)) {
-      this.request.loading = false;
-      this.request.items = this.findItemMatches(query, itemsProp);
-    }
-
-    // If there is nothing to fetch, return the items.
-    if (!this.request.loading) {
       return this.request.items;
     }
 
-    const nextItems = await itemsProp(query, this.getParams());
+    let nextItems;
+    if (!isFunction(itemsProp)) {
+      nextItems = await this.findItemMatches(query, itemsProp);
+    } else {
+      nextItems = await itemsProp(query, this.getParams());
+    }
 
     // If this request is still the latest request.
     if (this.request.id === requestId) {
@@ -559,6 +614,7 @@ class Autocomplete extends EventHandler {
           onSubmitEditing={this.onSubmitEditing}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
+          onClick={this.onFocus}
         />
         {showMenu ? (
           <Menu

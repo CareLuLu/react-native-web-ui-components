@@ -84,6 +84,7 @@ const ModalPicker = ({
   onBlur,
   style,
   disabled,
+  readonly,
   fontFamily,
 }) => {
   let outer;
@@ -113,7 +114,7 @@ const ModalPicker = ({
         labelExtractor={labelExtractor}
         initValue={placeholder}
         value={value}
-        disabled={disabled}
+        disabled={disabled || readonly}
         onChange={onChange}
         onModalOpen={onFocus}
         onModalClose={onBlur}
@@ -141,6 +142,7 @@ ModalPicker.propTypes = {
   optimized: PropTypes.bool,
   icon: PropTypes.string,
   disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
 };
@@ -159,6 +161,7 @@ ModalPicker.defaultProps = {
   selectStyle: styles.empty,
   selectTextStyle: styles.empty,
   disabled: false,
+  readonly: false,
   onFocus: noop,
   onBlur: noop,
 };
