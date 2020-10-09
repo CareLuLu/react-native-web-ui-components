@@ -297,6 +297,8 @@ class Autocomplete extends EventHandler {
   onFocus = (event) => {
     const { onFocus } = this.props;
 
+    this.focusTimestamp = Date.now();
+
     onFocus(event);
     if (
       !event.isDefaultPrevented()
@@ -307,6 +309,17 @@ class Autocomplete extends EventHandler {
       && this.isValidEvent(event)
     ) {
       this.onMount(() => this.setState({ open: true }));
+    }
+  };
+
+  onClick = () => {
+    if (this.isUncontrolled()) {
+      const { open } = this.state;
+      if (Date.now() - this.focusTimestamp > 400) {
+        this.onMount(() => this.setState({ open: !open }));
+      } else {
+        this.onMount(() => this.setState({ open: true }));
+      }
     }
   };
 
@@ -596,6 +609,10 @@ class Autocomplete extends EventHandler {
       setTimeout(() => this.updateItems(value));
     }
 
+    if (showMenu) {
+      this.onLayout();
+    }
+
     return (
       <View
         className={`${className} Autocomplete__Container ${this.id}`}
@@ -614,7 +631,7 @@ class Autocomplete extends EventHandler {
           onSubmitEditing={this.onSubmitEditing}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
-          onClick={this.onFocus}
+          onClick={this.onClick}
         />
         {showMenu ? (
           <Menu
