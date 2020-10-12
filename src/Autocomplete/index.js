@@ -441,6 +441,10 @@ class Autocomplete extends EventHandler {
     };
   }
 
+  setMenuOpen(open) {
+    this.onMount(() => this.setState({ open }));
+  }
+
   async findItemMatches(text, items) {
     const { isMatch, maxMatches } = this.props;
     const list = items || [];
