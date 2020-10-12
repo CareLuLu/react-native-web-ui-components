@@ -315,7 +315,7 @@ class Autocomplete extends EventHandler {
   onClick = () => {
     if (this.isUncontrolled()) {
       const { open } = this.state;
-      if (Date.now() - this.focusTimestamp > 400) {
+      if (!this.focusTimestamp || Date.now() - this.focusTimestamp > 400) {
         this.onMount(() => this.setState({ open: !open }));
       } else {
         this.onMount(() => this.setState({ open: true }));
