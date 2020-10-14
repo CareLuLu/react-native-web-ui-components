@@ -43,11 +43,11 @@
     "eslint-plugin-react-hooks": "4.1.2",
     "jest": "26.5.3",
     "metro-react-native-babel-preset": "0.63.0",
-    "react": "16.13.1",
+    "react": "16.14.0",
     "react-art": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "react-native-web": "0.14.1",
-    "react-test-renderer": "16.13.1"
+    "react-test-renderer": "16.14.0"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.4",
