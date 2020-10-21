@@ -342,7 +342,7 @@ class TextInput extends React.Component {
       onClick,
       autoComplete: autoComplete || autoCompleteType || 'on',
       autoCorrect: autoCorrect || autoCorrect === undefined ? 'on' : 'off',
-      enterkeyhint: returnKeyType,
+      enterKeyHint: returnKeyType,
       readOnly: !editable || readonly,
       spellCheck: spellCheck !== null
         ? spellCheck
