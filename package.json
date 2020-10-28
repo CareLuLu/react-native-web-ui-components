@@ -75,7 +75,7 @@
     "react-native-expo-image-cache": "^4.0.8",
     "react-native-webview": "^10.3.2",
     "react-sidebar": "^3.0.2",
-    "throttle-debounce": "^2.1.0"
+    "throttle-debounce": "^3.0.0"
   },
   "peerDependencies": {
     "expo": "*",
