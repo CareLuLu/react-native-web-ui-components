@@ -91,6 +91,7 @@ First you need to install react ^16.8.3 (this library uses react-hooks).
 
 ```sh
 yarn add react
+yarn add @babel/plugin-proposal-class-properties --dev
 ```
 
 If you're using [Expo](https://expo.io/), they use a custom version of react-native and therefore you need to check what is the React Native repository for the Expo version you're using. For Expo v33.x.x you'd run:
@@ -103,6 +104,20 @@ If your project is also being used for web, please install React Native Web. Mak
 
 ```sh
 yarn add react-dom react-native-web 
+```
+
+Please make sure your Babel configuration includes `@babel/plugin-proposal-class-properties` as a plugin. If you're using [React Create App](https://github.com/facebook/create-react-app) you don't need to make any changes.
+
+For Expo:
+```js
+// In babel.config.js
+module.exports = function(api) {
+  api.cache(true);
+  return {
+    presets: ['babel-preset-expo'],
+    plugins: ['@babel/plugin-proposal-class-properties'],
+  };
+};
 ```
 
 ### Installation
