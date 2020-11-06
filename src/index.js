@@ -40,7 +40,6 @@ export { default as Screen } from './Screen';
 export { default as ScrollView } from './ScrollView';
 export { default as Select } from './Select';
 export { default as Sidebar } from './Sidebar';
-export { default as Slider } from './Slider';
 export { default as Spinner } from './Spinner';
 export { default as StylePropType } from './StylePropType';
 export { default as Text } from './Text';
