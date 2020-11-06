@@ -58,7 +58,6 @@ React Native Web UI Components is a library of customized [React Native](https:/
   * [ScrollView](#scrollview)
   * [Select](#select)
   * [Sidebar](#sidebar)
-  * [Slider](#slider)
   * [Spinner](#spinner)
   * [StylePropType](#styleproptype)
   * [Switch](#switch)
@@ -627,12 +626,6 @@ Displays a select input.
 Displays a sidebar. This library uses [React Sidebar](https://github.com/balloob/react-sidebar) and [React Native Side Menu](https://github.com/react-native-community/react-native-side-menu) to render sidebars for web and mobile respectively.
 
 ![Sidebar Component Example](https://divin2sy6ce0b.cloudfront.net/docs/sidebar.gif)
-
-### Slider
-
-Displays a slider. This library uses [React Native Slider](https://github.com/react-native-community/react-native-slider) to render sliders for web and mobile.
-
-![Slider Component Example](https://divin2sy6ce0b.cloudfront.net/docs/slider.gif)
 
 ### Spinner
 
