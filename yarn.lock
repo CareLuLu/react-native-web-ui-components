@@ -16719,10 +16719,10 @@ react-native-expo-image-cache@^4.0.8:
     crypto-js "^3.1.9-1"
     lodash "^4.17.4"
 
-react-native-web@0.14.8:
-  version "0.14.8"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.14.8.tgz#1f3eba659216936be61b7bcfe4cb6c6f5e8ed056"
-  integrity sha512-MVKEqLMlUFlThp56/LbQM+cyLKyjY6+pk3MFZ/6VC/ZhTldmN86Otd4cxlopJYiEj0woG9klnz3+GmI47bKv0A==
+react-native-web@0.14.9:
+  version "0.14.9"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.14.9.tgz#ac968dd98e577ee655e0d270a858d6667fb8ce63"
+  integrity sha512-lrVSnzZuW+7xXQsjHFu1SGbd3XcgWaYUDNaJ9BF/eVypisQBlkagiJwpxBECcQjgMLz/ow8AmRSJCZtNuz73gA==
   dependencies:
     array-find-index "^1.0.2"
     create-react-class "^15.6.2"
