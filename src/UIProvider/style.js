@@ -199,13 +199,18 @@ export default `
     max-width: 100%;
     max-height: 100%;
   }
-  amp-img.fill img {
+  amp-img.fill img,
+  amp-img[data-class~="fill"] img {
     object-fit: cover;
   }
-  amp-img.circle {
+  amp-img.circle,
+  amp-img[data-class~="circle"] {
     border-radius: 50%;
   }
-  [data-class~="image-responsive"] {
+  img[data-class~="image-cover"] {
+    object-fit: cover;
+  }
+  img[data-class~="image-responsive"] {
     background-size: contain !important;
   }
   [data-class~="image-outer-wrapper"] {

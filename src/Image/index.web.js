@@ -11,6 +11,7 @@ const Img = ({
   fixed,
   source,
   className,
+  cover,
   srcSet,
   sizes,
   css,
@@ -24,7 +25,7 @@ const Img = ({
   return (
     <img
       alt={alt}
-      data-class={`${className} image-${fixed ? 'fixed' : 'responsive'}`}
+      data-class={`${className} ${cover ? 'image-cover' : ''} image-${fixed ? 'fixed' : 'responsive'}`}
       src={source.uri}
       style={imgStyle}
       srcSet={srcSet}
@@ -38,6 +39,7 @@ Img.propTypes = {
   source: PropTypes.shape({
     uri: PropTypes.string.isRequired,
   }).isRequired,
+  cover: PropTypes.bool.isRequired,
   fixed: PropTypes.bool.isRequired,
   className: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
