@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import first from 'lodash/first';
 import isArray from 'lodash/isArray';
 import isString from 'lodash/isString';
+import isNumber from 'lodash/isNumber';
 import NativeText from './NativeText';
 import { withTheme } from '../Theme';
 import Link from '../Link';
@@ -18,7 +19,8 @@ const styles = StyleSheet.create({
 
 const linebreakRegex = /\\n/g;
 const boldRegex = /\*\*([^*]+)\*\*/g;
-const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+const linkRegex = /\[([^\]]+)\]\(([^)]+)\)({[^}]*})?/g;
+const targetBlankRegex = /:target="_blank"/;
 
 const concat = (base, extension) => Array.prototype.push.apply(base, extension);
 
@@ -63,10 +65,23 @@ const parseLink = (options, { theme }) => parse({
   regex: linkRegex,
   handler: (params, args) => {
     const { parts, lastIndex, component } = params;
-    const [match, anchor, to, index] = args;
+    const [match, anchor, to] = args;
+
+    let [,,, attributes, index] = args;
+    if (isNumber(attributes)) {
+      index = attributes;
+      attributes = '';
+    }
+
     parts.push(component.substring(lastIndex, index));
     parts.push((
-      <Link auto key={`link:${match}:${index}`} type={theme.colors.primary} to={to}>
+      <Link
+        auto
+        key={`link:${match}:${index}`}
+        type={theme.colors.primary}
+        to={to}
+        blank={targetBlankRegex.test(attributes)}
+      >
         {anchor}
       </Link>
     ));
