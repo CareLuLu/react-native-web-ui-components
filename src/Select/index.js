@@ -19,6 +19,7 @@ const Select = ({
   onChange: originalOnChange,
   ...props
 }) => {
+  const uniqId = useRef(`ui${Math.random().toString(36).substr(2, 9)}`);
   const id = useRef(`Select__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`);
 
   const onChange = selected => originalOnChange(selected.value, name);
@@ -68,7 +69,7 @@ const Select = ({
         <style>
           {`
             ${placeholder !== null ? `
-              [data-class~="Autocomplete__${id.current}"] [data-class~="Autocomplete__Item-0"] {
+              [data-class~="Select__Container__${uniqId.current}"] [data-class~="Autocomplete__${id.current}"] [data-class~="Autocomplete__Item-0"] {
                 ${createDomStyle(themeInputStyle.placeholder)}
               }
             ` : ''}
@@ -81,7 +82,7 @@ const Select = ({
         name={id.current}
         icon="caret-down"
         type="white"
-        className="Select__Container"
+        className={`Select__Container Select__Container__${uniqId.current}`}
         value={value}
         onChange={onChange}
         placeholder={label}
