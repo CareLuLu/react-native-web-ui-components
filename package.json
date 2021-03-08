@@ -24,8 +24,8 @@
     "url": "https://github.com/CareLuLu/react-native-web-ui-components"
   },
   "devDependencies": {
-    "@babel/cli": "7.13.0",
-    "@babel/core": "7.13.8",
+    "@babel/cli": "7.13.10",
+    "@babel/core": "7.13.10",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/plugin-transform-react-jsx": "7.12.17",
     "@babel/register": "7.13.8",
