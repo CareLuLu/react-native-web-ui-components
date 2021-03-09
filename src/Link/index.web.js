@@ -40,6 +40,8 @@ const go = ({
 const Link = ({
   theme,
   blank,
+  nofollow,
+  download,
   className,
   type,
   auto,
@@ -51,6 +53,7 @@ const Link = ({
   replace,
   wrapper,
   fontFamily,
+  hrefAttrs,
 }) => {
   const history = useHistory();
   const { location } = history;
@@ -94,6 +97,16 @@ const Link = ({
     delete font.fontFamily;
   }
 
+  let adjustedHrefAttrs = hrefAttrs || null;
+  if (blank || nofollow || download) {
+    adjustedHrefAttrs = {
+      target: blank ? 'blank' : null,
+      rel: nofollow ? 'nofollow' : null,
+      download,
+      ...hrefAttrs,
+    };
+  }
+
   const wrappedOnPress = amp || blank
     ? undefined
     : (onPress || go({
@@ -106,7 +119,7 @@ const Link = ({
   return (
     <Wrapper
       {...classNameProp}
-      target={blank ? '_blank' : undefined}
+      hrefAttrs={adjustedHrefAttrs}
       href={href}
       onPress={wrappedOnPress}
       style={[currentStyle, font]}
@@ -126,11 +139,14 @@ Link.propTypes = {
   children: PropTypes.node,
   style: StylePropType,
   blank: PropTypes.bool,
+  nofollow: PropTypes.bool,
+  download: PropTypes.bool,
   className: PropTypes.string,
   to: PropTypes.string,
   onPress: PropTypes.func,
   replace: PropTypes.bool,
   wrapper: PropTypes.any, // eslint-disable-line
+  hrefAttrs: PropTypes.shape(),
 };
 
 Link.defaultProps = {
@@ -139,12 +155,15 @@ Link.defaultProps = {
   children: null,
   style: styles.empty,
   blank: false,
+  nofollow: false,
+  download: undefined,
   type: 'gray',
   className: '',
   to: null,
   onPress: null,
   replace: false,
   wrapper: Text,
+  hrefAttrs: undefined,
 };
 
 export default withTheme('Link')(Link);
