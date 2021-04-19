@@ -9674,11 +9674,12 @@ expo-blur@^9.0.0:
   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-9.0.0.tgz#6447a65dba3f14532406d9c5227622b3e7d1abf7"
   integrity sha512-zqZENclTYBtVAZOsnDROT5PQ9MbMxa5A36J+aU2NiV6MqLYlUh/b/FnR0JPAuY4F6jS6U7sYiAlStzIXpLd7XQ==
 
-expo-document-picker@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-9.0.1.tgz#d423c6dc1936e716e3ca7722253921599926cce9"
-  integrity sha512-JvsDEz6JII/aSzyjOBWZzQxURHOktNA3djkqEPWyKfVcQ5Ohye8sQhRxSHR2o26Sz5gEZTnORzoCEC28fSsyVQ==
+expo-document-picker@^9.0.1:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-9.1.2.tgz#0b79e1289e8d66d25ee477723cfdc12d7f8499d1"
+  integrity sha512-I4xq90HZg3JML40AfUv1Uk/dTSRDd3Cy3qLV1P+wAiSudp54ockHMR1Pwow12WCtbihHW5DlHT0TU+fz5jJb7g==
   dependencies:
+    "@expo/config-plugins" "^1.0.18"
     uuid "^3.3.2"
 
 expo-file-system@^11.0.0:
