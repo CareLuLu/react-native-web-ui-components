@@ -298,8 +298,8 @@ class Autocomplete extends EventHandler {
     const { onFocus, readonly } = this.props;
     // do nothing if component is readonly
     if (readonly) {
-      return
-    }
+      return;
+    };
 
     this.focusTimestamp = Date.now();
 
@@ -317,10 +317,11 @@ class Autocomplete extends EventHandler {
   };
 
   onClick = () => {
+    const { readonly } = this.props;
     // do nothing if component is readonly
     if (readonly) {
-      return
-    }
+      return;
+    };
     
     if (this.isUncontrolled()) {
       const { open } = this.state;
