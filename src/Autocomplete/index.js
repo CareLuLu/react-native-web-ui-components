@@ -321,7 +321,7 @@ class Autocomplete extends EventHandler {
     // do nothing if component is readonly
     if (readonly) {
       return;
-    };
+    }
     if (this.isUncontrolled()) {
       const { open } = this.state;
       if (!this.focusTimestamp || Date.now() - this.focusTimestamp > 400) {
