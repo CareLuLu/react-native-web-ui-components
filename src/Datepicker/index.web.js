@@ -7,7 +7,7 @@ import moment from 'moment';
 import { withTheme } from '../Theme';
 import { formatMask } from '../utils';
 import StylePropType from '../StylePropType';
-import { Helmet, style } from '../Helmet';
+import { Helmet } from '../Helmet';
 import View from '../View';
 import createDomStyle from '../createDomStyle';
 
@@ -146,7 +146,7 @@ const useCss = ({
   themeInputStyle,
   selectedDateColor,
   showMonthDropdown,
-  showYearDropdown
+  showYearDropdown,
 }) => {
   const id = `DatePicker__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`;
   const customCss = `
@@ -164,7 +164,7 @@ const useCss = ({
     .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
       background-color: ${selectedDateColor || StyleSheet.flatten(themeInputStyle.selected).color};
     }
-    ${(!showMonthDropdown || !showYearDropdown )? `
+    ${(!showMonthDropdown || !showYearDropdown) ? `
       .react-datepicker__current-month {
         display: none;
       }
