@@ -145,6 +145,8 @@ const useCss = ({
   name,
   themeInputStyle,
   selectedDateColor,
+  showMonthDropdown,
+  showYearDropdown
 }) => {
   const id = `DatePicker__${(name && name.replace(/\./g, '-')) || Math.random().toString(36).substr(2, 9)}`;
   const customCss = `
@@ -162,25 +164,27 @@ const useCss = ({
     .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
       background-color: ${selectedDateColor || StyleSheet.flatten(themeInputStyle.selected).color};
     }
-    .react-datepicker__current-month {
-      display: none;
-    }
-    .react-datepicker__year-read-view--down-arrow, 
-    .react-datepicker__month-read-view--down-arrow {
-      margin-left: 5px;
-    }
-    .react-datepicker__year-read-view, 
-    .react-datepicker__month-read-view {
-      text-align: left;
-      width: fit-content;
-    }
-    .react-datepicker__month-read-view {
-      margin-right: 8px;
-    }
-    .react-datepicker__navigation--next,
-    .react-datepicker__navigation--previous {
-      top: 14px;
-    }
+    ${(!showMonthDropdown || !showYearDropdown )? `
+      .react-datepicker__current-month {
+        display: none;
+      }
+      .react-datepicker__year-read-view--down-arrow, 
+      .react-datepicker__month-read-view--down-arrow {
+        margin-left: 5px;
+      }
+      .react-datepicker__year-read-view, 
+      .react-datepicker__month-read-view {
+        text-align: left;
+        width: fit-content;
+      }
+      .react-datepicker__month-read-view {
+        margin-right: 8px;
+      }
+      .react-datepicker__navigation--next,
+      .react-datepicker__navigation--previous {
+        top: 14px;
+      }
+    ` : ''}
     .react-datepicker__day--selected:hover,
     .react-datepicker__day--in-selecting-range:hover,
     .react-datepicker__day--in-range:hover,
@@ -223,6 +227,8 @@ const Datepicker = (props) => {
     className,
     is24Hour,
     timeIntervals,
+    showMonthDropdown,
+    showYearDropdown,
   } = props;
 
   let currentFormat = format;
@@ -288,8 +294,8 @@ const Datepicker = (props) => {
         style={currentStyle}
         strictParsing
         autoComplete={autoComplete}
-        showMonthDropdown
-        showYearDropdown
+        showMonthDropdown={showMonthDropdown}
+        showYearDropdown={showYearDropdown}
       />
     </View>
   );
@@ -313,6 +319,8 @@ Datepicker.propTypes = {
   format: PropTypes.string,
   is24Hour: PropTypes.bool,
   timeIntervals: PropTypes.number,
+  showMonthDropdown: PropTypes.bool,
+  showYearDropdown: PropTypes.bool,
 };
 
 Datepicker.defaultProps = {
@@ -333,6 +341,8 @@ Datepicker.defaultProps = {
   format: null,
   is24Hour: false,
   timeIntervals: 15,
+  showMonthDropdown: true,
+  showYearDropdown: true,
 };
 
 export default withTheme('Datepicker')(Datepicker);
