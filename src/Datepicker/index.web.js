@@ -51,6 +51,11 @@ const baseCustomCss = `
   }
   .react-datepicker-popper {
     width: max-content;
+    transform: none !important;
+    inset: unset !important;
+  }
+  .react-datepicker-popper[data-placement^="bottom"] {
+    margin-top: 0;
   }
   .react-datepicker__time-container .react-datepicker__time {
     border-bottom-right-radius: 3px;
@@ -296,6 +301,7 @@ const Datepicker = (props) => {
         autoComplete={autoComplete}
         showMonthDropdown={showMonthDropdown}
         showYearDropdown={showYearDropdown}
+        showPopperArrow={false}
       />
     </View>
   );
