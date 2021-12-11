@@ -4312,10 +4312,10 @@
     xcode "^2.0.0"
     xmldoc "^0.4.0"
 
-"@react-native-community/datetimepicker@^3.0.1":
-  version "3.4.6"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-3.4.6.tgz#bf54ebad54828c68afcb83c641c913721c295ae6"
-  integrity sha512-vE9YOL5w/H28YAYpWgT75HRPYP/JjdWyJEyFKfPntXtQC4YHsqueKYWsWydDN4vHVAf220/wEFkuj33gnFFZRA==
+"@react-native-community/datetimepicker@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-5.0.0.tgz#edf797a97375870b739c8ba9143f8cae148a39c8"
+  integrity sha512-mxi2dSYiN7XKCnR15y8ZyYOwcpjbiHFDLiir3oUQDclXn2/qFOSOni7R+cxJtp8jBn8mhurXPPPAdUreJAUoQg==
   dependencies:
     invariant "^2.2.4"
 
