@@ -21786,10 +21786,10 @@ throat@^6.0.1:
   resolved "https://registry.yarnpkg.com/throat/-/throat-6.0.1.tgz#d514fedad95740c12c2d7fc70ea863eb51ade375"
   integrity sha512-8hmiGIJMDlwjg7dlJ4yKGLK8EsYqKgPWbG3b4wjJddKNwc7N7Dpn08Df4szr/sZdMVeOstrdYSsqzX6BYbcB+w==
 
-throttle-debounce@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-3.0.0.tgz#8d7fd809e123599b17c8d3cf0ee4c4106ab099f8"
-  integrity sha512-2B0b5wmu8Hpmtsh9Q+1Lk7Eq0dd1u1XQAifrZr0EMshB80MthC1K7BK3FHG27VQ7g1GuW7fFThiobIjCTCIBTw==
+throttle-debounce@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-4.0.0.tgz#ec763b1c050c3a8f73eddd2e853a720893102a40"
+  integrity sha512-bO2OiH++k8Z3cTNZccOJRlxY5Sk3Tx3Kz6cQl3VY5pTRcEgqbPxwEKtrC00whFAo2jIBQlaH1ZG5mtfrBef3qw==
 
 through2@^2.0.0, through2@^2.0.1:
   version "2.0.5"
