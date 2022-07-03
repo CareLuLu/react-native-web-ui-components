@@ -3186,6 +3186,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.18.6":
+  version "7.18.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.6.tgz#6a1ef59f838debd670421f8c7f2cbb8da9751580"
+  integrity sha512-t9wi7/AW6XtKahAe20Yw0/mMljKq0B1r2fPdvaAdV/KPDZewFXdaaa6K7lxmZBZ8FBNpCiAT6iHPmd6QO9bKfQ==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.4", "@babel/runtime@^7.7.6":
   version "7.7.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.7.7.tgz#194769ca8d6d7790ec23605af9ee3e42a0aa79cf"
@@ -19208,11 +19215,12 @@ react-native-expo-image-cache@^4.0.8:
     crypto-js "^3.1.9-1"
     lodash "^4.17.4"
 
-react-native-web@0.18.3:
-  version "0.18.3"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.18.3.tgz#f4650addfb0d96c473bf400effa6e08fa4c3ddea"
-  integrity sha512-bTmvlGQcXQyC5grHP75emlapFTCYKMMREwKKVI2tDYh3Q5d+n87vrV3MB+a13jpFKwaTCNRzl83B8XmaqW17jg==
+react-native-web@0.18.4:
+  version "0.18.4"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.18.4.tgz#8729808af329845e1a81a1c72647e7d36ca0d4ca"
+  integrity sha512-DM8LMeE7jAc6WyoBu+Y03wYz6GryaOTqMibCzuKgHNexE1ANoKI/3BkQFG/sDLMYfM4YU/+CYnJ0qfr/nCkOMA==
   dependencies:
+    "@babel/runtime" "^7.18.6"
     create-react-class "^15.7.0"
     fbjs "^3.0.0"
     inline-style-prefixer "^6.0.0"
