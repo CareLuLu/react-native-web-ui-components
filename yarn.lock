@@ -4583,12 +4583,12 @@
     tippy.js "^4.3.4"
 
 "@tippy.js/react@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-3.0.0.tgz#bacc4af0ff4446b693a60cddd074ae59fa2d4df6"
-  integrity sha512-MrvHIJQ/DhjCHiNL4iTRje0zNAQixL2TKNhViU/lPyrOSx1GnVmbEomB/PWwmWbqzNqx3hca+fhWggH9jyTrhw==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-3.1.1.tgz#027e4595e55f31430741fe8e0d92aaddfbe47efd"
+  integrity sha512-KF45vW/jKh/nBXk/2zzTFslv/T46zOMkIoDJ56ymZ+M00yHttk58J5wZ29oqGqDIUnobWSZD+cFpbR4u/UUvgw==
   dependencies:
     prop-types "^15.6.2"
-    tippy.js "^5.0.0"
+    tippy.js "^5.1.1"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -17744,10 +17744,15 @@ polished@^3.3.0:
   dependencies:
     "@babel/runtime" "^7.4.5"
 
-popper.js@^1.14.7, popper.js@^1.15.0:
+popper.js@^1.14.7:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
+
+popper.js@^1.16.0:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
 
 portfinder@^1.0.20:
   version "1.0.21"
@@ -21756,12 +21761,12 @@ tippy.js@^4.3.4:
   dependencies:
     popper.js "^1.14.7"
 
-tippy.js@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-5.0.0.tgz#770a02e58bebc27a71f4977de0e4e984af0ca2a5"
-  integrity sha512-X+oueol2IDOpYxPP8rRpNlWaFbRRij9hit1DJ2aZfSTz0q4HgD3Q3U6pPUcXMsFUDik19sujxknAPPCRLnRZ2Q==
+tippy.js@^5.1.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-5.2.1.tgz#e08d7332c103a15e427124d710d881fca82365d6"
+  integrity sha512-66UT6JRVn3dXNCORE+0UvUK3JZqV/VhLlU6HTDm3FmrweUUFUxUGvT8tUQ7ycMp+uhuLAwQw6dBabyC+iKf/MA==
   dependencies:
-    popper.js "^1.15.0"
+    popper.js "^1.16.0"
 
 title-case@^2.1.0:
   version "2.1.1"
