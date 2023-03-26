@@ -8103,9 +8103,9 @@ crypto-browserify@^3.11.0:
     randomfill "^1.0.3"
 
 crypto-js@^3.1.9-1:
-  version "3.1.9-1"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
-  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
+  integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
 
 crypto-random-string@^1.0.0:
   version "1.0.0"
@@ -18868,9 +18868,9 @@ react-native-carousel@^0.12.0:
     react-timer-mixin "^0.13.3"
 
 react-native-expo-image-cache@^4.0.8:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-expo-image-cache/-/react-native-expo-image-cache-4.0.8.tgz#51763f22c2684edfe8e7229481da45727f2268a1"
-  integrity sha512-2KVZnZsDQV9y8GAfZzF6sQQdEwzNVEbxaRIdeefRlIrNLS69ab93m+0gE2xO2gnBF2oc0dYWrW4w7NvFrw/Fdw==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-expo-image-cache/-/react-native-expo-image-cache-4.1.0.tgz#649cbe9786249134d3eafed5baba50bbfa80c029"
+  integrity sha512-U6xHtuyalNZThhM11lu4+mRNSpJFkdh4dSLbWkKAj5QfY63cKlTnDVtv8c88njn71GHL4exEzf8hNKBMWhH37Q==
   dependencies:
     crypto-js "^3.1.9-1"
     lodash "^4.17.4"
