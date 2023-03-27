@@ -18867,10 +18867,10 @@ react-native-expo-image-cache@^4.0.8:
     crypto-js "^3.1.9-1"
     lodash "^4.17.4"
 
-react-native-web@0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.19.0.tgz#b40c3b7353967372e964d3d2f371b1ce6ced55e2"
-  integrity sha512-KT3QinirATviotqB8aX4GIvaLzA5WeGQgdqxmKTVBf9msRsrfmFDRUqZrIkYtXRrLo/GjBUZCXKTulSSV3wuog==
+react-native-web@0.19.1:
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.19.1.tgz#89767a6a84175879f4d20399a5401c4c1bced706"
+  integrity sha512-/gJQukY5/qBwDPPsU97IM2vYHH2EyRxpTSp9rHQeBPlVi/U2LId1Dk08gON1fqXzTSg/XmrOH3XmB2Xnm67BAA==
   dependencies:
     "@babel/runtime" "^7.18.6"
     fbjs "^3.0.4"
