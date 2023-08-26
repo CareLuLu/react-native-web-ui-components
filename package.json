@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",
-    "@react-native-community/datetimepicker": "^3.0.1",
+    "@react-native-community/datetimepicker": "^7.0.0",
     "@tippy.js/react": "^3.0.0",
     "expo-blur": "^9.0.0",
     "expo-document-picker": "^9.0.1",
